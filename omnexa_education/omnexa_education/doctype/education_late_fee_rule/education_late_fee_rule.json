@@ -1,0 +1,49 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:{company}-{rule_code}",
+ "creation": "2026-04-16 19:00:00",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "rule_code",
+  "rule_name",
+  "company",
+  "branch",
+  "grace_days",
+  "charge_type",
+  "charge_value",
+  "max_charge",
+  "late_fee_item",
+  "is_active"
+ ],
+ "fields": [
+  {"fieldname": "rule_code", "fieldtype": "Data", "label": "Rule Code", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "rule_name", "fieldtype": "Data", "label": "Rule Name", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "company", "fieldtype": "Link", "label": "Company", "options": "Company", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "branch", "fieldtype": "Link", "label": "Branch", "options": "Branch", "reqd": 1, "in_list_view": 1},
+  {"default": "0", "fieldname": "grace_days", "fieldtype": "Int", "label": "Grace Days", "reqd": 1},
+  {"fieldname": "charge_type", "fieldtype": "Select", "label": "Charge Type", "options": "Percent\nFixed", "reqd": 1},
+  {"fieldname": "charge_value", "fieldtype": "Currency", "label": "Charge Value", "reqd": 1},
+  {"default": "0", "fieldname": "max_charge", "fieldtype": "Currency", "label": "Max Charge (0 = no cap)"},
+  {"fieldname": "late_fee_item", "fieldtype": "Link", "label": "Late Fee Item", "options": "Education Fee Item", "reqd": 1},
+  {"default": "1", "fieldname": "is_active", "fieldtype": "Check", "label": "Is Active", "in_list_view": 1}
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-04-16 19:00:00",
+ "module": "Omnexa Education",
+ "name": "Education Late Fee Rule",
+ "owner": "Administrator",
+ "permissions": [
+  {"role": "System Manager", "read": 1, "write": 1, "create": 1, "delete": 1, "report": 1, "export": 1, "share": 1, "print": 1, "email": 1},
+  {"role": "Education Manager", "read": 1, "write": 1, "create": 1, "delete": 0, "report": 1, "export": 1, "share": 0, "print": 1, "email": 1},
+  {"role": "Accounts Manager", "read": 1, "write": 1, "create": 1, "delete": 0, "report": 1, "export": 1, "share": 0, "print": 1, "email": 1}
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}
+

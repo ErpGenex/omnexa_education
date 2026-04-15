@@ -1,0 +1,55 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:{company}-{fee_code}",
+ "creation": "2026-04-16 18:00:00",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "fee_code",
+  "fee_name",
+  "company",
+  "fee_category",
+  "is_recurring",
+  "default_rate",
+  "income_account",
+  "default_tax_rule",
+  "status"
+ ],
+ "fields": [
+  {"fieldname": "fee_code", "fieldtype": "Data", "label": "Fee Code", "reqd": 1, "in_list_view": 1, "description": "e.g. TUITION, BUS, TRIP, PROGRAM, PRIVATE"},
+  {"fieldname": "fee_name", "fieldtype": "Data", "label": "Fee Name", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "company", "fieldtype": "Link", "label": "Company", "options": "Company", "reqd": 1, "in_list_view": 1},
+  {
+   "fieldname": "fee_category",
+   "fieldtype": "Select",
+   "label": "Category",
+   "options": "Tuition\nAdmission\nTransport (Bus)\nTrip / Excursion\nProgram / Course\nPrivate Lessons\nActivities\nExams\nHousing\nLibrary\nLab\nOther",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {"default": "0", "fieldname": "is_recurring", "fieldtype": "Check", "label": "Recurring (installments / cycles)"},
+  {"default": "0", "fieldname": "default_rate", "fieldtype": "Currency", "label": "Default Rate"},
+  {"fieldname": "income_account", "fieldtype": "Link", "label": "Income Account", "options": "GL Account", "reqd": 1},
+  {"fieldname": "default_tax_rule", "fieldtype": "Link", "label": "Default Tax Rule", "options": "Tax Rule"},
+  {"default": "Active", "fieldname": "status", "fieldtype": "Select", "label": "Status", "options": "Active\nInactive", "reqd": 1, "in_list_view": 1}
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-04-16 18:00:00",
+ "module": "Omnexa Education",
+ "name": "Education Fee Item",
+ "owner": "Administrator",
+ "permissions": [
+  {"role": "System Manager", "read": 1, "write": 1, "create": 1, "delete": 1, "report": 1, "export": 1, "share": 1, "print": 1, "email": 1},
+  {"role": "Education Manager", "read": 1, "write": 1, "create": 1, "delete": 0, "report": 1, "export": 1, "share": 0, "print": 1, "email": 1},
+  {"role": "Accounts Manager", "read": 1, "write": 1, "create": 1, "delete": 0, "report": 1, "export": 1, "share": 0, "print": 1, "email": 1},
+  {"role": "Accounts User", "read": 1, "write": 1, "create": 1, "delete": 0, "report": 1, "export": 0, "share": 0, "print": 1, "email": 0}
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}
+

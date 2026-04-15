@@ -1,0 +1,45 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:{company}-{grade_code}",
+ "creation": "2026-04-16 17:00:00",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "grade_code",
+  "grade_name",
+  "company",
+  "institution",
+  "curriculum",
+  "stage",
+  "sequence",
+  "status"
+ ],
+ "fields": [
+  {"fieldname": "grade_code", "fieldtype": "Data", "label": "Grade Code", "reqd": 1, "in_list_view": 1, "description": "e.g. KG1, G1, Y10"},
+  {"fieldname": "grade_name", "fieldtype": "Data", "label": "Grade Name", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "company", "fieldtype": "Link", "label": "Company", "options": "Company", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "institution", "fieldtype": "Link", "label": "Institution", "options": "Education Institution", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "curriculum", "fieldtype": "Link", "label": "Curriculum", "options": "Education Curriculum", "reqd": 1},
+  {"fieldname": "stage", "fieldtype": "Select", "label": "Stage", "options": "Early Years\nPrimary\nMiddle\nSecondary\nPost-secondary\nHigher Education\nProfessional", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "sequence", "fieldtype": "Int", "label": "Sequence", "reqd": 1, "description": "Order within stage for promotion / analytics."},
+  {"default": "Active", "fieldname": "status", "fieldtype": "Select", "label": "Status", "options": "Active\nInactive", "reqd": 1, "in_list_view": 1}
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-04-16 17:00:00",
+ "module": "Omnexa Education",
+ "name": "Education Grade Level",
+ "owner": "Administrator",
+ "permissions": [
+  {"role": "System Manager", "read": 1, "write": 1, "create": 1, "delete": 1, "report": 1, "export": 1, "share": 1, "print": 1, "email": 1},
+  {"role": "Education Manager", "read": 1, "write": 1, "create": 1, "delete": 0, "report": 1, "export": 1, "share": 0, "print": 1, "email": 1},
+  {"role": "Education User", "read": 1, "write": 1, "create": 1, "delete": 0, "report": 1, "export": 0, "share": 0, "print": 1, "email": 0}
+ ],
+ "sort_field": "sequence",
+ "sort_order": "ASC",
+ "states": [],
+ "track_changes": 1
+}
+

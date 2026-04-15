@@ -1,0 +1,65 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:{company}-{student_code}",
+ "creation": "2026-04-16 18:00:00",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "student_code",
+  "student_name",
+  "company",
+  "branch",
+  "institution",
+  "campus",
+  "grade_level",
+  "section",
+  "status",
+  "section_contact",
+  "guardian_name",
+  "guardian_phone",
+  "guardian_email",
+  "customer"
+ ],
+ "fields": [
+  {"fieldname": "student_code", "fieldtype": "Data", "label": "Student Code", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "student_name", "fieldtype": "Data", "label": "Student Name", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "company", "fieldtype": "Link", "label": "Company", "options": "Company", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "branch", "fieldtype": "Link", "label": "Branch", "options": "Branch", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "institution", "fieldtype": "Link", "label": "Institution", "options": "Education Institution"},
+  {"fieldname": "campus", "fieldtype": "Link", "label": "Campus", "options": "Education Campus"},
+  {"fieldname": "grade_level", "fieldtype": "Link", "label": "Grade Level", "options": "Education Grade Level"},
+  {"fieldname": "section", "fieldtype": "Link", "label": "Section", "options": "Education Section"},
+  {"default": "Active", "fieldname": "status", "fieldtype": "Select", "label": "Status", "options": "Active\nInactive\nWithdrawn\nGraduated", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "section_contact", "fieldtype": "Section Break", "label": "Contact (billing)"},
+  {"fieldname": "guardian_name", "fieldtype": "Data", "label": "Guardian / Payer Name"},
+  {"fieldname": "guardian_phone", "fieldtype": "Data", "label": "Guardian Phone"},
+  {"fieldname": "guardian_email", "fieldtype": "Data", "label": "Guardian Email", "options": "Email"},
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "label": "Customer (Accounting)",
+   "options": "Customer",
+   "read_only": 1,
+   "description": "Created automatically for billing and accounting integration."
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-04-16 18:00:00",
+ "module": "Omnexa Education",
+ "name": "Education Student",
+ "owner": "Administrator",
+ "permissions": [
+  {"role": "System Manager", "read": 1, "write": 1, "create": 1, "delete": 1, "report": 1, "export": 1, "share": 1, "print": 1, "email": 1},
+  {"role": "Education Manager", "read": 1, "write": 1, "create": 1, "delete": 0, "report": 1, "export": 1, "share": 0, "print": 1, "email": 1},
+  {"role": "Education User", "read": 1, "write": 1, "create": 1, "delete": 0, "report": 1, "export": 0, "share": 0, "print": 1, "email": 0},
+  {"role": "Accounts User", "read": 1, "write": 0, "create": 0, "delete": 0, "report": 1, "export": 0, "share": 0, "print": 1, "email": 0}
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}
+

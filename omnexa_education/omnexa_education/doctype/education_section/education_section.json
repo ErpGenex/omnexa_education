@@ -1,0 +1,50 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:{branch}-{section_code}",
+ "creation": "2026-04-16 17:00:00",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_code",
+  "section_name",
+  "company",
+  "branch",
+  "campus",
+  "academic_year",
+  "grade_level",
+  "capacity",
+  "homeroom_department",
+  "status"
+ ],
+ "fields": [
+  {"fieldname": "section_code", "fieldtype": "Data", "label": "Section Code", "reqd": 1, "in_list_view": 1, "description": "e.g. G1-A, Y10-Blue"},
+  {"fieldname": "section_name", "fieldtype": "Data", "label": "Section Name", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "company", "fieldtype": "Link", "label": "Company", "options": "Company", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "branch", "fieldtype": "Link", "label": "Branch", "options": "Branch", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "campus", "fieldtype": "Link", "label": "Campus", "options": "Education Campus", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "academic_year", "fieldtype": "Link", "label": "Academic Year", "options": "Education Academic Year", "reqd": 1},
+  {"fieldname": "grade_level", "fieldtype": "Link", "label": "Grade Level", "options": "Education Grade Level", "reqd": 1},
+  {"default": "0", "fieldname": "capacity", "fieldtype": "Int", "label": "Capacity"},
+  {"fieldname": "homeroom_department", "fieldtype": "Link", "label": "Homeroom Department", "options": "Education Department"},
+  {"default": "Active", "fieldname": "status", "fieldtype": "Select", "label": "Status", "options": "Active\nInactive", "reqd": 1, "in_list_view": 1}
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-04-16 17:00:00",
+ "module": "Omnexa Education",
+ "name": "Education Section",
+ "owner": "Administrator",
+ "permissions": [
+  {"role": "System Manager", "read": 1, "write": 1, "create": 1, "delete": 1, "report": 1, "export": 1, "share": 1, "print": 1, "email": 1},
+  {"role": "Education Manager", "read": 1, "write": 1, "create": 1, "delete": 0, "report": 1, "export": 1, "share": 0, "print": 1, "email": 1},
+  {"role": "Education User", "read": 1, "write": 1, "create": 1, "delete": 0, "report": 1, "export": 0, "share": 0, "print": 1, "email": 0},
+  {"role": "Teacher", "read": 1, "write": 0, "create": 0, "delete": 0, "report": 1, "export": 0, "share": 0, "print": 1, "email": 0}
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}
+

@@ -8,18 +8,17 @@ app_license = "mit"
 # Apps
 # ------------------
 
-required_apps = ["omnexa_core"]
+required_apps = ["omnexa_core", "omnexa_accounting"]
 
 # Each item in the list will be shown as an app in the apps page
-# add_to_apps_screen = [
-# 	{
-# 		"name": "omnexa_education",
-# 		"logo": "/assets/omnexa_education/logo.png",
-# 		"title": "Omnexa Education",
-# 		"route": "/omnexa_education",
-# 		"has_permission": "omnexa_education.api.permission.has_app_permission"
-# 	}
-# ]
+add_to_apps_screen = [
+	{
+		"name": "omnexa_education",
+		"logo": "/assets/omnexa_education/education.svg",
+		"title": "Education",
+		"route": "/app/education",
+	}
+]
 
 # Includes in <head>
 # ------------------
@@ -117,9 +116,25 @@ required_apps = ["omnexa_core"]
 # -----------
 # Permissions evaluated in scripted ways
 
-# permission_query_conditions = {
-# 	"Event": "frappe.desk.doctype.event.event.get_permission_query_conditions",
-# }
+permission_query_conditions = {
+	"Education Institution": "omnexa_education.permissions.education_institution_query_conditions",
+	"Education Campus": "omnexa_education.permissions.education_campus_query_conditions",
+	"Education Department": "omnexa_education.permissions.education_department_query_conditions",
+	"Education Curriculum": "omnexa_education.permissions.education_curriculum_query_conditions",
+	"Education Academic Year": "omnexa_education.permissions.education_academic_year_query_conditions",
+	"Education Term": "omnexa_education.permissions.education_term_query_conditions",
+	"Education Grade Level": "omnexa_education.permissions.education_grade_level_query_conditions",
+	"Education Section": "omnexa_education.permissions.education_section_query_conditions",
+	"Education Subject": "omnexa_education.permissions.education_subject_query_conditions",
+	"Education Student": "omnexa_education.permissions.education_student_query_conditions",
+	"Education Fee Item": "omnexa_education.permissions.education_fee_item_query_conditions",
+	"Education Billing Invoice": "omnexa_education.permissions.education_billing_invoice_query_conditions",
+	"Education Fee Plan": "omnexa_education.permissions.education_fee_plan_query_conditions",
+	"Education Discount Rule": "omnexa_education.permissions.education_discount_rule_query_conditions",
+	"Education Late Fee Rule": "omnexa_education.permissions.education_late_fee_rule_query_conditions",
+	"Education Billing Cycle": "omnexa_education.permissions.education_billing_cycle_query_conditions",
+	"Education Teacher": "omnexa_education.permissions.education_teacher_query_conditions",
+}
 #
 # has_permission = {
 # 	"Event": "frappe.desk.doctype.event.event.has_permission",
@@ -137,13 +152,51 @@ required_apps = ["omnexa_core"]
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
-# 	"*": {
-# 		"on_update": "method",
-# 		"on_cancel": "method",
-# 		"on_trash": "method"
-# 	}
-# }
+doc_events = {
+	"Education Institution": {
+		"before_validate": "omnexa_education.permissions.populate_company_branch_from_user_context",
+	},
+	"Education Campus": {
+		"before_validate": "omnexa_education.permissions.populate_company_branch_from_user_context",
+		"validate": "omnexa_education.permissions.enforce_branch_access_for_doc",
+	},
+	"Education Department": {
+		"before_validate": "omnexa_education.permissions.populate_company_branch_from_user_context",
+		"validate": "omnexa_education.permissions.enforce_branch_access_for_doc",
+	},
+	"Education Section": {
+		"before_validate": "omnexa_education.permissions.populate_company_branch_from_user_context",
+		"validate": "omnexa_education.permissions.enforce_branch_access_for_doc",
+	},
+	"Education Student": {
+		"before_validate": "omnexa_education.permissions.populate_company_branch_from_user_context",
+		"validate": "omnexa_education.permissions.enforce_branch_access_for_doc",
+	},
+	"Education Billing Invoice": {
+		"before_validate": "omnexa_education.permissions.populate_company_branch_from_user_context",
+		"validate": "omnexa_education.permissions.enforce_branch_access_for_doc",
+	},
+	"Education Fee Plan": {
+		"before_validate": "omnexa_education.permissions.populate_company_branch_from_user_context",
+		"validate": "omnexa_education.permissions.enforce_branch_access_for_doc",
+	},
+	"Education Discount Rule": {
+		"before_validate": "omnexa_education.permissions.populate_company_branch_from_user_context",
+		"validate": "omnexa_education.permissions.enforce_branch_access_for_doc",
+	},
+	"Education Late Fee Rule": {
+		"before_validate": "omnexa_education.permissions.populate_company_branch_from_user_context",
+		"validate": "omnexa_education.permissions.enforce_branch_access_for_doc",
+	},
+	"Education Billing Cycle": {
+		"before_validate": "omnexa_education.permissions.populate_company_branch_from_user_context",
+		"validate": "omnexa_education.permissions.enforce_branch_access_for_doc",
+	},
+	"Education Teacher": {
+		"before_validate": "omnexa_education.permissions.populate_company_branch_from_user_context",
+		"validate": "omnexa_education.permissions.enforce_branch_access_for_doc",
+	},
+}
 
 # Scheduled Tasks
 # ---------------
