@@ -1,0 +1,21 @@
+{
+ "action": "Create Entry",
+ "action_label": "Create",
+ "creation": "2026-04-20 00:31:40.634295",
+ "description": "Create or review your first **Education Campus** record from this workspace.",
+ "docstatus": 0,
+ "doctype": "Onboarding Step",
+ "idx": 0,
+ "is_complete": 0,
+ "is_single": 0,
+ "is_skipped": 0,
+ "modified": "2026-04-20 02:24:45.429603",
+ "modified_by": "Administrator",
+ "name": "ERPGENEX-WS-education-02-education_campus",
+ "owner": "Administrator",
+ "reference_document": "Education Campus",
+ "show_form_tour": 0,
+ "show_full_form": 0,
+ "title": "Get started with Education Campus",
+ "validate_action": 1
+}

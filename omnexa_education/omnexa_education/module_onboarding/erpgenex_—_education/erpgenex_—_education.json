@@ -1,0 +1,41 @@
+{
+ "allow_roles": [
+  {
+   "role": "Desk User"
+  },
+  {
+   "role": "System Manager"
+  }
+ ],
+ "creation": "2026-04-20 00:31:40.670234",
+ "docstatus": 0,
+ "doctype": "Module Onboarding",
+ "documentation_url": "https://frappe.io/framework",
+ "idx": 0,
+ "is_complete": 0,
+ "modified": "2026-04-20 02:24:45.460642",
+ "modified_by": "Administrator",
+ "module": "Omnexa Education",
+ "name": "ERPGENEX \u2014 Education",
+ "owner": "Administrator",
+ "steps": [
+  {
+   "step": "ERPGENEX-WS-education-01-education_institution"
+  },
+  {
+   "step": "ERPGENEX-WS-education-02-education_campus"
+  },
+  {
+   "step": "ERPGENEX-WS-education-03-education_department"
+  },
+  {
+   "step": "ERPGENEX-WS-education-04-education_teacher"
+  },
+  {
+   "step": "ERPGENEX-WS-education-home"
+  }
+ ],
+ "subtitle": "Guided setup for this workspace.",
+ "success_message": "You are ready to work in Education.",
+ "title": "ERPGENEX \u00b7 Education"
+}
