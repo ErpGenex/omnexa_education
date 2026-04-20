@@ -6,10 +6,12 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "identity_section",
   "rule_code",
   "rule_name",
   "company",
   "branch",
+  "discount_section",
   "discount_type",
   "discount_value",
   "scope",
@@ -17,13 +19,17 @@
   "fee_item",
   "valid_from",
   "valid_to",
-  "is_active"
+  "is_active",
+  "control_section",
+  "approval_role"
  ],
  "fields": [
+  {"fieldname": "identity_section", "fieldtype": "Section Break", "label": "Rule Identity"},
   {"fieldname": "rule_code", "fieldtype": "Data", "label": "Rule Code", "reqd": 1, "in_list_view": 1},
   {"fieldname": "rule_name", "fieldtype": "Data", "label": "Rule Name", "reqd": 1, "in_list_view": 1},
   {"fieldname": "company", "fieldtype": "Link", "label": "Company", "options": "Company", "reqd": 1, "in_list_view": 1},
   {"fieldname": "branch", "fieldtype": "Link", "label": "Branch", "options": "Branch", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "discount_section", "fieldtype": "Section Break", "label": "Discount Logic"},
   {"fieldname": "discount_type", "fieldtype": "Select", "label": "Discount Type", "options": "Percent\nFixed", "reqd": 1},
   {"fieldname": "discount_value", "fieldtype": "Currency", "label": "Discount Value", "reqd": 1},
   {"fieldname": "scope", "fieldtype": "Select", "label": "Scope", "options": "All Items\nFee Category\nFee Item", "reqd": 1},
@@ -31,7 +37,9 @@
   {"fieldname": "fee_item", "fieldtype": "Link", "label": "Fee Item (if scope=Fee Item)", "options": "Education Fee Item"},
   {"fieldname": "valid_from", "fieldtype": "Date", "label": "Valid From"},
   {"fieldname": "valid_to", "fieldtype": "Date", "label": "Valid To"},
-  {"default": "1", "fieldname": "is_active", "fieldtype": "Check", "label": "Is Active", "in_list_view": 1}
+  {"default": "1", "fieldname": "is_active", "fieldtype": "Check", "label": "Is Active", "in_list_view": 1},
+  {"fieldname": "control_section", "fieldtype": "Section Break", "label": "Control"},
+  {"fieldname": "approval_role", "fieldtype": "Data", "label": "Approval Role"}
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,

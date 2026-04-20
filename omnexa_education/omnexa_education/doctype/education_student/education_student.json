@@ -6,10 +6,12 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "identity_section",
   "student_code",
   "student_name",
   "company",
   "branch",
+  "academic_section",
   "institution",
   "campus",
   "grade_level",
@@ -19,13 +21,16 @@
   "guardian_name",
   "guardian_phone",
   "guardian_email",
+  "control_section",
   "customer"
  ],
  "fields": [
+  {"fieldname": "identity_section", "fieldtype": "Section Break", "label": "Student Identity"},
   {"fieldname": "student_code", "fieldtype": "Data", "label": "Student Code", "reqd": 1, "in_list_view": 1},
   {"fieldname": "student_name", "fieldtype": "Data", "label": "Student Name", "reqd": 1, "in_list_view": 1},
   {"fieldname": "company", "fieldtype": "Link", "label": "Company", "options": "Company", "reqd": 1, "in_list_view": 1},
   {"fieldname": "branch", "fieldtype": "Link", "label": "Branch", "options": "Branch", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "academic_section", "fieldtype": "Section Break", "label": "Academic Assignment"},
   {"fieldname": "institution", "fieldtype": "Link", "label": "Institution", "options": "Education Institution"},
   {"fieldname": "campus", "fieldtype": "Link", "label": "Campus", "options": "Education Campus"},
   {"fieldname": "grade_level", "fieldtype": "Link", "label": "Grade Level", "options": "Education Grade Level"},
@@ -35,6 +40,7 @@
   {"fieldname": "guardian_name", "fieldtype": "Data", "label": "Guardian / Payer Name"},
   {"fieldname": "guardian_phone", "fieldtype": "Data", "label": "Guardian Phone"},
   {"fieldname": "guardian_email", "fieldtype": "Data", "label": "Guardian Email", "options": "Email"},
+  {"fieldname": "control_section", "fieldtype": "Section Break", "label": "Accounting Link"},
   {
    "fieldname": "customer",
    "fieldtype": "Link",

@@ -6,26 +6,34 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "identity_section",
   "teacher_code",
   "teacher_name",
   "company",
   "branch",
+  "assignment_section",
   "campus",
   "department",
   "employee",
   "specialization",
-  "status"
+  "status",
+  "control_section",
+  "teaching_license_no"
  ],
  "fields": [
+  {"fieldname": "identity_section", "fieldtype": "Section Break", "label": "Teacher Identity"},
   {"fieldname": "teacher_code", "fieldtype": "Data", "label": "Teacher Code", "reqd": 1, "in_list_view": 1},
   {"fieldname": "teacher_name", "fieldtype": "Data", "label": "Teacher Name", "reqd": 1, "in_list_view": 1},
   {"fieldname": "company", "fieldtype": "Link", "label": "Company", "options": "Company", "reqd": 1, "in_list_view": 1},
   {"fieldname": "branch", "fieldtype": "Link", "label": "Branch", "options": "Branch", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "assignment_section", "fieldtype": "Section Break", "label": "Assignment"},
   {"fieldname": "campus", "fieldtype": "Link", "label": "Campus", "options": "Education Campus"},
   {"fieldname": "department", "fieldtype": "Link", "label": "Department", "options": "Education Department"},
   {"fieldname": "employee", "fieldtype": "Link", "label": "Employee (HR/Payroll)", "options": "Employee"},
   {"fieldname": "specialization", "fieldtype": "Data", "label": "Specialization"},
-  {"default": "Active", "fieldname": "status", "fieldtype": "Select", "label": "Status", "options": "Active\nInactive", "reqd": 1, "in_list_view": 1}
+  {"default": "Active", "fieldname": "status", "fieldtype": "Select", "label": "Status", "options": "Active\nInactive", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "control_section", "fieldtype": "Section Break", "label": "Control"},
+  {"fieldname": "teaching_license_no", "fieldtype": "Data", "label": "Teaching License No"}
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,

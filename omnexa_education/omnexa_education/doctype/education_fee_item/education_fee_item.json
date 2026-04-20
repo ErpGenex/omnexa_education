@@ -6,20 +6,26 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "identity_section",
   "fee_code",
   "fee_name",
   "company",
+  "classification_section",
   "fee_category",
   "is_recurring",
   "default_rate",
   "income_account",
   "default_tax_rule",
-  "status"
+  "status",
+  "control_section",
+  "classification_code"
  ],
  "fields": [
+  {"fieldname": "identity_section", "fieldtype": "Section Break", "label": "Fee Item Identity"},
   {"fieldname": "fee_code", "fieldtype": "Data", "label": "Fee Code", "reqd": 1, "in_list_view": 1, "description": "e.g. TUITION, BUS, TRIP, PROGRAM, PRIVATE"},
   {"fieldname": "fee_name", "fieldtype": "Data", "label": "Fee Name", "reqd": 1, "in_list_view": 1},
   {"fieldname": "company", "fieldtype": "Link", "label": "Company", "options": "Company", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "classification_section", "fieldtype": "Section Break", "label": "Classification"},
   {
    "fieldname": "fee_category",
    "fieldtype": "Select",
@@ -32,7 +38,9 @@
   {"default": "0", "fieldname": "default_rate", "fieldtype": "Currency", "label": "Default Rate"},
   {"fieldname": "income_account", "fieldtype": "Link", "label": "Income Account", "options": "GL Account", "reqd": 1},
   {"fieldname": "default_tax_rule", "fieldtype": "Link", "label": "Default Tax Rule", "options": "Tax Rule"},
-  {"default": "Active", "fieldname": "status", "fieldtype": "Select", "label": "Status", "options": "Active\nInactive", "reqd": 1, "in_list_view": 1}
+  {"default": "Active", "fieldname": "status", "fieldtype": "Select", "label": "Status", "options": "Active\nInactive", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "control_section", "fieldtype": "Section Break", "label": "Control"},
+  {"fieldname": "classification_code", "fieldtype": "Data", "label": "Classification Code"}
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,

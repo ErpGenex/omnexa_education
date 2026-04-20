@@ -6,17 +6,22 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "identity_section",
   "institution_code",
   "institution_name",
   "company",
   "institution_type",
+  "profile_section",
   "curriculum_default",
   "timezone",
   "language",
   "website",
-  "status"
+  "status",
+  "control_section",
+  "regulatory_code"
  ],
  "fields": [
+  {"fieldname": "identity_section", "fieldtype": "Section Break", "label": "Institution Identity"},
   {
    "fieldname": "institution_code",
    "fieldtype": "Data",
@@ -48,6 +53,7 @@
    "options": "School\nAcademy\nTraining Center\nInstitute\nUniversity",
    "reqd": 1
   },
+  {"fieldname": "profile_section", "fieldtype": "Section Break", "label": "Profile"},
   {
    "fieldname": "curriculum_default",
    "fieldtype": "Link",
@@ -80,7 +86,9 @@
    "label": "Status",
    "options": "Active\nInactive",
    "reqd": 1
-  }
+  },
+  {"fieldname": "control_section", "fieldtype": "Section Break", "label": "Control"},
+  {"fieldname": "regulatory_code", "fieldtype": "Data", "label": "Regulatory Code"}
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,

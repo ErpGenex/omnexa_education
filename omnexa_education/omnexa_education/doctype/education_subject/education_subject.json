@@ -6,19 +6,25 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "identity_section",
   "subject_code",
   "subject_name",
   "company",
+  "classification_section",
   "curriculum",
   "subject_area",
   "language",
   "credit_hours",
-  "status"
+  "status",
+  "control_section",
+  "classification_code"
  ],
  "fields": [
+  {"fieldname": "identity_section", "fieldtype": "Section Break", "label": "Subject Identity"},
   {"fieldname": "subject_code", "fieldtype": "Data", "label": "Subject Code", "reqd": 1, "in_list_view": 1},
   {"fieldname": "subject_name", "fieldtype": "Data", "label": "Subject Name", "reqd": 1, "in_list_view": 1},
   {"fieldname": "company", "fieldtype": "Link", "label": "Company", "options": "Company", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "classification_section", "fieldtype": "Section Break", "label": "Classification"},
   {"fieldname": "curriculum", "fieldtype": "Link", "label": "Curriculum", "options": "Education Curriculum", "reqd": 1, "in_list_view": 1},
   {
    "fieldname": "subject_area",
@@ -30,7 +36,9 @@
   },
   {"fieldname": "language", "fieldtype": "Data", "label": "Language (optional)", "description": "e.g. ar, en"},
   {"default": "0", "fieldname": "credit_hours", "fieldtype": "Float", "label": "Credit hours (higher ed/training)"},
-  {"default": "Active", "fieldname": "status", "fieldtype": "Select", "label": "Status", "options": "Active\nInactive", "reqd": 1, "in_list_view": 1}
+  {"default": "Active", "fieldname": "status", "fieldtype": "Select", "label": "Status", "options": "Active\nInactive", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "control_section", "fieldtype": "Section Break", "label": "Control"},
+  {"fieldname": "classification_code", "fieldtype": "Data", "label": "Classification Code"}
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,

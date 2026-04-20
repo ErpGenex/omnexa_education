@@ -6,17 +6,23 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "identity_section",
   "curriculum_code",
   "curriculum_name",
   "company",
+  "framework_section",
   "framework",
   "grading_scheme",
-  "status"
+  "status",
+  "control_section",
+  "accreditation_body"
  ],
  "fields": [
+  {"fieldname": "identity_section", "fieldtype": "Section Break", "label": "Curriculum Identity"},
   {"fieldname": "curriculum_code", "fieldtype": "Data", "label": "Curriculum Code", "reqd": 1, "in_list_view": 1},
   {"fieldname": "curriculum_name", "fieldtype": "Data", "label": "Curriculum Name", "reqd": 1, "in_list_view": 1},
   {"fieldname": "company", "fieldtype": "Link", "label": "Company", "options": "Company", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "framework_section", "fieldtype": "Section Break", "label": "Framework and Grading"},
   {
    "fieldname": "framework",
    "fieldtype": "Select",
@@ -32,7 +38,9 @@
    "options": "Percentage\nGPA 4.0\nGPA 5.0\nLetter (A-F)\nRubric\nCustom",
    "reqd": 1
   },
-  {"default": "Active", "fieldname": "status", "fieldtype": "Select", "label": "Status", "options": "Active\nInactive", "reqd": 1, "in_list_view": 1}
+  {"default": "Active", "fieldname": "status", "fieldtype": "Select", "label": "Status", "options": "Active\nInactive", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "control_section", "fieldtype": "Section Break", "label": "Control"},
+  {"fieldname": "accreditation_body", "fieldtype": "Data", "label": "Accreditation Body"}
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,

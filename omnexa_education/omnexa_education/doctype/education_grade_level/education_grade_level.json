@@ -6,24 +6,32 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "identity_section",
   "grade_code",
   "grade_name",
   "company",
   "institution",
+  "structure_section",
   "curriculum",
   "stage",
   "sequence",
-  "status"
+  "status",
+  "control_section",
+  "reporting_tag"
  ],
  "fields": [
+  {"fieldname": "identity_section", "fieldtype": "Section Break", "label": "Grade Identity"},
   {"fieldname": "grade_code", "fieldtype": "Data", "label": "Grade Code", "reqd": 1, "in_list_view": 1, "description": "e.g. KG1, G1, Y10"},
   {"fieldname": "grade_name", "fieldtype": "Data", "label": "Grade Name", "reqd": 1, "in_list_view": 1},
   {"fieldname": "company", "fieldtype": "Link", "label": "Company", "options": "Company", "reqd": 1, "in_list_view": 1},
   {"fieldname": "institution", "fieldtype": "Link", "label": "Institution", "options": "Education Institution", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "structure_section", "fieldtype": "Section Break", "label": "Structure"},
   {"fieldname": "curriculum", "fieldtype": "Link", "label": "Curriculum", "options": "Education Curriculum", "reqd": 1},
   {"fieldname": "stage", "fieldtype": "Select", "label": "Stage", "options": "Early Years\nPrimary\nMiddle\nSecondary\nPost-secondary\nHigher Education\nProfessional", "reqd": 1, "in_list_view": 1},
   {"fieldname": "sequence", "fieldtype": "Int", "label": "Sequence", "reqd": 1, "description": "Order within stage for promotion / analytics."},
-  {"default": "Active", "fieldname": "status", "fieldtype": "Select", "label": "Status", "options": "Active\nInactive", "reqd": 1, "in_list_view": 1}
+  {"default": "Active", "fieldname": "status", "fieldtype": "Select", "label": "Status", "options": "Active\nInactive", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "control_section", "fieldtype": "Section Break", "label": "Control"},
+  {"fieldname": "reporting_tag", "fieldtype": "Data", "label": "Reporting Tag"}
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
