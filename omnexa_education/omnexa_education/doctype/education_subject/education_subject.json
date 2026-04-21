@@ -1,61 +1,157 @@
 {
- "actions": [],
- "allow_rename": 1,
- "autoname": "format:{company}-{subject_code}",
- "creation": "2026-04-16 17:00:00",
- "doctype": "DocType",
- "engine": "InnoDB",
- "field_order": [
-  "identity_section",
-  "subject_code",
-  "subject_name",
-  "company",
-  "classification_section",
-  "curriculum",
-  "subject_area",
-  "language",
-  "credit_hours",
-  "status",
-  "control_section",
-  "classification_code"
- ],
- "fields": [
-  {"fieldname": "identity_section", "fieldtype": "Section Break", "label": "Subject Identity"},
-  {"fieldname": "subject_code", "fieldtype": "Data", "label": "Subject Code", "reqd": 1, "in_list_view": 1},
-  {"fieldname": "subject_name", "fieldtype": "Data", "label": "Subject Name", "reqd": 1, "in_list_view": 1},
-  {"fieldname": "company", "fieldtype": "Link", "label": "Company", "options": "Company", "reqd": 1, "in_list_view": 1},
-  {"fieldname": "classification_section", "fieldtype": "Section Break", "label": "Classification"},
-  {"fieldname": "curriculum", "fieldtype": "Link", "label": "Curriculum", "options": "Education Curriculum", "reqd": 1, "in_list_view": 1},
-  {
-   "fieldname": "subject_area",
-   "fieldtype": "Select",
-   "label": "Subject Area",
-   "options": "Languages\nMathematics\nScience\nSocial Studies\nArts\nPhysical Education\nComputer Science\nBusiness\nVocational\nOther",
-   "reqd": 1,
-   "in_list_view": 1
-  },
-  {"fieldname": "language", "fieldtype": "Data", "label": "Language (optional)", "description": "e.g. ar, en"},
-  {"default": "0", "fieldname": "credit_hours", "fieldtype": "Float", "label": "Credit hours (higher ed/training)"},
-  {"default": "Active", "fieldname": "status", "fieldtype": "Select", "label": "Status", "options": "Active\nInactive", "reqd": 1, "in_list_view": 1},
-  {"fieldname": "control_section", "fieldtype": "Section Break", "label": "Control"},
-  {"fieldname": "classification_code", "fieldtype": "Data", "label": "Classification Code"}
- ],
- "grid_page_length": 50,
- "index_web_pages_for_search": 1,
- "links": [],
- "modified": "2026-04-16 17:00:00",
- "module": "Omnexa Education",
- "name": "Education Subject",
- "owner": "Administrator",
- "permissions": [
-  {"role": "System Manager", "read": 1, "write": 1, "create": 1, "delete": 1, "report": 1, "export": 1, "share": 1, "print": 1, "email": 1},
-  {"role": "Education Manager", "read": 1, "write": 1, "create": 1, "delete": 0, "report": 1, "export": 1, "share": 0, "print": 1, "email": 1},
-  {"role": "Education User", "read": 1, "write": 1, "create": 1, "delete": 0, "report": 1, "export": 0, "share": 0, "print": 1, "email": 0},
-  {"role": "Teacher", "read": 1, "write": 0, "create": 0, "delete": 0, "report": 1, "export": 0, "share": 0, "print": 1, "email": 0}
- ],
- "sort_field": "modified",
- "sort_order": "DESC",
- "states": [],
- "track_changes": 1
+	"actions": [],
+	"allow_rename": 1,
+	"autoname": "format:{company}-{subject_code}",
+	"creation": "2026-04-16 17:00:00",
+	"doctype": "DocType",
+	"engine": "InnoDB",
+	"field_order": [
+		"subject_code",
+		"subject_name",
+		"company",
+		"classification_section",
+		"curriculum",
+		"subject_area",
+		"language",
+		"column_break_omnexa_1",
+		"credit_hours",
+		"status",
+		"classification_code"
+	],
+	"fields": [
+		{
+			"fieldname": "subject_code",
+			"fieldtype": "Data",
+			"label": "Subject Code",
+			"reqd": 1,
+			"in_list_view": 1
+		},
+		{
+			"fieldname": "subject_name",
+			"fieldtype": "Data",
+			"label": "Subject Name",
+			"reqd": 1,
+			"in_list_view": 1
+		},
+		{
+			"fieldname": "company",
+			"fieldtype": "Link",
+			"label": "Company",
+			"options": "Company",
+			"reqd": 1,
+			"in_list_view": 1
+		},
+		{
+			"fieldname": "classification_section",
+			"fieldtype": "Section Break",
+			"label": "Classification"
+		},
+		{
+			"fieldname": "curriculum",
+			"fieldtype": "Link",
+			"label": "Curriculum",
+			"options": "Education Curriculum",
+			"reqd": 1,
+			"in_list_view": 1
+		},
+		{
+			"fieldname": "subject_area",
+			"fieldtype": "Select",
+			"label": "Subject Area",
+			"options": "Languages\nMathematics\nScience\nSocial Studies\nArts\nPhysical Education\nComputer Science\nBusiness\nVocational\nOther",
+			"reqd": 1,
+			"in_list_view": 1
+		},
+		{
+			"fieldname": "language",
+			"fieldtype": "Data",
+			"label": "Language (optional)",
+			"description": "e.g. ar, en"
+		},
+		{
+			"default": "0",
+			"fieldname": "credit_hours",
+			"fieldtype": "Float",
+			"label": "Credit hours (higher ed/training)"
+		},
+		{
+			"default": "Active",
+			"fieldname": "status",
+			"fieldtype": "Select",
+			"label": "Status",
+			"options": "Active\nInactive",
+			"reqd": 1,
+			"in_list_view": 1
+		},
+		{
+			"fieldname": "classification_code",
+			"fieldtype": "Data",
+			"label": "Classification Code"
+		},
+		{
+			"fieldname": "column_break_omnexa_1",
+			"fieldtype": "Column Break"
+		}
+	],
+	"grid_page_length": 50,
+	"index_web_pages_for_search": 1,
+	"links": [],
+	"modified": "2026-04-16 17:00:00",
+	"module": "Omnexa Education",
+	"name": "Education Subject",
+	"owner": "Administrator",
+	"permissions": [
+		{
+			"role": "System Manager",
+			"read": 1,
+			"write": 1,
+			"create": 1,
+			"delete": 1,
+			"report": 1,
+			"export": 1,
+			"share": 1,
+			"print": 1,
+			"email": 1
+		},
+		{
+			"role": "Education Manager",
+			"read": 1,
+			"write": 1,
+			"create": 1,
+			"delete": 0,
+			"report": 1,
+			"export": 1,
+			"share": 0,
+			"print": 1,
+			"email": 1
+		},
+		{
+			"role": "Education User",
+			"read": 1,
+			"write": 1,
+			"create": 1,
+			"delete": 0,
+			"report": 1,
+			"export": 0,
+			"share": 0,
+			"print": 1,
+			"email": 0
+		},
+		{
+			"role": "Teacher",
+			"read": 1,
+			"write": 0,
+			"create": 0,
+			"delete": 0,
+			"report": 1,
+			"export": 0,
+			"share": 0,
+			"print": 1,
+			"email": 0
+		}
+	],
+	"sort_field": "modified",
+	"sort_order": "DESC",
+	"states": [],
+	"track_changes": 1
 }
-

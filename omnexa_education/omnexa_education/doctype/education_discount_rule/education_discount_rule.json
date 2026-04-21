@@ -1,61 +1,178 @@
 {
- "actions": [],
- "allow_rename": 1,
- "autoname": "format:{company}-{rule_code}",
- "creation": "2026-04-16 19:00:00",
- "doctype": "DocType",
- "engine": "InnoDB",
- "field_order": [
-  "identity_section",
-  "rule_code",
-  "rule_name",
-  "company",
-  "branch",
-  "discount_section",
-  "discount_type",
-  "discount_value",
-  "scope",
-  "fee_category",
-  "fee_item",
-  "valid_from",
-  "valid_to",
-  "is_active",
-  "control_section",
-  "approval_role"
- ],
- "fields": [
-  {"fieldname": "identity_section", "fieldtype": "Section Break", "label": "Rule Identity"},
-  {"fieldname": "rule_code", "fieldtype": "Data", "label": "Rule Code", "reqd": 1, "in_list_view": 1},
-  {"fieldname": "rule_name", "fieldtype": "Data", "label": "Rule Name", "reqd": 1, "in_list_view": 1},
-  {"fieldname": "company", "fieldtype": "Link", "label": "Company", "options": "Company", "reqd": 1, "in_list_view": 1},
-  {"fieldname": "branch", "fieldtype": "Link", "label": "Branch", "options": "Branch", "reqd": 1, "in_list_view": 1},
-  {"fieldname": "discount_section", "fieldtype": "Section Break", "label": "Discount Logic"},
-  {"fieldname": "discount_type", "fieldtype": "Select", "label": "Discount Type", "options": "Percent\nFixed", "reqd": 1},
-  {"fieldname": "discount_value", "fieldtype": "Currency", "label": "Discount Value", "reqd": 1},
-  {"fieldname": "scope", "fieldtype": "Select", "label": "Scope", "options": "All Items\nFee Category\nFee Item", "reqd": 1},
-  {"fieldname": "fee_category", "fieldtype": "Data", "label": "Fee Category (if scope=Fee Category)"},
-  {"fieldname": "fee_item", "fieldtype": "Link", "label": "Fee Item (if scope=Fee Item)", "options": "Education Fee Item"},
-  {"fieldname": "valid_from", "fieldtype": "Date", "label": "Valid From"},
-  {"fieldname": "valid_to", "fieldtype": "Date", "label": "Valid To"},
-  {"default": "1", "fieldname": "is_active", "fieldtype": "Check", "label": "Is Active", "in_list_view": 1},
-  {"fieldname": "control_section", "fieldtype": "Section Break", "label": "Control"},
-  {"fieldname": "approval_role", "fieldtype": "Data", "label": "Approval Role"}
- ],
- "grid_page_length": 50,
- "index_web_pages_for_search": 1,
- "links": [],
- "modified": "2026-04-16 19:00:00",
- "module": "Omnexa Education",
- "name": "Education Discount Rule",
- "owner": "Administrator",
- "permissions": [
-  {"role": "System Manager", "read": 1, "write": 1, "create": 1, "delete": 1, "report": 1, "export": 1, "share": 1, "print": 1, "email": 1},
-  {"role": "Education Manager", "read": 1, "write": 1, "create": 1, "delete": 0, "report": 1, "export": 1, "share": 0, "print": 1, "email": 1},
-  {"role": "Accounts Manager", "read": 1, "write": 1, "create": 1, "delete": 0, "report": 1, "export": 1, "share": 0, "print": 1, "email": 1}
- ],
- "sort_field": "modified",
- "sort_order": "DESC",
- "states": [],
- "track_changes": 1
+	"actions": [],
+	"allow_rename": 1,
+	"autoname": "format:{company}-{rule_code}",
+	"creation": "2026-04-16 19:00:00",
+	"doctype": "DocType",
+	"engine": "InnoDB",
+	"field_order": [
+		"rule_code",
+		"rule_name",
+		"column_break_omnexa_3",
+		"company",
+		"branch",
+		"discount_section",
+		"discount_type",
+		"discount_value",
+		"scope",
+		"column_break_omnexa_1",
+		"fee_category",
+		"fee_item",
+		"valid_from",
+		"column_break_omnexa_2",
+		"valid_to",
+		"is_active",
+		"approval_role"
+	],
+	"fields": [
+		{
+			"fieldname": "rule_code",
+			"fieldtype": "Data",
+			"label": "Rule Code",
+			"reqd": 1,
+			"in_list_view": 1
+		},
+		{
+			"fieldname": "rule_name",
+			"fieldtype": "Data",
+			"label": "Rule Name",
+			"reqd": 1,
+			"in_list_view": 1
+		},
+		{
+			"fieldname": "company",
+			"fieldtype": "Link",
+			"label": "Company",
+			"options": "Company",
+			"reqd": 1,
+			"in_list_view": 1
+		},
+		{
+			"fieldname": "branch",
+			"fieldtype": "Link",
+			"label": "Branch",
+			"options": "Branch",
+			"reqd": 1,
+			"in_list_view": 1
+		},
+		{
+			"fieldname": "discount_section",
+			"fieldtype": "Section Break",
+			"label": "Discount Logic"
+		},
+		{
+			"fieldname": "discount_type",
+			"fieldtype": "Select",
+			"label": "Discount Type",
+			"options": "Percent\nFixed",
+			"reqd": 1
+		},
+		{
+			"fieldname": "discount_value",
+			"fieldtype": "Currency",
+			"label": "Discount Value",
+			"reqd": 1
+		},
+		{
+			"fieldname": "scope",
+			"fieldtype": "Select",
+			"label": "Scope",
+			"options": "All Items\nFee Category\nFee Item",
+			"reqd": 1
+		},
+		{
+			"fieldname": "fee_category",
+			"fieldtype": "Data",
+			"label": "Fee Category (if scope=Fee Category)"
+		},
+		{
+			"fieldname": "fee_item",
+			"fieldtype": "Link",
+			"label": "Fee Item (if scope=Fee Item)",
+			"options": "Education Fee Item"
+		},
+		{
+			"fieldname": "valid_from",
+			"fieldtype": "Date",
+			"label": "Valid From"
+		},
+		{
+			"fieldname": "valid_to",
+			"fieldtype": "Date",
+			"label": "Valid To"
+		},
+		{
+			"default": "1",
+			"fieldname": "is_active",
+			"fieldtype": "Check",
+			"label": "Is Active",
+			"in_list_view": 1
+		},
+		{
+			"fieldname": "approval_role",
+			"fieldtype": "Data",
+			"label": "Approval Role"
+		},
+		{
+			"fieldname": "column_break_omnexa_1",
+			"fieldtype": "Column Break"
+		},
+		{
+			"fieldname": "column_break_omnexa_2",
+			"fieldtype": "Column Break"
+		},
+		{
+			"fieldname": "column_break_omnexa_3",
+			"fieldtype": "Column Break"
+		}
+	],
+	"grid_page_length": 50,
+	"index_web_pages_for_search": 1,
+	"links": [],
+	"modified": "2026-04-16 19:00:00",
+	"module": "Omnexa Education",
+	"name": "Education Discount Rule",
+	"owner": "Administrator",
+	"permissions": [
+		{
+			"role": "System Manager",
+			"read": 1,
+			"write": 1,
+			"create": 1,
+			"delete": 1,
+			"report": 1,
+			"export": 1,
+			"share": 1,
+			"print": 1,
+			"email": 1
+		},
+		{
+			"role": "Education Manager",
+			"read": 1,
+			"write": 1,
+			"create": 1,
+			"delete": 0,
+			"report": 1,
+			"export": 1,
+			"share": 0,
+			"print": 1,
+			"email": 1
+		},
+		{
+			"role": "Accounts Manager",
+			"read": 1,
+			"write": 1,
+			"create": 1,
+			"delete": 0,
+			"report": 1,
+			"export": 1,
+			"share": 0,
+			"print": 1,
+			"email": 1
+		}
+	],
+	"sort_field": "modified",
+	"sort_order": "DESC",
+	"states": [],
+	"track_changes": 1
 }
-

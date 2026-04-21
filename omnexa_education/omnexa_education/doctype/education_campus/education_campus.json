@@ -1,54 +1,122 @@
 {
- "actions": [],
- "allow_rename": 1,
- "autoname": "format:{company}-{campus_code}",
- "creation": "2026-04-16 17:00:00",
- "doctype": "DocType",
- "engine": "InnoDB",
- "field_order": [
-  "identity_section",
-  "campus_code",
-  "campus_name",
-  "company",
-  "branch",
-  "institution",
-  "status",
-  "control_section",
-  "campus_type"
- ],
- "fields": [
-  {"fieldname": "identity_section", "fieldtype": "Section Break", "label": "Campus Identity"},
-  {"fieldname": "campus_code", "fieldtype": "Data", "label": "Campus Code", "reqd": 1, "in_list_view": 1},
-  {"fieldname": "campus_name", "fieldtype": "Data", "label": "Campus Name", "reqd": 1, "in_list_view": 1},
-  {"fieldname": "company", "fieldtype": "Link", "label": "Company", "options": "Company", "reqd": 1, "in_list_view": 1},
-  {"fieldname": "branch", "fieldtype": "Link", "label": "Branch", "options": "Branch", "reqd": 1, "in_list_view": 1},
-  {
-   "fieldname": "institution",
-   "fieldtype": "Link",
-   "label": "Institution",
-   "options": "Education Institution",
-   "reqd": 1,
-   "in_list_view": 1
-  },
-  {"default": "Active", "fieldname": "status", "fieldtype": "Select", "label": "Status", "options": "Active\nInactive", "reqd": 1, "in_list_view": 1},
-  {"fieldname": "control_section", "fieldtype": "Section Break", "label": "Control"},
-  {"fieldname": "campus_type", "fieldtype": "Select", "label": "Campus Type", "options": "Main\nSatellite\nVirtual", "default": "Main"}
- ],
- "grid_page_length": 50,
- "index_web_pages_for_search": 1,
- "links": [],
- "modified": "2026-04-16 17:00:00",
- "module": "Omnexa Education",
- "name": "Education Campus",
- "owner": "Administrator",
- "permissions": [
-  {"role": "System Manager", "read": 1, "write": 1, "create": 1, "delete": 1, "report": 1, "export": 1, "share": 1, "print": 1, "email": 1},
-  {"role": "Education Manager", "read": 1, "write": 1, "create": 1, "delete": 0, "report": 1, "export": 1, "share": 0, "print": 1, "email": 1},
-  {"role": "Education User", "read": 1, "write": 1, "create": 1, "delete": 0, "report": 1, "export": 0, "share": 0, "print": 1, "email": 0}
- ],
- "sort_field": "modified",
- "sort_order": "DESC",
- "states": [],
- "track_changes": 1
+	"actions": [],
+	"allow_rename": 1,
+	"autoname": "format:{company}-{campus_code}",
+	"creation": "2026-04-16 17:00:00",
+	"doctype": "DocType",
+	"engine": "InnoDB",
+	"field_order": [
+		"campus_code",
+		"campus_name",
+		"company",
+		"branch",
+		"institution",
+		"status",
+		"campus_type"
+	],
+	"fields": [
+		{
+			"fieldname": "campus_code",
+			"fieldtype": "Data",
+			"label": "Campus Code",
+			"reqd": 1,
+			"in_list_view": 1
+		},
+		{
+			"fieldname": "campus_name",
+			"fieldtype": "Data",
+			"label": "Campus Name",
+			"reqd": 1,
+			"in_list_view": 1
+		},
+		{
+			"fieldname": "company",
+			"fieldtype": "Link",
+			"label": "Company",
+			"options": "Company",
+			"reqd": 1,
+			"in_list_view": 1
+		},
+		{
+			"fieldname": "branch",
+			"fieldtype": "Link",
+			"label": "Branch",
+			"options": "Branch",
+			"reqd": 1,
+			"in_list_view": 1
+		},
+		{
+			"fieldname": "institution",
+			"fieldtype": "Link",
+			"label": "Institution",
+			"options": "Education Institution",
+			"reqd": 1,
+			"in_list_view": 1
+		},
+		{
+			"default": "Active",
+			"fieldname": "status",
+			"fieldtype": "Select",
+			"label": "Status",
+			"options": "Active\nInactive",
+			"reqd": 1,
+			"in_list_view": 1
+		},
+		{
+			"fieldname": "campus_type",
+			"fieldtype": "Select",
+			"label": "Campus Type",
+			"options": "Main\nSatellite\nVirtual",
+			"default": "Main"
+		}
+	],
+	"grid_page_length": 50,
+	"index_web_pages_for_search": 1,
+	"links": [],
+	"modified": "2026-04-16 17:00:00",
+	"module": "Omnexa Education",
+	"name": "Education Campus",
+	"owner": "Administrator",
+	"permissions": [
+		{
+			"role": "System Manager",
+			"read": 1,
+			"write": 1,
+			"create": 1,
+			"delete": 1,
+			"report": 1,
+			"export": 1,
+			"share": 1,
+			"print": 1,
+			"email": 1
+		},
+		{
+			"role": "Education Manager",
+			"read": 1,
+			"write": 1,
+			"create": 1,
+			"delete": 0,
+			"report": 1,
+			"export": 1,
+			"share": 0,
+			"print": 1,
+			"email": 1
+		},
+		{
+			"role": "Education User",
+			"read": 1,
+			"write": 1,
+			"create": 1,
+			"delete": 0,
+			"report": 1,
+			"export": 0,
+			"share": 0,
+			"print": 1,
+			"email": 0
+		}
+	],
+	"sort_field": "modified",
+	"sort_order": "DESC",
+	"states": [],
+	"track_changes": 1
 }
-

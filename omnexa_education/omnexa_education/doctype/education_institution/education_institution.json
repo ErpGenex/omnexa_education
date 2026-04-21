@@ -1,110 +1,156 @@
 {
- "actions": [],
- "allow_rename": 1,
- "autoname": "format:{company}-{institution_code}",
- "creation": "2026-04-16 17:00:00",
- "doctype": "DocType",
- "engine": "InnoDB",
- "field_order": [
-  "identity_section",
-  "institution_code",
-  "institution_name",
-  "company",
-  "institution_type",
-  "profile_section",
-  "curriculum_default",
-  "timezone",
-  "language",
-  "website",
-  "status",
-  "control_section",
-  "regulatory_code"
- ],
- "fields": [
-  {"fieldname": "identity_section", "fieldtype": "Section Break", "label": "Institution Identity"},
-  {
-   "fieldname": "institution_code",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Institution Code",
-   "reqd": 1,
-   "description": "Short code used across integrations (admissions, payments, LMS)."
-  },
-  {
-   "fieldname": "institution_name",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Institution Name",
-   "reqd": 1
-  },
-  {
-   "fieldname": "company",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Company",
-   "options": "Company",
-   "reqd": 1
-  },
-  {
-   "fieldname": "institution_type",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "label": "Institution Type",
-   "options": "School\nAcademy\nTraining Center\nInstitute\nUniversity",
-   "reqd": 1
-  },
-  {"fieldname": "profile_section", "fieldtype": "Section Break", "label": "Profile"},
-  {
-   "fieldname": "curriculum_default",
-   "fieldtype": "Link",
-   "label": "Default Curriculum",
-   "options": "Education Curriculum",
-   "description": "Used as default for new academic years/grade structures unless overridden."
-  },
-  {
-   "fieldname": "timezone",
-   "fieldtype": "Data",
-   "label": "Timezone",
-   "description": "IANA timezone e.g. Africa/Cairo."
-  },
-  {
-   "fieldname": "language",
-   "fieldtype": "Data",
-   "label": "Primary Language",
-   "description": "BCP-47 language tag e.g. ar-EG, en-GB."
-  },
-  {
-   "fieldname": "website",
-   "fieldtype": "Data",
-   "label": "Website"
-  },
-  {
-   "default": "Active",
-   "fieldname": "status",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "label": "Status",
-   "options": "Active\nInactive",
-   "reqd": 1
-  },
-  {"fieldname": "control_section", "fieldtype": "Section Break", "label": "Control"},
-  {"fieldname": "regulatory_code", "fieldtype": "Data", "label": "Regulatory Code"}
- ],
- "grid_page_length": 50,
- "index_web_pages_for_search": 1,
- "links": [],
- "modified": "2026-04-16 17:00:00",
- "module": "Omnexa Education",
- "name": "Education Institution",
- "owner": "Administrator",
- "permissions": [
-  {"role": "System Manager", "read": 1, "write": 1, "create": 1, "delete": 1, "report": 1, "export": 1, "share": 1, "print": 1, "email": 1},
-  {"role": "Education Manager", "read": 1, "write": 1, "create": 1, "delete": 0, "report": 1, "export": 1, "share": 0, "print": 1, "email": 1},
-  {"role": "Education User", "read": 1, "write": 0, "create": 0, "delete": 0, "report": 1, "export": 0, "share": 0, "print": 1, "email": 0}
- ],
- "sort_field": "modified",
- "sort_order": "DESC",
- "states": [],
- "track_changes": 1
+	"actions": [],
+	"allow_rename": 1,
+	"autoname": "format:{company}-{institution_code}",
+	"creation": "2026-04-16 17:00:00",
+	"doctype": "DocType",
+	"engine": "InnoDB",
+	"field_order": [
+		"institution_code",
+		"institution_name",
+		"column_break_omnexa_1",
+		"company",
+		"institution_type",
+		"profile_section",
+		"curriculum_default",
+		"timezone",
+		"language",
+		"column_break_omnexa_2",
+		"website",
+		"status",
+		"regulatory_code"
+	],
+	"fields": [
+		{
+			"fieldname": "institution_code",
+			"fieldtype": "Data",
+			"in_list_view": 1,
+			"label": "Institution Code",
+			"reqd": 1,
+			"description": "Short code used across integrations (admissions, payments, LMS)."
+		},
+		{
+			"fieldname": "institution_name",
+			"fieldtype": "Data",
+			"in_list_view": 1,
+			"label": "Institution Name",
+			"reqd": 1
+		},
+		{
+			"fieldname": "company",
+			"fieldtype": "Link",
+			"in_list_view": 1,
+			"label": "Company",
+			"options": "Company",
+			"reqd": 1
+		},
+		{
+			"fieldname": "institution_type",
+			"fieldtype": "Select",
+			"in_list_view": 1,
+			"label": "Institution Type",
+			"options": "School\nAcademy\nTraining Center\nInstitute\nUniversity",
+			"reqd": 1
+		},
+		{
+			"fieldname": "profile_section",
+			"fieldtype": "Section Break",
+			"label": "Profile"
+		},
+		{
+			"fieldname": "curriculum_default",
+			"fieldtype": "Link",
+			"label": "Default Curriculum",
+			"options": "Education Curriculum",
+			"description": "Used as default for new academic years/grade structures unless overridden."
+		},
+		{
+			"fieldname": "timezone",
+			"fieldtype": "Data",
+			"label": "Timezone",
+			"description": "IANA timezone e.g. Africa/Cairo."
+		},
+		{
+			"fieldname": "language",
+			"fieldtype": "Data",
+			"label": "Primary Language",
+			"description": "BCP-47 language tag e.g. ar-EG, en-GB."
+		},
+		{
+			"fieldname": "website",
+			"fieldtype": "Data",
+			"label": "Website"
+		},
+		{
+			"default": "Active",
+			"fieldname": "status",
+			"fieldtype": "Select",
+			"in_list_view": 1,
+			"label": "Status",
+			"options": "Active\nInactive",
+			"reqd": 1
+		},
+		{
+			"fieldname": "regulatory_code",
+			"fieldtype": "Data",
+			"label": "Regulatory Code"
+		},
+		{
+			"fieldname": "column_break_omnexa_1",
+			"fieldtype": "Column Break"
+		},
+		{
+			"fieldname": "column_break_omnexa_2",
+			"fieldtype": "Column Break"
+		}
+	],
+	"grid_page_length": 50,
+	"index_web_pages_for_search": 1,
+	"links": [],
+	"modified": "2026-04-16 17:00:00",
+	"module": "Omnexa Education",
+	"name": "Education Institution",
+	"owner": "Administrator",
+	"permissions": [
+		{
+			"role": "System Manager",
+			"read": 1,
+			"write": 1,
+			"create": 1,
+			"delete": 1,
+			"report": 1,
+			"export": 1,
+			"share": 1,
+			"print": 1,
+			"email": 1
+		},
+		{
+			"role": "Education Manager",
+			"read": 1,
+			"write": 1,
+			"create": 1,
+			"delete": 0,
+			"report": 1,
+			"export": 1,
+			"share": 0,
+			"print": 1,
+			"email": 1
+		},
+		{
+			"role": "Education User",
+			"read": 1,
+			"write": 0,
+			"create": 0,
+			"delete": 0,
+			"report": 1,
+			"export": 0,
+			"share": 0,
+			"print": 1,
+			"email": 0
+		}
+	],
+	"sort_field": "modified",
+	"sort_order": "DESC",
+	"states": [],
+	"track_changes": 1
 }
-

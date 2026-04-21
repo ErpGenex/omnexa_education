@@ -1,53 +1,152 @@
 {
- "actions": [],
- "allow_rename": 1,
- "autoname": "format:{company}-{year_code}",
- "creation": "2026-04-16 17:00:00",
- "doctype": "DocType",
- "engine": "InnoDB",
- "field_order": [
-  "identity_section",
-  "year_code",
-  "title",
-  "company",
-  "institution",
-  "planning_section",
-  "curriculum",
-  "start_date",
-  "end_date",
-  "status",
-  "control_section",
-  "reporting_tag"
- ],
- "fields": [
-  {"fieldname": "identity_section", "fieldtype": "Section Break", "label": "Academic Year Identity"},
-  {"fieldname": "year_code", "fieldtype": "Data", "label": "Year Code", "reqd": 1, "in_list_view": 1, "description": "e.g. 2026-2027"},
-  {"fieldname": "title", "fieldtype": "Data", "label": "Title", "reqd": 1, "in_list_view": 1},
-  {"fieldname": "company", "fieldtype": "Link", "label": "Company", "options": "Company", "reqd": 1, "in_list_view": 1},
-  {"fieldname": "institution", "fieldtype": "Link", "label": "Institution", "options": "Education Institution", "reqd": 1, "in_list_view": 1},
-  {"fieldname": "planning_section", "fieldtype": "Section Break", "label": "Planning"},
-  {"fieldname": "curriculum", "fieldtype": "Link", "label": "Curriculum", "options": "Education Curriculum", "reqd": 1},
-  {"fieldname": "start_date", "fieldtype": "Date", "label": "Start Date", "reqd": 1, "in_list_view": 1},
-  {"fieldname": "end_date", "fieldtype": "Date", "label": "End Date", "reqd": 1, "in_list_view": 1},
-  {"default": "Draft", "fieldname": "status", "fieldtype": "Select", "label": "Status", "options": "Draft\nActive\nClosed", "reqd": 1, "in_list_view": 1},
-  {"fieldname": "control_section", "fieldtype": "Section Break", "label": "Control"},
-  {"fieldname": "reporting_tag", "fieldtype": "Data", "label": "Reporting Tag"}
- ],
- "grid_page_length": 50,
- "index_web_pages_for_search": 1,
- "links": [],
- "modified": "2026-04-16 17:00:00",
- "module": "Omnexa Education",
- "name": "Education Academic Year",
- "owner": "Administrator",
- "permissions": [
-  {"role": "System Manager", "read": 1, "write": 1, "create": 1, "delete": 1, "report": 1, "export": 1, "share": 1, "print": 1, "email": 1},
-  {"role": "Education Manager", "read": 1, "write": 1, "create": 1, "delete": 0, "report": 1, "export": 1, "share": 0, "print": 1, "email": 1},
-  {"role": "Education User", "read": 1, "write": 1, "create": 1, "delete": 0, "report": 1, "export": 0, "share": 0, "print": 1, "email": 0}
- ],
- "sort_field": "modified",
- "sort_order": "DESC",
- "states": [],
- "track_changes": 1
+	"actions": [],
+	"allow_rename": 1,
+	"autoname": "format:{company}-{year_code}",
+	"creation": "2026-04-16 17:00:00",
+	"doctype": "DocType",
+	"engine": "InnoDB",
+	"field_order": [
+		"year_code",
+		"title",
+		"column_break_omnexa_1",
+		"company",
+		"institution",
+		"planning_section",
+		"curriculum",
+		"start_date",
+		"column_break_omnexa_2",
+		"end_date",
+		"status",
+		"reporting_tag"
+	],
+	"fields": [
+		{
+			"fieldname": "year_code",
+			"fieldtype": "Data",
+			"label": "Year Code",
+			"reqd": 1,
+			"in_list_view": 1,
+			"description": "e.g. 2026-2027"
+		},
+		{
+			"fieldname": "title",
+			"fieldtype": "Data",
+			"label": "Title",
+			"reqd": 1,
+			"in_list_view": 1
+		},
+		{
+			"fieldname": "company",
+			"fieldtype": "Link",
+			"label": "Company",
+			"options": "Company",
+			"reqd": 1,
+			"in_list_view": 1
+		},
+		{
+			"fieldname": "institution",
+			"fieldtype": "Link",
+			"label": "Institution",
+			"options": "Education Institution",
+			"reqd": 1,
+			"in_list_view": 1
+		},
+		{
+			"fieldname": "planning_section",
+			"fieldtype": "Section Break",
+			"label": "Planning"
+		},
+		{
+			"fieldname": "curriculum",
+			"fieldtype": "Link",
+			"label": "Curriculum",
+			"options": "Education Curriculum",
+			"reqd": 1
+		},
+		{
+			"fieldname": "start_date",
+			"fieldtype": "Date",
+			"label": "Start Date",
+			"reqd": 1,
+			"in_list_view": 1
+		},
+		{
+			"fieldname": "end_date",
+			"fieldtype": "Date",
+			"label": "End Date",
+			"reqd": 1,
+			"in_list_view": 1
+		},
+		{
+			"default": "Draft",
+			"fieldname": "status",
+			"fieldtype": "Select",
+			"label": "Status",
+			"options": "Draft\nActive\nClosed",
+			"reqd": 1,
+			"in_list_view": 1
+		},
+		{
+			"fieldname": "reporting_tag",
+			"fieldtype": "Data",
+			"label": "Reporting Tag"
+		},
+		{
+			"fieldname": "column_break_omnexa_1",
+			"fieldtype": "Column Break"
+		},
+		{
+			"fieldname": "column_break_omnexa_2",
+			"fieldtype": "Column Break"
+		}
+	],
+	"grid_page_length": 50,
+	"index_web_pages_for_search": 1,
+	"links": [],
+	"modified": "2026-04-16 17:00:00",
+	"module": "Omnexa Education",
+	"name": "Education Academic Year",
+	"owner": "Administrator",
+	"permissions": [
+		{
+			"role": "System Manager",
+			"read": 1,
+			"write": 1,
+			"create": 1,
+			"delete": 1,
+			"report": 1,
+			"export": 1,
+			"share": 1,
+			"print": 1,
+			"email": 1
+		},
+		{
+			"role": "Education Manager",
+			"read": 1,
+			"write": 1,
+			"create": 1,
+			"delete": 0,
+			"report": 1,
+			"export": 1,
+			"share": 0,
+			"print": 1,
+			"email": 1
+		},
+		{
+			"role": "Education User",
+			"read": 1,
+			"write": 1,
+			"create": 1,
+			"delete": 0,
+			"report": 1,
+			"export": 0,
+			"share": 0,
+			"print": 1,
+			"email": 0
+		}
+	],
+	"sort_field": "modified",
+	"sort_order": "DESC",
+	"states": [],
+	"track_changes": 1
 }
-

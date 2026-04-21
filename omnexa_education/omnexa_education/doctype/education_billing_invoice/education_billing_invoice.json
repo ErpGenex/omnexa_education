@@ -1,73 +1,245 @@
 {
- "actions": [],
- "allow_rename": 0,
- "autoname": "naming_series:",
- "creation": "2026-04-16 18:00:00",
- "doctype": "DocType",
- "engine": "InnoDB",
- "field_order": [
-  "identity_section",
-  "naming_series",
-  "company",
-  "branch",
-  "student",
-  "customer",
-  "posting_section",
-  "posting_date",
-  "due_date",
-  "currency",
-  "conversion_rate",
-  "default_tax_rule",
-  "items_section",
-  "items",
-  "net_total",
-  "tax_total",
-  "grand_total",
-  "sales_invoice",
-  "control_section",
-  "reporting_tag",
-  "remarks"
- ],
- "fields": [
-  {"fieldname": "identity_section", "fieldtype": "Section Break", "label": "Invoice Identity"},
-  {"default": "EDINV-.#####", "fieldname": "naming_series", "fieldtype": "Select", "label": "Series", "options": "EDINV-.#####", "reqd": 1},
-  {"fieldname": "company", "fieldtype": "Link", "label": "Company", "options": "Company", "reqd": 1, "in_list_view": 1},
-  {"fieldname": "branch", "fieldtype": "Link", "label": "Branch", "options": "Branch", "reqd": 1, "in_list_view": 1},
-  {"fieldname": "student", "fieldtype": "Link", "label": "Student", "options": "Education Student", "reqd": 1, "in_list_view": 1},
-  {"fetch_from": "student.customer", "fieldname": "customer", "fieldtype": "Link", "label": "Customer", "options": "Customer", "read_only": 1, "in_list_view": 1},
-  {"fieldname": "posting_section", "fieldtype": "Section Break", "label": "Posting and Currency"},
-  {"default": "Today", "fieldname": "posting_date", "fieldtype": "Date", "label": "Posting Date", "reqd": 1, "in_list_view": 1},
-  {"fieldname": "due_date", "fieldtype": "Date", "label": "Due Date"},
-  {"fieldname": "currency", "fieldtype": "Link", "label": "Currency", "options": "Currency", "reqd": 1},
-  {"default": "1", "fieldname": "conversion_rate", "fieldtype": "Float", "label": "Conversion Rate", "precision": "9"},
-  {"fieldname": "default_tax_rule", "fieldtype": "Link", "label": "Default Tax Rule", "options": "Tax Rule"},
-  {"fieldname": "items_section", "fieldtype": "Section Break", "label": "Items and Totals"},
-  {"fieldname": "items", "fieldtype": "Table", "label": "Items", "options": "Education Billing Invoice Item", "reqd": 1},
-  {"fieldname": "net_total", "fieldtype": "Currency", "label": "Net Total", "read_only": 1, "in_list_view": 1},
-  {"fieldname": "tax_total", "fieldtype": "Currency", "label": "Tax Total", "read_only": 1},
-  {"fieldname": "grand_total", "fieldtype": "Currency", "label": "Grand Total", "read_only": 1, "in_list_view": 1},
-  {"fieldname": "sales_invoice", "fieldtype": "Link", "label": "Sales Invoice", "options": "Sales Invoice", "read_only": 1, "in_list_view": 1},
-  {"fieldname": "control_section", "fieldtype": "Section Break", "label": "Control"},
-  {"fieldname": "reporting_tag", "fieldtype": "Data", "label": "Reporting Tag"},
-  {"fieldname": "remarks", "fieldtype": "Small Text", "label": "Remarks"}
- ],
- "grid_page_length": 50,
- "index_web_pages_for_search": 1,
- "is_submittable": 1,
- "links": [],
- "modified": "2026-04-16 18:00:00",
- "module": "Omnexa Education",
- "name": "Education Billing Invoice",
- "owner": "Administrator",
- "permissions": [
-  {"role": "System Manager", "read": 1, "write": 1, "create": 1, "delete": 1, "submit": 1, "cancel": 1, "report": 1, "export": 1, "share": 1, "print": 1, "email": 1},
-  {"role": "Education Manager", "read": 1, "write": 1, "create": 1, "delete": 0, "submit": 1, "cancel": 1, "report": 1, "export": 1, "share": 0, "print": 1, "email": 1},
-  {"role": "Accounts Manager", "read": 1, "write": 1, "create": 1, "delete": 0, "submit": 1, "cancel": 1, "report": 1, "export": 1, "share": 0, "print": 1, "email": 1},
-  {"role": "Accounts User", "read": 1, "write": 0, "create": 1, "delete": 0, "submit": 1, "cancel": 0, "report": 1, "export": 0, "share": 0, "print": 1, "email": 0}
- ],
- "sort_field": "modified",
- "sort_order": "DESC",
- "states": [],
- "track_changes": 1
+	"actions": [],
+	"allow_rename": 0,
+	"autoname": "naming_series:",
+	"creation": "2026-04-16 18:00:00",
+	"doctype": "DocType",
+	"engine": "InnoDB",
+	"field_order": [
+		"naming_series",
+		"company",
+		"column_break_omnexa_1",
+		"branch",
+		"student",
+		"customer",
+		"posting_section",
+		"posting_date",
+		"due_date",
+		"column_break_omnexa_2",
+		"currency",
+		"conversion_rate",
+		"default_tax_rule",
+		"items_section",
+		"items",
+		"net_total",
+		"tax_total",
+		"grand_total",
+		"column_break_omnexa_3",
+		"sales_invoice",
+		"reporting_tag",
+		"remarks"
+	],
+	"fields": [
+		{
+			"default": "EDINV-.#####",
+			"fieldname": "naming_series",
+			"fieldtype": "Select",
+			"label": "Series",
+			"options": "EDINV-.#####",
+			"reqd": 1
+		},
+		{
+			"fieldname": "company",
+			"fieldtype": "Link",
+			"label": "Company",
+			"options": "Company",
+			"reqd": 1,
+			"in_list_view": 1
+		},
+		{
+			"fieldname": "branch",
+			"fieldtype": "Link",
+			"label": "Branch",
+			"options": "Branch",
+			"reqd": 1,
+			"in_list_view": 1
+		},
+		{
+			"fieldname": "student",
+			"fieldtype": "Link",
+			"label": "Student",
+			"options": "Education Student",
+			"reqd": 1,
+			"in_list_view": 1
+		},
+		{
+			"fetch_from": "student.customer",
+			"fieldname": "customer",
+			"fieldtype": "Link",
+			"label": "Customer",
+			"options": "Customer",
+			"read_only": 1,
+			"in_list_view": 1
+		},
+		{
+			"fieldname": "posting_section",
+			"fieldtype": "Section Break",
+			"label": "Posting and Currency"
+		},
+		{
+			"default": "Today",
+			"fieldname": "posting_date",
+			"fieldtype": "Date",
+			"label": "Posting Date",
+			"reqd": 1,
+			"in_list_view": 1
+		},
+		{
+			"fieldname": "due_date",
+			"fieldtype": "Date",
+			"label": "Due Date"
+		},
+		{
+			"fieldname": "currency",
+			"fieldtype": "Link",
+			"label": "Currency",
+			"options": "Currency",
+			"reqd": 1
+		},
+		{
+			"default": "1",
+			"fieldname": "conversion_rate",
+			"fieldtype": "Float",
+			"label": "Conversion Rate",
+			"precision": "9"
+		},
+		{
+			"fieldname": "default_tax_rule",
+			"fieldtype": "Link",
+			"label": "Default Tax Rule",
+			"options": "Tax Rule"
+		},
+		{
+			"fieldname": "items_section",
+			"fieldtype": "Section Break",
+			"label": "Items and Totals"
+		},
+		{
+			"fieldname": "items",
+			"fieldtype": "Table",
+			"label": "Items",
+			"options": "Education Billing Invoice Item",
+			"reqd": 1
+		},
+		{
+			"fieldname": "net_total",
+			"fieldtype": "Currency",
+			"label": "Net Total",
+			"read_only": 1,
+			"in_list_view": 1
+		},
+		{
+			"fieldname": "tax_total",
+			"fieldtype": "Currency",
+			"label": "Tax Total",
+			"read_only": 1
+		},
+		{
+			"fieldname": "grand_total",
+			"fieldtype": "Currency",
+			"label": "Grand Total",
+			"read_only": 1,
+			"in_list_view": 1
+		},
+		{
+			"fieldname": "sales_invoice",
+			"fieldtype": "Link",
+			"label": "Sales Invoice",
+			"options": "Sales Invoice",
+			"read_only": 1,
+			"in_list_view": 1
+		},
+		{
+			"fieldname": "reporting_tag",
+			"fieldtype": "Data",
+			"label": "Reporting Tag"
+		},
+		{
+			"fieldname": "remarks",
+			"fieldtype": "Small Text",
+			"label": "Remarks"
+		},
+		{
+			"fieldname": "column_break_omnexa_1",
+			"fieldtype": "Column Break"
+		},
+		{
+			"fieldname": "column_break_omnexa_2",
+			"fieldtype": "Column Break"
+		},
+		{
+			"fieldname": "column_break_omnexa_3",
+			"fieldtype": "Column Break"
+		}
+	],
+	"grid_page_length": 50,
+	"index_web_pages_for_search": 1,
+	"is_submittable": 1,
+	"links": [],
+	"modified": "2026-04-16 18:00:00",
+	"module": "Omnexa Education",
+	"name": "Education Billing Invoice",
+	"owner": "Administrator",
+	"permissions": [
+		{
+			"role": "System Manager",
+			"read": 1,
+			"write": 1,
+			"create": 1,
+			"delete": 1,
+			"submit": 1,
+			"cancel": 1,
+			"report": 1,
+			"export": 1,
+			"share": 1,
+			"print": 1,
+			"email": 1
+		},
+		{
+			"role": "Education Manager",
+			"read": 1,
+			"write": 1,
+			"create": 1,
+			"delete": 0,
+			"submit": 1,
+			"cancel": 1,
+			"report": 1,
+			"export": 1,
+			"share": 0,
+			"print": 1,
+			"email": 1
+		},
+		{
+			"role": "Accounts Manager",
+			"read": 1,
+			"write": 1,
+			"create": 1,
+			"delete": 0,
+			"submit": 1,
+			"cancel": 1,
+			"report": 1,
+			"export": 1,
+			"share": 0,
+			"print": 1,
+			"email": 1
+		},
+		{
+			"role": "Accounts User",
+			"read": 1,
+			"write": 0,
+			"create": 1,
+			"delete": 0,
+			"submit": 1,
+			"cancel": 0,
+			"report": 1,
+			"export": 0,
+			"share": 0,
+			"print": 1,
+			"email": 0
+		}
+	],
+	"sort_field": "modified",
+	"sort_order": "DESC",
+	"states": [],
+	"track_changes": 1
 }
-

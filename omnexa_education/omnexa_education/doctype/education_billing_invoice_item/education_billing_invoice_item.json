@@ -1,102 +1,100 @@
 {
- "actions": [],
- "creation": "2026-04-16 18:00:00",
- "doctype": "DocType",
- "editable_grid": 1,
- "engine": "InnoDB",
- "field_order": [
-  "identity_section",
-  "fee_item",
-  "description",
-  "line_note",
-  "qty",
-  "rate",
-  "amount",
-  "tax_rule",
-  "income_account",
-  "control_section",
-  "line_reference"
- ],
- "fields": [
-  {
-   "fieldname": "identity_section",
-   "fieldtype": "Section Break",
-   "label": "Invoice Item Identity"
-  },
-  {
-   "fieldname": "fee_item",
-   "fieldtype": "Link",
-   "label": "Fee Item",
-   "options": "Education Fee Item",
-   "reqd": 1,
-   "in_list_view": 1
-  },
-  {
-   "fieldname": "description",
-   "fieldtype": "Data",
-   "label": "Description",
-   "in_list_view": 1
-  },
-  {
-   "fieldname": "line_note",
-   "fieldtype": "Data",
-   "label": "Line Note"
-  },
-  {
-   "default": "1",
-   "fieldname": "qty",
-   "fieldtype": "Float",
-   "label": "Qty",
-   "reqd": 1,
-   "in_list_view": 1
-  },
-  {
-   "fieldname": "rate",
-   "fieldtype": "Currency",
-   "label": "Rate",
-   "reqd": 1,
-   "in_list_view": 1
-  },
-  {
-   "fieldname": "amount",
-   "fieldtype": "Currency",
-   "label": "Amount",
-   "read_only": 1,
-   "in_list_view": 1
-  },
-  {
-   "fieldname": "tax_rule",
-   "fieldtype": "Link",
-   "label": "Tax Rule",
-   "options": "Tax Rule"
-  },
-  {
-   "fieldname": "income_account",
-   "fieldtype": "Link",
-   "label": "Income Account",
-   "options": "GL Account",
-   "read_only": 1
-  },
-  {
-   "fieldname": "control_section",
-   "fieldtype": "Section Break",
-   "label": "Control"
-  },
-  {
-   "fieldname": "line_reference",
-   "fieldtype": "Data",
-   "label": "Line Reference"
-  }
- ],
- "istable": 1,
- "links": [],
- "modified": "2026-04-16 18:00:00",
- "module": "Omnexa Education",
- "name": "Education Billing Invoice Item",
- "owner": "Administrator",
- "permissions": [],
- "sort_field": "name",
- "sort_order": "DESC",
- "states": [],
- "track_changes": 0
+	"actions": [],
+	"creation": "2026-04-16 18:00:00",
+	"doctype": "DocType",
+	"editable_grid": 1,
+	"engine": "InnoDB",
+	"field_order": [
+		"fee_item",
+		"description",
+		"line_note",
+		"column_break_omnexa_1",
+		"qty",
+		"rate",
+		"amount",
+		"column_break_omnexa_2",
+		"tax_rule",
+		"income_account",
+		"line_reference"
+	],
+	"fields": [
+		{
+			"fieldname": "fee_item",
+			"fieldtype": "Link",
+			"label": "Fee Item",
+			"options": "Education Fee Item",
+			"reqd": 1,
+			"in_list_view": 1
+		},
+		{
+			"fieldname": "description",
+			"fieldtype": "Data",
+			"label": "Description",
+			"in_list_view": 1
+		},
+		{
+			"fieldname": "line_note",
+			"fieldtype": "Data",
+			"label": "Line Note"
+		},
+		{
+			"default": "1",
+			"fieldname": "qty",
+			"fieldtype": "Float",
+			"label": "Qty",
+			"reqd": 1,
+			"in_list_view": 1
+		},
+		{
+			"fieldname": "rate",
+			"fieldtype": "Currency",
+			"label": "Rate",
+			"reqd": 1,
+			"in_list_view": 1
+		},
+		{
+			"fieldname": "amount",
+			"fieldtype": "Currency",
+			"label": "Amount",
+			"read_only": 1,
+			"in_list_view": 1
+		},
+		{
+			"fieldname": "tax_rule",
+			"fieldtype": "Link",
+			"label": "Tax Rule",
+			"options": "Tax Rule"
+		},
+		{
+			"fieldname": "income_account",
+			"fieldtype": "Link",
+			"label": "Income Account",
+			"options": "GL Account",
+			"read_only": 1
+		},
+		{
+			"fieldname": "line_reference",
+			"fieldtype": "Data",
+			"label": "Line Reference"
+		},
+		{
+			"fieldname": "column_break_omnexa_1",
+			"fieldtype": "Column Break"
+		},
+		{
+			"fieldname": "column_break_omnexa_2",
+			"fieldtype": "Column Break"
+		}
+	],
+	"istable": 1,
+	"links": [],
+	"modified": "2026-04-16 18:00:00",
+	"module": "Omnexa Education",
+	"name": "Education Billing Invoice Item",
+	"owner": "Administrator",
+	"permissions": [],
+	"sort_field": "name",
+	"sort_order": "DESC",
+	"states": [],
+	"track_changes": 0
 }
