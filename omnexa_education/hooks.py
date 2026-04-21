@@ -81,8 +81,8 @@ add_to_apps_screen = [
 # Installation
 # ------------
 
-# before_install = "omnexa_education.install.before_install"
-# after_install = "omnexa_education.install.after_install"
+before_install = "omnexa_education.install.enforce_supported_frappe_version"
+before_migrate = "omnexa_education.install.enforce_supported_frappe_version"
 
 # Uninstallation
 # ------------

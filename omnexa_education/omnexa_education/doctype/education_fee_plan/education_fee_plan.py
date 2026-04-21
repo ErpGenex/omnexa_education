@@ -62,4 +62,8 @@ class EducationFeePlan(Document):
 	def _validate_installments(self):
 		if not self.installments_count or int(self.installments_count) < 1:
 			frappe.throw(_("Installments Count must be at least 1."), title=_("Installments"))
+		if not self.items:
+			frappe.throw(_("At least one fee plan item is required."), title=_("Fee Plan"))
+		if sum(flt(r.amount) for r in self.items) <= 0:
+			frappe.throw(_("Fee Plan total amount must be greater than zero."), title=_("Fee Plan"))
 

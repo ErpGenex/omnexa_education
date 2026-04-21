@@ -11,10 +11,15 @@ class EducationBillingInvoice(Document):
 	def validate(self):
 		self._validate_branch_company_match()
 		self._validate_student_company_branch()
+		self._validate_lifecycle_controls()
 		self._sync_currency_defaults()
 		self._sync_fee_items()
 		self._set_amounts()
 		self._validate_due_date()
+
+	def _validate_lifecycle_controls(self):
+		if not self.items:
+			frappe.throw(_("At least one billing item is required."), title=_("Billing"))
 
 	def _validate_branch_company_match(self):
 		branch_company = frappe.db.get_value("Branch", self.branch, "company")
@@ -86,6 +91,8 @@ class EducationBillingInvoice(Document):
 		self.net_total = net
 		self.tax_total = tax
 		self.grand_total = net + tax
+		if flt(self.grand_total) <= 0:
+			frappe.throw(_("Grand Total must be greater than zero."), title=_("Billing"))
 
 	def _validate_due_date(self):
 		if not self.due_date:
