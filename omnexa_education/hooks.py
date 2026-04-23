@@ -1,8 +1,8 @@
 app_name = "omnexa_education"
 app_title = "ErpGenEx — Education"
-app_publisher = "Omnexa"
+app_publisher = "ErpGenEx"
 app_description = "Education vertical"
-app_email = "dev@omnexa.com"
+app_email = "dev@erpgenex.com"
 app_license = "mit"
 
 # Apps
