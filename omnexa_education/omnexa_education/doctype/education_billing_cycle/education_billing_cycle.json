@@ -6,12 +6,14 @@
 	"doctype": "DocType",
 	"engine": "InnoDB",
 	"field_order": [
+		"tab_break_overview",
 		"naming_series",
 		"company",
 		"column_break_omnexa_3",
 		"branch",
 		"academic_year",
 		"cycle_name",
+		"tab_break_1",
 		"posting_section",
 		"posting_date",
 		"due_date",
@@ -30,6 +32,16 @@
 		"remarks"
 	],
 	"fields": [
+		{
+			"fieldname": "tab_break_overview",
+			"fieldtype": "Tab Break",
+			"label": "Overview"
+		},
+		{
+			"fieldname": "tab_break_1",
+			"fieldtype": "Tab Break",
+			"label": "Details"
+		},
 		{
 			"default": "EDCYC-.#####",
 			"fieldname": "naming_series",
@@ -172,7 +184,7 @@
 	"index_web_pages_for_search": 1,
 	"is_submittable": 1,
 	"links": [],
-	"modified": "2026-04-16 19:00:00",
+	"modified": "2026-05-07 12:00:00",
 	"module": "Omnexa Education",
 	"name": "Education Billing Cycle",
 	"owner": "Administrator",
