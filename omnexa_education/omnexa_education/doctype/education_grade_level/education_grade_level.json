@@ -6,11 +6,13 @@
 	"doctype": "DocType",
 	"engine": "InnoDB",
 	"field_order": [
+		"tab_break_overview",
 		"grade_code",
 		"grade_name",
 		"column_break_omnexa_1",
 		"company",
 		"institution",
+		"tab_break_1",
 		"structure_section",
 		"curriculum",
 		"stage",
@@ -20,6 +22,16 @@
 		"reporting_tag"
 	],
 	"fields": [
+		{
+			"fieldname": "tab_break_overview",
+			"fieldtype": "Tab Break",
+			"label": "Overview"
+		},
+		{
+			"fieldname": "tab_break_1",
+			"fieldtype": "Tab Break",
+			"label": "Details"
+		},
 		{
 			"fieldname": "grade_code",
 			"fieldtype": "Data",
@@ -104,7 +116,7 @@
 	"grid_page_length": 50,
 	"index_web_pages_for_search": 1,
 	"links": [],
-	"modified": "2026-04-16 17:00:00",
+	"modified": "2026-05-07 12:00:00",
 	"module": "Omnexa Education",
 	"name": "Education Grade Level",
 	"owner": "Administrator",

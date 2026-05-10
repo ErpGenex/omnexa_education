@@ -6,12 +6,14 @@
 	"doctype": "DocType",
 	"engine": "InnoDB",
 	"field_order": [
+		"tab_break_overview",
 		"naming_series",
 		"company",
 		"column_break_omnexa_1",
 		"branch",
 		"student",
 		"customer",
+		"tab_break_1",
 		"posting_section",
 		"posting_date",
 		"due_date",
@@ -19,6 +21,7 @@
 		"currency",
 		"conversion_rate",
 		"default_tax_rule",
+		"tab_break_2",
 		"items_section",
 		"items",
 		"net_total",
@@ -30,6 +33,21 @@
 		"remarks"
 	],
 	"fields": [
+		{
+			"fieldname": "tab_break_overview",
+			"fieldtype": "Tab Break",
+			"label": "Overview"
+		},
+		{
+			"fieldname": "tab_break_1",
+			"fieldtype": "Tab Break",
+			"label": "Details"
+		},
+		{
+			"fieldname": "tab_break_2",
+			"fieldtype": "Tab Break",
+			"label": "Further"
+		},
 		{
 			"default": "EDINV-.#####",
 			"fieldname": "naming_series",
@@ -176,7 +194,7 @@
 	"index_web_pages_for_search": 1,
 	"is_submittable": 1,
 	"links": [],
-	"modified": "2026-04-16 18:00:00",
+	"modified": "2026-05-07 12:00:00",
 	"module": "Omnexa Education",
 	"name": "Education Billing Invoice",
 	"owner": "Administrator",
