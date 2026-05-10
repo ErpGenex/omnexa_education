@@ -6,11 +6,13 @@
 	"doctype": "DocType",
 	"engine": "InnoDB",
 	"field_order": [
+		"tab_break_overview",
 		"rule_code",
 		"rule_name",
 		"column_break_omnexa_2",
 		"company",
 		"branch",
+		"tab_break_1",
 		"calculation_section",
 		"grace_days",
 		"charge_type",
@@ -22,6 +24,16 @@
 		"approval_role"
 	],
 	"fields": [
+		{
+			"fieldname": "tab_break_overview",
+			"fieldtype": "Tab Break",
+			"label": "Overview"
+		},
+		{
+			"fieldname": "tab_break_1",
+			"fieldtype": "Tab Break",
+			"label": "Details"
+		},
 		{
 			"fieldname": "rule_code",
 			"fieldtype": "Data",
@@ -114,7 +126,7 @@
 	"grid_page_length": 50,
 	"index_web_pages_for_search": 1,
 	"links": [],
-	"modified": "2026-04-16 19:00:00",
+	"modified": "2026-05-07 12:00:00",
 	"module": "Omnexa Education",
 	"name": "Education Late Fee Rule",
 	"owner": "Administrator",

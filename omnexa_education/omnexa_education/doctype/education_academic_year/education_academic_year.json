@@ -6,11 +6,13 @@
 	"doctype": "DocType",
 	"engine": "InnoDB",
 	"field_order": [
+		"tab_break_overview",
 		"year_code",
 		"title",
 		"column_break_omnexa_1",
 		"company",
 		"institution",
+		"tab_break_1",
 		"planning_section",
 		"curriculum",
 		"start_date",
@@ -20,6 +22,16 @@
 		"reporting_tag"
 	],
 	"fields": [
+		{
+			"fieldname": "tab_break_overview",
+			"fieldtype": "Tab Break",
+			"label": "Overview"
+		},
+		{
+			"fieldname": "tab_break_1",
+			"fieldtype": "Tab Break",
+			"label": "Details"
+		},
 		{
 			"fieldname": "year_code",
 			"fieldtype": "Data",
@@ -103,7 +115,7 @@
 	"grid_page_length": 50,
 	"index_web_pages_for_search": 1,
 	"links": [],
-	"modified": "2026-04-16 17:00:00",
+	"modified": "2026-05-07 12:00:00",
 	"module": "Omnexa Education",
 	"name": "Education Academic Year",
 	"owner": "Administrator",
