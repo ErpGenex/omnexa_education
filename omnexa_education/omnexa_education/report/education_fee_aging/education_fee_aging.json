@@ -5,7 +5,47 @@
  "disabled": 0,
  "docstatus": 0,
  "doctype": "Report",
- "filters": [],
+ "filters": [
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1,
+   "width": "180px"
+  },
+  {
+   "fieldname": "branch",
+   "fieldtype": "Link",
+   "label": "Branch",
+   "options": "Branch",
+   "width": "180px"
+  },
+  {
+   "fieldname": "bucket_1",
+   "fieldtype": "Data",
+   "label": "Bucket 1",
+   "width": "180px"
+  },
+  {
+   "fieldname": "bucket_2",
+   "fieldtype": "Data",
+   "label": "Bucket 2",
+   "width": "180px"
+  },
+  {
+   "fieldname": "bucket_3",
+   "fieldtype": "Data",
+   "label": "Bucket 3",
+   "width": "180px"
+  },
+  {
+   "fieldname": "report_date",
+   "fieldtype": "Data",
+   "label": "Report Date",
+   "width": "180px"
+  }
+ ],
  "idx": 0,
  "is_standard": "Yes",
  "modified": "2026-04-16 21:00:00",
@@ -19,11 +59,20 @@
  "report_name": "Education Fee Aging",
  "report_type": "Script Report",
  "roles": [
-  {"role": "System Manager"},
-  {"role": "Education Manager"},
-  {"role": "Accounts Manager"},
-  {"role": "Accounts User"},
-  {"role": "Education User"}
+  {
+   "role": "System Manager"
+  },
+  {
+   "role": "Education Manager"
+  },
+  {
+   "role": "Accounts Manager"
+  },
+  {
+   "role": "Accounts User"
+  },
+  {
+   "role": "Education User"
+  }
  ]
 }
-
