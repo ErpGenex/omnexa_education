@@ -1,0 +1,140 @@
+{
+	"actions": [],
+	"doctype": "DocType",
+	"engine": "InnoDB",
+	"module": "Omnexa Education",
+	"name": "Education Assessment Plan",
+	"permissions": [
+		{
+			"role": "System Manager",
+			"read": 1,
+			"write": 1,
+			"create": 1,
+			"delete": 1,
+			"submit": 1,
+			"cancel": 1
+		},
+		{
+			"role": "Education Manager",
+			"read": 1,
+			"write": 1,
+			"create": 1,
+			"delete": 1,
+			"submit": 1,
+			"cancel": 1
+		},
+		{
+			"role": "Education User",
+			"read": 1,
+			"write": 1,
+			"create": 1,
+			"delete": 0,
+			"submit": 1,
+			"cancel": 0
+		},
+		{
+			"role": "Teacher",
+			"read": 1,
+			"write": 1,
+			"create": 1,
+			"delete": 0,
+			"submit": 1,
+			"cancel": 0
+		},
+		{
+			"role": "Desk User",
+			"read": 1,
+			"write": 1,
+			"create": 1,
+			"delete": 0
+		}
+	],
+	"track_changes": 1,
+	"autoname": "format:APL-{YYYY}-{#####}",
+	"fields": [
+		{
+			"fieldname": "plan_name",
+			"fieldtype": "Data",
+			"label": "Plan Name",
+			"reqd": 1,
+			"in_list_view": 1
+		},
+		{
+			"fieldname": "institution",
+			"fieldtype": "Link",
+			"label": "Institution",
+			"options": "Education Institution",
+			"reqd": 1
+		},
+		{
+			"fieldname": "company",
+			"fieldtype": "Link",
+			"label": "Company",
+			"options": "Company",
+			"reqd": 1
+		},
+		{
+			"fieldname": "branch",
+			"fieldtype": "Link",
+			"label": "Branch",
+			"options": "Branch",
+			"reqd": 1,
+			"in_list_view": 1
+		},
+		{
+			"fieldname": "academic_year",
+			"fieldtype": "Link",
+			"label": "Academic Year",
+			"options": "Education Academic Year",
+			"reqd": 1
+		},
+		{
+			"fieldname": "term",
+			"fieldtype": "Link",
+			"label": "Term",
+			"options": "Education Term"
+		},
+		{
+			"fieldname": "section",
+			"fieldtype": "Link",
+			"label": "Section",
+			"options": "Education Section"
+		},
+		{
+			"fieldname": "course",
+			"fieldtype": "Link",
+			"label": "Course",
+			"options": "Education Course"
+		},
+		{
+			"fieldname": "subject",
+			"fieldtype": "Link",
+			"label": "Subject",
+			"options": "Education Subject",
+			"reqd": 1
+		},
+		{
+			"fieldname": "assessment_type",
+			"fieldtype": "Select",
+			"label": "Type",
+			"options": "Quiz\nExam\nAssignment\nProject\nParticipation\nFinal",
+			"reqd": 1
+		},
+		{
+			"fieldname": "max_score",
+			"fieldtype": "Float",
+			"label": "Max Score",
+			"default": "100"
+		},
+		{
+			"fieldname": "weight_percent",
+			"fieldtype": "Percent",
+			"label": "Weight %"
+		},
+		{
+			"fieldname": "due_date",
+			"fieldtype": "Date",
+			"label": "Due Date"
+		}
+	]
+}

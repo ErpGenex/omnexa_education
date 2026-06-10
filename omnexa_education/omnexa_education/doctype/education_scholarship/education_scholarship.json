@@ -1,0 +1,100 @@
+{
+	"actions": [],
+	"doctype": "DocType",
+	"engine": "InnoDB",
+	"module": "Omnexa Education",
+	"name": "Education Scholarship",
+	"permissions": [
+		{
+			"role": "System Manager",
+			"read": 1,
+			"write": 1,
+			"create": 1,
+			"delete": 1,
+			"submit": 1,
+			"cancel": 1
+		},
+		{
+			"role": "Education Manager",
+			"read": 1,
+			"write": 1,
+			"create": 1,
+			"delete": 1,
+			"submit": 1,
+			"cancel": 1
+		},
+		{
+			"role": "Education User",
+			"read": 1,
+			"write": 1,
+			"create": 1,
+			"delete": 0,
+			"submit": 1,
+			"cancel": 0
+		},
+		{
+			"role": "Teacher",
+			"read": 1,
+			"write": 1,
+			"create": 1,
+			"delete": 0
+		},
+		{
+			"role": "Desk User",
+			"read": 1,
+			"write": 1,
+			"create": 1,
+			"delete": 0
+		}
+	],
+	"track_changes": 1,
+	"autoname": "field:scholarship_code",
+	"fields": [
+		{
+			"fieldname": "scholarship_code",
+			"fieldtype": "Data",
+			"label": "Code",
+			"reqd": 1,
+			"unique": 1,
+			"in_list_view": 1
+		},
+		{
+			"fieldname": "scholarship_name",
+			"fieldtype": "Data",
+			"label": "Name",
+			"reqd": 1
+		},
+		{
+			"fieldname": "institution",
+			"fieldtype": "Link",
+			"label": "Institution",
+			"options": "Education Institution",
+			"reqd": 1
+		},
+		{
+			"fieldname": "company",
+			"fieldtype": "Link",
+			"label": "Company",
+			"options": "Company",
+			"reqd": 1
+		},
+		{
+			"fieldname": "branch",
+			"fieldtype": "Link",
+			"label": "Branch",
+			"options": "Branch",
+			"reqd": 1,
+			"in_list_view": 1
+		},
+		{
+			"fieldname": "amount",
+			"fieldtype": "Currency",
+			"label": "Amount"
+		},
+		{
+			"fieldname": "percent_discount",
+			"fieldtype": "Percent",
+			"label": "Discount %"
+		}
+	]
+}

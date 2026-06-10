@@ -1,0 +1,91 @@
+{
+	"actions": [],
+	"doctype": "DocType",
+	"engine": "InnoDB",
+	"module": "Omnexa Education",
+	"name": "Education Settings",
+	"permissions": [
+		{
+			"role": "System Manager",
+			"read": 1,
+			"write": 1,
+			"create": 1,
+			"delete": 1,
+			"submit": 1,
+			"cancel": 1
+		},
+		{
+			"role": "Education Manager",
+			"read": 1,
+			"write": 1,
+			"create": 1,
+			"delete": 1,
+			"submit": 1,
+			"cancel": 1
+		},
+		{
+			"role": "Education User",
+			"read": 1,
+			"write": 1,
+			"create": 1,
+			"delete": 0,
+			"submit": 1,
+			"cancel": 0
+		},
+		{
+			"role": "Teacher",
+			"read": 1,
+			"write": 1,
+			"create": 1,
+			"delete": 0,
+			"submit": 1,
+			"cancel": 0
+		},
+		{
+			"role": "Desk User",
+			"read": 1,
+			"write": 1,
+			"create": 1,
+			"delete": 0
+		}
+	],
+	"track_changes": 1,
+	"issingle": 1,
+	"fields": [
+		{
+			"fieldname": "default_institution_type",
+			"fieldtype": "Select",
+			"label": "Default Institution Type",
+			"options": "School\nAcademy\nUniversity\nTraining Center\nInstitute"
+		},
+		{
+			"default": "1",
+			"fieldname": "enable_university_modules",
+			"fieldtype": "Check",
+			"label": "Enable University (Banner/Workday)"
+		},
+		{
+			"default": "1",
+			"fieldname": "enable_k12_modules",
+			"fieldtype": "Check",
+			"label": "Enable K12 (PowerSchool)"
+		},
+		{
+			"default": "1",
+			"fieldname": "auto_create_customer",
+			"fieldtype": "Check",
+			"label": "Auto-create Customer for Students"
+		},
+		{
+			"fieldname": "attendance_lock_days",
+			"fieldtype": "Int",
+			"label": "Attendance lock after (days)",
+			"default": "7"
+		},
+		{
+			"fieldname": "grade_publish_requires_approval",
+			"fieldtype": "Check",
+			"label": "Grades require approval before publish"
+		}
+	]
+}

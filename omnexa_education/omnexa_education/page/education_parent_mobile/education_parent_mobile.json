@@ -1,0 +1,22 @@
+{
+	"doctype": "Page",
+	"module": "Omnexa Education",
+	"name": "education-parent-mobile",
+	"page_name": "education-parent-mobile",
+	"standard": "Yes",
+	"title": "Education Parent Mobile",
+	"roles": [
+		{
+			"role": "System Manager"
+		},
+		{
+			"role": "Education Manager"
+		},
+		{
+			"role": "Education User"
+		},
+		{
+			"role": "Teacher"
+		}
+	]
+}

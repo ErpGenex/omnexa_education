@@ -1,0 +1,107 @@
+{
+	"actions": [],
+	"doctype": "DocType",
+	"engine": "InnoDB",
+	"module": "Omnexa Education",
+	"name": "Education Student Consent",
+	"permissions": [
+		{
+			"role": "System Manager",
+			"read": 1,
+			"write": 1,
+			"create": 1,
+			"delete": 1,
+			"submit": 1,
+			"cancel": 1
+		},
+		{
+			"role": "Education Manager",
+			"read": 1,
+			"write": 1,
+			"create": 1,
+			"delete": 1,
+			"submit": 1,
+			"cancel": 1
+		},
+		{
+			"role": "Education User",
+			"read": 1,
+			"write": 1,
+			"create": 1,
+			"delete": 0,
+			"submit": 1,
+			"cancel": 0
+		},
+		{
+			"role": "Teacher",
+			"read": 1,
+			"write": 1,
+			"create": 1,
+			"delete": 0
+		},
+		{
+			"role": "Desk User",
+			"read": 1,
+			"write": 1,
+			"create": 1,
+			"delete": 0
+		}
+	],
+	"track_changes": 1,
+	"autoname": "format:CNS-{YYYY}-{#####}",
+	"fields": [
+		{
+			"fieldname": "student",
+			"fieldtype": "Link",
+			"label": "Student",
+			"options": "Education Student",
+			"reqd": 1,
+			"in_list_view": 1
+		},
+		{
+			"fieldname": "consent_type",
+			"fieldtype": "Select",
+			"label": "Consent Type",
+			"options": "FERPA Directory\nPhoto/Media\nData Sharing\nMedical\nOther",
+			"reqd": 1
+		},
+		{
+			"default": "1",
+			"fieldname": "consent_given",
+			"fieldtype": "Check",
+			"label": "Consent Given"
+		},
+		{
+			"fieldname": "signed_on",
+			"fieldtype": "Date",
+			"label": "Signed On"
+		},
+		{
+			"fieldname": "guardian_name",
+			"fieldtype": "Data",
+			"label": "Guardian Name"
+		},
+		{
+			"fieldname": "institution",
+			"fieldtype": "Link",
+			"label": "Institution",
+			"options": "Education Institution",
+			"reqd": 1
+		},
+		{
+			"fieldname": "company",
+			"fieldtype": "Link",
+			"label": "Company",
+			"options": "Company",
+			"reqd": 1
+		},
+		{
+			"fieldname": "branch",
+			"fieldtype": "Link",
+			"label": "Branch",
+			"options": "Branch",
+			"reqd": 1,
+			"in_list_view": 1
+		}
+	]
+}

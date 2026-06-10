@@ -1,0 +1,103 @@
+{
+	"actions": [],
+	"doctype": "DocType",
+	"engine": "InnoDB",
+	"module": "Omnexa Education",
+	"name": "Education Lottery Run",
+	"permissions": [
+		{
+			"role": "System Manager",
+			"read": 1,
+			"write": 1,
+			"create": 1,
+			"delete": 1,
+			"submit": 1,
+			"cancel": 1
+		},
+		{
+			"role": "Education Manager",
+			"read": 1,
+			"write": 1,
+			"create": 1,
+			"delete": 1,
+			"submit": 1,
+			"cancel": 1
+		},
+		{
+			"role": "Education User",
+			"read": 1,
+			"write": 1,
+			"create": 1,
+			"delete": 0,
+			"submit": 1,
+			"cancel": 0
+		},
+		{
+			"role": "Teacher",
+			"read": 1,
+			"write": 1,
+			"create": 1,
+			"delete": 0
+		},
+		{
+			"role": "Desk User",
+			"read": 1,
+			"write": 1,
+			"create": 1,
+			"delete": 0
+		}
+	],
+	"track_changes": 1,
+	"autoname": "format:LOT-{YYYY}-{#####}",
+	"is_submittable": 1,
+	"fields": [
+		{
+			"fieldname": "institution",
+			"fieldtype": "Link",
+			"label": "Institution",
+			"options": "Education Institution",
+			"reqd": 1
+		},
+		{
+			"fieldname": "company",
+			"fieldtype": "Link",
+			"label": "Company",
+			"options": "Company",
+			"reqd": 1
+		},
+		{
+			"fieldname": "branch",
+			"fieldtype": "Link",
+			"label": "Branch",
+			"options": "Branch",
+			"reqd": 1,
+			"in_list_view": 1
+		},
+		{
+			"fieldname": "waitlist_pool",
+			"fieldtype": "Link",
+			"label": "Waitlist Pool",
+			"options": "Education Waitlist Pool",
+			"reqd": 1
+		},
+		{
+			"fieldname": "run_date",
+			"fieldtype": "Datetime",
+			"label": "Run Date",
+			"reqd": 1
+		},
+		{
+			"fieldname": "seats_offered",
+			"fieldtype": "Int",
+			"label": "Seats Offered"
+		},
+		{
+			"default": "Draft",
+			"fieldname": "status",
+			"fieldtype": "Select",
+			"label": "Status",
+			"options": "Draft\nCompleted\nCancelled",
+			"in_list_view": 1
+		}
+	]
+}

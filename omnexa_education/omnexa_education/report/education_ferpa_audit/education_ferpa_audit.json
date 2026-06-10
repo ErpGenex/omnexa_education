@@ -1,0 +1,23 @@
+{
+	"add_total_row": 0,
+	"columns": [],
+	"disabled": 0,
+	"doctype": "Report",
+	"is_standard": "Yes",
+	"module": "Omnexa Education",
+	"name": "FERPA Audit Trail",
+	"ref_doctype": "Education Ferpa Access Log",
+	"report_name": "FERPA Audit Trail",
+	"report_type": "Script Report",
+	"roles": [
+		{
+			"role": "System Manager"
+		},
+		{
+			"role": "Education Manager"
+		},
+		{
+			"role": "Report Manager"
+		}
+	]
+}

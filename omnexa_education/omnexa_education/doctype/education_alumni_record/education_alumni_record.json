@@ -1,0 +1,105 @@
+{
+	"actions": [],
+	"doctype": "DocType",
+	"engine": "InnoDB",
+	"module": "Omnexa Education",
+	"name": "Education Alumni Record",
+	"permissions": [
+		{
+			"role": "System Manager",
+			"read": 1,
+			"write": 1,
+			"create": 1,
+			"delete": 1,
+			"submit": 1,
+			"cancel": 1
+		},
+		{
+			"role": "Education Manager",
+			"read": 1,
+			"write": 1,
+			"create": 1,
+			"delete": 1,
+			"submit": 1,
+			"cancel": 1
+		},
+		{
+			"role": "Education User",
+			"read": 1,
+			"write": 1,
+			"create": 1,
+			"delete": 0,
+			"submit": 1,
+			"cancel": 0
+		},
+		{
+			"role": "Teacher",
+			"read": 1,
+			"write": 1,
+			"create": 1,
+			"delete": 0
+		},
+		{
+			"role": "Desk User",
+			"read": 1,
+			"write": 1,
+			"create": 1,
+			"delete": 0
+		}
+	],
+	"track_changes": 1,
+	"autoname": "format:ALM-{YYYY}-{#####}",
+	"fields": [
+		{
+			"fieldname": "student",
+			"fieldtype": "Link",
+			"label": "Student",
+			"options": "Education Student",
+			"reqd": 1,
+			"in_list_view": 1
+		},
+		{
+			"fieldname": "institution",
+			"fieldtype": "Link",
+			"label": "Institution",
+			"options": "Education Institution",
+			"reqd": 1
+		},
+		{
+			"fieldname": "company",
+			"fieldtype": "Link",
+			"label": "Company",
+			"options": "Company",
+			"reqd": 1
+		},
+		{
+			"fieldname": "branch",
+			"fieldtype": "Link",
+			"label": "Branch",
+			"options": "Branch",
+			"reqd": 1,
+			"in_list_view": 1
+		},
+		{
+			"fieldname": "graduation_date",
+			"fieldtype": "Date",
+			"label": "Graduation Date"
+		},
+		{
+			"fieldname": "program",
+			"fieldtype": "Link",
+			"label": "Program",
+			"options": "Education Program"
+		},
+		{
+			"fieldname": "current_employer",
+			"fieldtype": "Data",
+			"label": "Employer"
+		},
+		{
+			"fieldname": "contact_email",
+			"fieldtype": "Data",
+			"label": "Contact Email"
+		}
+	]
+}

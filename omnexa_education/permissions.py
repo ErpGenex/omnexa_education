@@ -117,3 +117,25 @@ def education_billing_cycle_query_conditions(user=None):
 
 def education_teacher_query_conditions(user=None):
 	return _get_query_for_table("Education Teacher", user)
+
+
+def make_branch_query(doctype: str):
+	def fn(user=None):
+		return _get_query_for_table(doctype, user)
+
+	return fn
+
+
+education_program_query_conditions = make_branch_query("Education Program")
+education_course_query_conditions = make_branch_query("Education Course")
+education_room_query_conditions = make_branch_query("Education Room")
+education_admission_application_query_conditions = make_branch_query("Education Admission Application")
+education_student_enrollment_query_conditions = make_branch_query("Education Student Enrollment")
+education_course_enrollment_query_conditions = make_branch_query("Education Course Enrollment")
+education_teacher_assignment_query_conditions = make_branch_query("Education Teacher Assignment")
+education_timetable_entry_query_conditions = make_branch_query("Education Timetable Entry")
+education_attendance_session_query_conditions = make_branch_query("Education Attendance Session")
+education_assessment_plan_query_conditions = make_branch_query("Education Assessment Plan")
+education_assessment_result_query_conditions = make_branch_query("Education Assessment Result")
+education_report_card_query_conditions = make_branch_query("Education Report Card")
+education_transcript_request_query_conditions = make_branch_query("Education Transcript Request")

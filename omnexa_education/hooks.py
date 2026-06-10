@@ -83,6 +83,7 @@ add_to_apps_screen = [
 
 before_install = "omnexa_education.install.enforce_supported_frappe_version"
 before_migrate = "omnexa_education.install.enforce_supported_frappe_version"
+after_migrate = "omnexa_education.install.after_migrate"
 
 # Uninstallation
 # ------------
@@ -134,6 +135,19 @@ permission_query_conditions = {
 	"Education Late Fee Rule": "omnexa_education.permissions.education_late_fee_rule_query_conditions",
 	"Education Billing Cycle": "omnexa_education.permissions.education_billing_cycle_query_conditions",
 	"Education Teacher": "omnexa_education.permissions.education_teacher_query_conditions",
+	"Education Program": "omnexa_education.permissions.education_program_query_conditions",
+	"Education Course": "omnexa_education.permissions.education_course_query_conditions",
+	"Education Room": "omnexa_education.permissions.education_room_query_conditions",
+	"Education Admission Application": "omnexa_education.permissions.education_admission_application_query_conditions",
+	"Education Student Enrollment": "omnexa_education.permissions.education_student_enrollment_query_conditions",
+	"Education Course Enrollment": "omnexa_education.permissions.education_course_enrollment_query_conditions",
+	"Education Teacher Assignment": "omnexa_education.permissions.education_teacher_assignment_query_conditions",
+	"Education Timetable Entry": "omnexa_education.permissions.education_timetable_entry_query_conditions",
+	"Education Attendance Session": "omnexa_education.permissions.education_attendance_session_query_conditions",
+	"Education Assessment Plan": "omnexa_education.permissions.education_assessment_plan_query_conditions",
+	"Education Assessment Result": "omnexa_education.permissions.education_assessment_result_query_conditions",
+	"Education Report Card": "omnexa_education.permissions.education_report_card_query_conditions",
+	"Education Transcript Request": "omnexa_education.permissions.education_transcript_request_query_conditions",
 }
 #
 # has_permission = {

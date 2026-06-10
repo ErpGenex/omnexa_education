@@ -1,0 +1,23 @@
+{
+	"add_total_row": 0,
+	"columns": [],
+	"disabled": 0,
+	"doctype": "Report",
+	"is_standard": "Yes",
+	"module": "Omnexa Education",
+	"name": "LMS Sync Status",
+	"ref_doctype": "Education Lms Course Link",
+	"report_name": "LMS Sync Status",
+	"report_type": "Script Report",
+	"roles": [
+		{
+			"role": "System Manager"
+		},
+		{
+			"role": "Education Manager"
+		},
+		{
+			"role": "Report Manager"
+		}
+	]
+}

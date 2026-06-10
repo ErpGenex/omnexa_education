@@ -1,0 +1,116 @@
+{
+	"actions": [],
+	"doctype": "DocType",
+	"engine": "InnoDB",
+	"module": "Omnexa Education",
+	"name": "Education Program",
+	"permissions": [
+		{
+			"role": "System Manager",
+			"read": 1,
+			"write": 1,
+			"create": 1,
+			"delete": 1,
+			"submit": 1,
+			"cancel": 1
+		},
+		{
+			"role": "Education Manager",
+			"read": 1,
+			"write": 1,
+			"create": 1,
+			"delete": 1,
+			"submit": 1,
+			"cancel": 1
+		},
+		{
+			"role": "Education User",
+			"read": 1,
+			"write": 1,
+			"create": 1,
+			"delete": 0,
+			"submit": 1,
+			"cancel": 0
+		},
+		{
+			"role": "Teacher",
+			"read": 1,
+			"write": 1,
+			"create": 1,
+			"delete": 0,
+			"submit": 1,
+			"cancel": 0
+		},
+		{
+			"role": "Desk User",
+			"read": 1,
+			"write": 1,
+			"create": 1,
+			"delete": 0
+		}
+	],
+	"track_changes": 1,
+	"autoname": "field:program_code",
+	"fields": [
+		{
+			"fieldname": "program_code",
+			"fieldtype": "Data",
+			"label": "Program Code",
+			"reqd": 1,
+			"unique": 1,
+			"in_list_view": 1
+		},
+		{
+			"fieldname": "program_name",
+			"fieldtype": "Data",
+			"label": "Program Name",
+			"reqd": 1,
+			"in_list_view": 1
+		},
+		{
+			"fieldname": "institution",
+			"fieldtype": "Link",
+			"label": "Institution",
+			"options": "Education Institution",
+			"reqd": 1
+		},
+		{
+			"fieldname": "company",
+			"fieldtype": "Link",
+			"label": "Company",
+			"options": "Company",
+			"reqd": 1
+		},
+		{
+			"fieldname": "branch",
+			"fieldtype": "Link",
+			"label": "Branch",
+			"options": "Branch",
+			"reqd": 1,
+			"in_list_view": 1
+		},
+		{
+			"fieldname": "department",
+			"fieldtype": "Link",
+			"label": "Department",
+			"options": "Education Department"
+		},
+		{
+			"fieldname": "degree_level",
+			"fieldtype": "Select",
+			"label": "Degree Level",
+			"options": "Certificate\nDiploma\nAssociate\nBachelor\nMaster\nDoctorate\nProfessional"
+		},
+		{
+			"fieldname": "total_credits",
+			"fieldtype": "Float",
+			"label": "Total Credits Required"
+		},
+		{
+			"default": "1",
+			"fieldname": "is_active",
+			"fieldtype": "Check",
+			"label": "Active"
+		}
+	]
+}

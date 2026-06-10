@@ -1,0 +1,22 @@
+{
+	"doctype": "Page",
+	"module": "Omnexa Education",
+	"name": "education-teacher-gradebook",
+	"page_name": "education-teacher-gradebook",
+	"standard": "Yes",
+	"title": "Education Teacher Gradebook",
+	"roles": [
+		{
+			"role": "System Manager"
+		},
+		{
+			"role": "Education Manager"
+		},
+		{
+			"role": "Education User"
+		},
+		{
+			"role": "Teacher"
+		}
+	]
+}

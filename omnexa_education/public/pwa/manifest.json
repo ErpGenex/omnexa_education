@@ -1,0 +1,17 @@
+{
+  "name": "Omnexa Education",
+  "short_name": "Omnexa EDU",
+  "description": "Student Information System — parent and student mobile",
+  "start_url": "/app/education-parent-mobile",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2490ef",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/assets/frappe/images/frappe-favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

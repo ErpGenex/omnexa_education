@@ -1,0 +1,32 @@
+{
+	"actions": [],
+	"doctype": "DocType",
+	"engine": "InnoDB",
+	"module": "Omnexa Education",
+	"name": "Education Attendance Record",
+	"permissions": [],
+	"track_changes": 1,
+	"fields": [
+		{
+			"fieldname": "student",
+			"fieldtype": "Link",
+			"label": "Student",
+			"options": "Education Student",
+			"reqd": 1,
+			"in_list_view": 1
+		},
+		{
+			"default": "Present",
+			"fieldname": "status",
+			"fieldtype": "Select",
+			"label": "Status",
+			"options": "Present\nAbsent\nLate\nExcused\nRemote",
+			"in_list_view": 1
+		},
+		{
+			"fieldname": "remarks",
+			"fieldtype": "Small Text",
+			"label": "Remarks"
+		}
+	]
+}

@@ -1,0 +1,114 @@
+{
+	"actions": [],
+	"doctype": "DocType",
+	"engine": "InnoDB",
+	"module": "Omnexa Education",
+	"name": "Education Ferpa Access Log",
+	"permissions": [
+		{
+			"role": "System Manager",
+			"read": 1,
+			"write": 1,
+			"create": 1,
+			"delete": 1,
+			"submit": 1,
+			"cancel": 1
+		},
+		{
+			"role": "Education Manager",
+			"read": 1,
+			"write": 1,
+			"create": 1,
+			"delete": 1,
+			"submit": 1,
+			"cancel": 1
+		},
+		{
+			"role": "Education User",
+			"read": 1,
+			"write": 1,
+			"create": 1,
+			"delete": 0,
+			"submit": 1,
+			"cancel": 0
+		},
+		{
+			"role": "Teacher",
+			"read": 1,
+			"write": 1,
+			"create": 1,
+			"delete": 0
+		},
+		{
+			"role": "Desk User",
+			"read": 1,
+			"write": 1,
+			"create": 1,
+			"delete": 0
+		}
+	],
+	"track_changes": 1,
+	"autoname": "hash",
+	"fields": [
+		{
+			"fieldname": "student",
+			"fieldtype": "Link",
+			"label": "Student",
+			"options": "Education Student",
+			"reqd": 1,
+			"in_list_view": 1
+		},
+		{
+			"fieldname": "accessed_by",
+			"fieldtype": "Link",
+			"label": "Accessed By",
+			"options": "User",
+			"reqd": 1
+		},
+		{
+			"fieldname": "access_datetime",
+			"fieldtype": "Datetime",
+			"label": "Access Time",
+			"reqd": 1,
+			"in_list_view": 1
+		},
+		{
+			"fieldname": "resource_type",
+			"fieldtype": "Data",
+			"label": "Resource",
+			"reqd": 1
+		},
+		{
+			"fieldname": "resource_name",
+			"fieldtype": "Data",
+			"label": "Resource Name"
+		},
+		{
+			"fieldname": "purpose",
+			"fieldtype": "Small Text",
+			"label": "Purpose"
+		},
+		{
+			"fieldname": "institution",
+			"fieldtype": "Link",
+			"label": "Institution",
+			"options": "Education Institution",
+			"reqd": 1
+		},
+		{
+			"fieldname": "company",
+			"fieldtype": "Link",
+			"label": "Company",
+			"options": "Company",
+			"reqd": 1
+		},
+		{
+			"fieldname": "branch",
+			"fieldtype": "Link",
+			"label": "Branch",
+			"options": "Branch",
+			"reqd": 1,
+			"in_list_view": 1
+		}
+	]
+}

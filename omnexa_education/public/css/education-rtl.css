@@ -1,0 +1,8 @@
+/* RTL support for Education portals */
+[dir="rtl"] .education-portal {
+  text-align: right;
+}
+
+[dir="rtl"] .education-portal .btn-group {
+  flex-direction: row-reverse;
+}

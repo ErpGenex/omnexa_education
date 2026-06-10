@@ -1,0 +1,22 @@
+{
+	"doctype": "Page",
+	"module": "Omnexa Education",
+	"name": "education-registrar-desk",
+	"page_name": "education-registrar-desk",
+	"standard": "Yes",
+	"title": "Education Registrar Desk",
+	"roles": [
+		{
+			"role": "System Manager"
+		},
+		{
+			"role": "Education Manager"
+		},
+		{
+			"role": "Education User"
+		},
+		{
+			"role": "Teacher"
+		}
+	]
+}

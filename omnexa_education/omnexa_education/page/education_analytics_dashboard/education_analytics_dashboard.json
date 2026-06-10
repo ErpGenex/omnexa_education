@@ -1,0 +1,22 @@
+{
+	"doctype": "Page",
+	"module": "Omnexa Education",
+	"name": "education-analytics-dashboard",
+	"page_name": "education-analytics-dashboard",
+	"standard": "Yes",
+	"title": "Education Analytics Dashboard",
+	"roles": [
+		{
+			"role": "System Manager"
+		},
+		{
+			"role": "Education Manager"
+		},
+		{
+			"role": "Education User"
+		},
+		{
+			"role": "Teacher"
+		}
+	]
+}

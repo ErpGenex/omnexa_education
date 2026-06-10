@@ -22,3 +22,19 @@ def enforce_supported_frappe_version():
 			"Supported range is >=15.0,<16.0.",
 			frappe.ValidationError,
 		)
+
+
+def after_migrate():
+	try:
+		from omnexa_education.workspace.education_workspace import sync_education_workspace_menu
+
+		sync_education_workspace_menu(save=True)
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), "Omnexa Education: workspace sync failed")
+
+	try:
+		from omnexa_education.patches.v1_0.sync_education_report_roles import execute as sync_report_roles
+
+		sync_report_roles()
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), "Omnexa Education: report role sync failed")

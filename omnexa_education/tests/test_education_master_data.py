@@ -39,15 +39,16 @@ class TestEducationMasterData(FrappeTestCase):
 		return doc.name
 
 	def _create_branch(self, company: str, code: str, name: str):
-		doc = frappe.get_doc(
-			{
-				"doctype": "Branch",
-				"company": company,
-				"branch_name": name,
-				"branch_code": code,
-				"status": "Active",
-			}
-		)
+		payload = {
+			"doctype": "Branch",
+			"company": company,
+			"branch_name": name,
+			"branch_code": code,
+			"status": "Active",
+		}
+		if frappe.get_meta("Branch").has_field("eta_usb_signing_pin"):
+			payload["eta_usb_signing_pin"] = "0000"
+		doc = frappe.get_doc(payload)
 		doc.insert(ignore_permissions=True)
 		return doc.name
 
