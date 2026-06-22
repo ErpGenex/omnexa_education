@@ -14,9 +14,9 @@ required_apps = ["omnexa_core", "omnexa_accounting"]
 add_to_apps_screen = [
 	{
 		"name": "omnexa_education",
-		"logo": "/assets/omnexa_education/education.svg",
-		"title": "Education",
-		"route": "/app/education",
+		"logo": "/assets/omnexa_education/logo.png",
+		"title": "EduSphere",
+		"route": "/app/education-workcenter",
 	}
 ]
 
@@ -24,8 +24,17 @@ add_to_apps_screen = [
 # ------------------
 
 # include js, css files in header of desk.html
-# app_include_css = "/assets/omnexa_education/css/omnexa_education.css"
-# app_include_js = "/assets/omnexa_education/js/omnexa_education.js"
+app_include_css = [
+	"/assets/omnexa_education/css/education-rtl.css",
+	"/assets/omnexa_education/css/omnexa-journey.css",
+	"/assets/omnexa_core/css/omnexa-finance-journey.css",
+]
+app_include_js = [
+	"/assets/omnexa_core/js/omnexa-finance-journey.js",
+	"/assets/omnexa_education/js/omnexa-journey.js",
+	"/assets/omnexa_education/js/education-journey-kit.js",
+	"/assets/omnexa_education/js/education-portal-factory.js",
+]
 
 # include js, css files in header of web template
 # web_include_css = "/assets/omnexa_education/css/omnexa_education.css"
@@ -42,7 +51,10 @@ add_to_apps_screen = [
 # page_js = {"page" : "public/js/file.js"}
 
 # include js in doctype views
-# doctype_js = {"doctype" : "public/js/doctype.js"}
+doctype_js = {
+	"Education Settings": "public/js/education_settings.js",
+	"Education Student": "public/js/education_student.js",
+}
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
@@ -186,6 +198,13 @@ doc_events = {
 		"before_validate": "omnexa_education.permissions.populate_company_branch_from_user_context",
 		"validate": "omnexa_education.permissions.enforce_branch_access_for_doc",
 	},
+	"Payment Entry": {
+		"on_submit": "omnexa_education.financial_hold.on_payment_entry_submit",
+	},
+	"Sales Invoice": {
+		"on_submit": "omnexa_education.financial_hold.on_sales_invoice_update",
+		"on_cancel": "omnexa_education.financial_hold.on_sales_invoice_update",
+	},
 	"Education Billing Invoice": {
 		"before_validate": "omnexa_education.permissions.populate_company_branch_from_user_context",
 		"validate": "omnexa_education.permissions.enforce_branch_access_for_doc",
@@ -215,23 +234,14 @@ doc_events = {
 # Scheduled Tasks
 # ---------------
 
-# scheduler_events = {
-# 	"all": [
-# 		"omnexa_education.tasks.all"
-# 	],
-# 	"daily": [
-# 		"omnexa_education.tasks.daily"
-# 	],
-# 	"hourly": [
-# 		"omnexa_education.tasks.hourly"
-# 	],
-# 	"weekly": [
-# 		"omnexa_education.tasks.weekly"
-# 	],
-# 	"monthly": [
-# 		"omnexa_education.tasks.monthly"
-# 	],
-# }
+scheduler_events = {
+	"daily": [
+		"omnexa_education.financial_hold.run_daily_financial_hold_scan",
+	],
+	"hourly": [
+		"omnexa_education.api.laravel_client.process_sync_queue",
+	],
+}
 
 # Testing
 # -------

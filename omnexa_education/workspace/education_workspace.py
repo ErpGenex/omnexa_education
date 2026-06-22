@@ -17,6 +17,19 @@ WorkspaceLink = tuple[str, str, str]  # link_type, link_to, label
 # Curated sections (priority order) — anything missing is auto-added at the end.
 WORKSPACE_SECTIONS: list[tuple[str, list[WorkspaceLink]]] = [
 	(
+		"✨ Omnexa Journey Experience",
+		[
+			("Page", "education-workcenter", "Education Workcenter"),
+			("Page", "education-finance-desk", "Finance Workcenter"),
+			("Page", "education-laravel-integration", "Laravel TLMS Integration"),
+			("Page", "education-registrar-desk", "Registrar Desk"),
+			("Page", "education-admissions-portal", "Admissions Portal"),
+			("Page", "education-teacher-gradebook", "Teacher Gradebook"),
+			("Page", "education-student-portal", "Student Portal"),
+			("Page", "education-parent-mobile", "Parent Portal (PWA)"),
+		],
+	),
+	(
 		"📊 Dashboards & Portals",
 		[
 			("Page", "education-registrar-desk", "Registrar Desk"),
@@ -129,6 +142,8 @@ WORKSPACE_SECTIONS: list[tuple[str, list[WorkspaceLink]]] = [
 		"🔗 LMS · Mobile · Analytics",
 		[
 			("DocType", "Education Lms Course Link", "LMS Course Link"),
+			("DocType", "Education Laravel Sync Queue", "Laravel Sync Queue"),
+			("DocType", "Education Account Access Log", "Account Access Log"),
 			("DocType", "Education Mobile Device Token", "Mobile Device Token"),
 			("DocType", "Education Predictive Alert", "Predictive Alert"),
 		],
