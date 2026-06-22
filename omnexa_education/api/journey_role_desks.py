@@ -183,14 +183,17 @@ def get_admissions_dashboard(company: str | None = None, branch: str | None = No
 @frappe.whitelist()
 def get_registrar_dashboard(company: str | None = None, branch: str | None = None) -> dict:
 	company, branch = _scope(company, branch)
-	filters = {"status": "Active"}
+	student_filters: dict = {"status": "Active"}
+	enrollment_filters: dict = {"enrollment_status": "Enrolled", "docstatus": 1}
 	if company:
-		filters["company"] = company
+		student_filters["company"] = company
+		enrollment_filters["company"] = company
 	if branch:
-		filters["branch"] = branch
+		student_filters["branch"] = branch
+		enrollment_filters["branch"] = branch
 	return {
-		"active_students": frappe.db.count("Education Student", filters),
-		"enrollments": frappe.db.count("Education Student Enrollment", filters)
+		"active_students": frappe.db.count("Education Student", student_filters),
+		"enrollments": frappe.db.count("Education Student Enrollment", enrollment_filters)
 		if frappe.db.exists("DocType", "Education Student Enrollment")
 		else 0,
 	}

@@ -1,6 +1,15 @@
 ### Omnexa Education
 
-Education vertical
+Education vertical — ISMS (Integrated School Management System) on ErpGenEx, with **Laravel TLMS** for Teaching & Learning (§5).
+
+**Planning docs (ISMS Specification AR):**
+
+| Document | Purpose |
+|----------|---------|
+| [docs/ISMS_MASTER_PLAN_AR.md](docs/ISMS_MASTER_PLAN_AR.md) | Architecture, finance-controlled account lifecycle, roadmap |
+| [docs/LARAVEL_TLMS_INTEGRATION_GUIDE_AR.md](docs/LARAVEL_TLMS_INTEGRATION_GUIDE_AR.md) | **دليل ربط Laravel TLMS (عربي)** — إعداد ErpGenEx + Webhooks + API |
+| [docs/LARAVEL_TLMS_INTEGRATION_PROMPT.md](docs/LARAVEL_TLMS_INTEGRATION_PROMPT.md) | Copy-paste prompt for Laravel team / AI agent |
+| [docs/ISMS_GLOBAL_DEVELOPMENT_CHECKLIST.md](docs/ISMS_GLOBAL_DEVELOPMENT_CHECKLIST.md) | 80-item checklist vs global standards (PowerSchool, Banner, Workday) |
 
 License model: Paid app. Access is gated through `license_gate.before_request` when `omnexa_license_enforce` is enabled.
 

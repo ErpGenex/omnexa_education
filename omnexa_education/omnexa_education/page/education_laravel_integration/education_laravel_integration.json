@@ -1,0 +1,13 @@
+{
+	"doctype": "Page",
+	"module": "Omnexa Education",
+	"name": "education-laravel-integration",
+	"page_name": "education-laravel-integration",
+	"standard": "Yes",
+	"title": "Laravel TLMS Integration",
+	"roles": [
+		{"role": "System Manager"},
+		{"role": "Education Manager"},
+		{"role": "Company Admin"}
+	]
+}

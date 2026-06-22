@@ -5,6 +5,11 @@ import frappe
 from frappe import _
 from frappe.model.document import Document
 
+from omnexa_education.api.student_account_lifecycle import (
+	auto_provision_if_needed,
+	deprovision_student,
+)
+
 
 class EducationStudent(Document):
 	def validate(self):
@@ -15,9 +20,9 @@ class EducationStudent(Document):
 
 	def after_insert(self):
 		self._ensure_customer()
+		auto_provision_if_needed(self.name)
 
 	def on_update(self):
-		# keep customer name in sync for usability (non-destructive)
 		if self.customer and self.student_name:
 			frappe.db.set_value(
 				"Customer",
@@ -26,6 +31,14 @@ class EducationStudent(Document):
 				self._customer_display_name(),
 				update_modified=False,
 			)
+		if self.status in ("Withdrawn", "Graduated") and self.account_access_status not in (
+			"Withdrawn",
+			None,
+			"",
+		):
+			deprovision_student(self.name, trigger="Withdrawal")
+		elif self.status == "Active" and self.account_access_status in (None, "", "Not Provisioned"):
+			auto_provision_if_needed(self.name)
 
 	def _customer_display_name(self) -> str:
 		return f"{self.student_name} ({self.student_code})" if self.student_code else self.student_name
@@ -90,4 +103,3 @@ class EducationStudent(Document):
 			}
 		).insert(ignore_permissions=True)
 		self.db_set("customer", c.name, update_modified=False)
-

@@ -7,3 +7,4 @@
 omnexa_education.patches.v1_0.sync_education_report_roles
 omnexa_education.patches.v1_0.seed_global_sis_wave1
 omnexa_education.patches.v1_0.seed_global_sis_wave23
+omnexa_education.patches.v1_0.sync_education_laravel_integration

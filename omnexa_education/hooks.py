@@ -27,14 +27,26 @@ add_to_apps_screen = [
 app_include_css = [
 	"/assets/omnexa_education/css/education-rtl.css",
 	"/assets/omnexa_education/css/omnexa-journey.css",
-	"/assets/omnexa_core/css/omnexa-finance-journey.css",
 ]
 app_include_js = [
-	"/assets/omnexa_core/js/omnexa-finance-journey.js",
 	"/assets/omnexa_education/js/omnexa-journey.js",
 	"/assets/omnexa_education/js/education-journey-kit.js",
+	"/assets/omnexa_education/js/education-portal-boot.js",
 	"/assets/omnexa_education/js/education-portal-factory.js",
 ]
+
+# Re-apply education shell after other vertical kits on portal pages
+page_js = {
+	"education-workcenter": "public/js/education-journey-kit.js",
+	"education-finance-desk": "public/js/education-journey-kit.js",
+	"education-admissions-portal": "public/js/education-journey-kit.js",
+	"education-registrar-desk": "public/js/education-journey-kit.js",
+	"education-laravel-integration": "public/js/education-journey-kit.js",
+	"education-teacher-gradebook": "public/js/education-journey-kit.js",
+	"education-student-portal": "public/js/education-journey-kit.js",
+	"education-parent-mobile": "public/js/education-journey-kit.js",
+	"education-timetable-board": "public/js/education-journey-kit.js",
+}
 
 # include js, css files in header of web template
 # web_include_css = "/assets/omnexa_education/css/omnexa_education.css"

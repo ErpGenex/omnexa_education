@@ -84,7 +84,7 @@
 			"fieldname": "lms_provider",
 			"fieldtype": "Select",
 			"label": "LMS Provider",
-			"options": "Moodle\nCanvas\nGoogle Classroom\nBlackboard\nCustom API",
+			"options": "Moodle\nCanvas\nGoogle Classroom\nBlackboard\nLaravel TLMS\nCustom API",
 			"reqd": 1
 		},
 		{

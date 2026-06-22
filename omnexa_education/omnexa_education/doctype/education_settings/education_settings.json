@@ -42,6 +42,13 @@
 			"cancel": 0
 		},
 		{
+			"role": "Accounts User",
+			"read": 1,
+			"write": 0,
+			"create": 0,
+			"delete": 0
+		},
+		{
 			"role": "Desk User",
 			"read": 1,
 			"write": 1,
@@ -51,7 +58,44 @@
 	],
 	"track_changes": 1,
 	"issingle": 1,
+	"field_order": [
+		"general_section",
+		"default_institution_type",
+		"enable_university_modules",
+		"enable_k12_modules",
+		"auto_create_customer",
+		"column_break_general",
+		"attendance_lock_days",
+		"grade_publish_requires_approval",
+		"laravel_section",
+		"enable_laravel_tlms",
+		"laravel_base_url",
+		"laravel_api_key",
+		"laravel_webhook_secret",
+		"column_break_laravel",
+		"laravel_institution_header",
+		"laravel_sso_enabled",
+		"laravel_jwt_secret",
+		"laravel_allow_readonly_on_hold",
+		"account_lifecycle_section",
+		"auto_provision_student_user",
+		"auto_suspend_on_overdue",
+		"financial_hold_grace_days",
+		"column_break_lifecycle",
+		"student_user_role",
+		"parent_user_role",
+		"teacher_user_role",
+		"sync_section",
+		"laravel_sync_batch_size",
+		"laravel_last_ping_at",
+		"laravel_last_ping_status"
+	],
 	"fields": [
+		{
+			"fieldname": "general_section",
+			"fieldtype": "Section Break",
+			"label": "General"
+		},
 		{
 			"fieldname": "default_institution_type",
 			"fieldtype": "Select",
@@ -77,6 +121,10 @@
 			"label": "Auto-create Customer for Students"
 		},
 		{
+			"fieldname": "column_break_general",
+			"fieldtype": "Column Break"
+		},
+		{
 			"fieldname": "attendance_lock_days",
 			"fieldtype": "Int",
 			"label": "Attendance lock after (days)",
@@ -86,6 +134,138 @@
 			"fieldname": "grade_publish_requires_approval",
 			"fieldtype": "Check",
 			"label": "Grades require approval before publish"
+		},
+		{
+			"fieldname": "laravel_section",
+			"fieldtype": "Section Break",
+			"label": "Laravel TLMS Integration"
+		},
+		{
+			"default": "0",
+			"fieldname": "enable_laravel_tlms",
+			"fieldtype": "Check",
+			"label": "Enable Laravel TLMS"
+		},
+		{
+			"depends_on": "eval:doc.enable_laravel_tlms",
+			"fieldname": "laravel_base_url",
+			"fieldtype": "Data",
+			"label": "Laravel Base URL",
+			"description": "Example: https://tlms.school.edu"
+		},
+		{
+			"depends_on": "eval:doc.enable_laravel_tlms",
+			"fieldname": "laravel_api_key",
+			"fieldtype": "Password",
+			"label": "Laravel API Key"
+		},
+		{
+			"depends_on": "eval:doc.enable_laravel_tlms",
+			"fieldname": "laravel_webhook_secret",
+			"fieldtype": "Password",
+			"label": "Webhook Secret (HMAC)"
+		},
+		{
+			"fieldname": "column_break_laravel",
+			"fieldtype": "Column Break"
+		},
+		{
+			"depends_on": "eval:doc.enable_laravel_tlms",
+			"fieldname": "laravel_institution_header",
+			"fieldtype": "Data",
+			"label": "Institution Header Name",
+			"default": "X-ErpGenEx-School",
+			"description": "HTTP header sent with every API call"
+		},
+		{
+			"depends_on": "eval:doc.enable_laravel_tlms",
+			"default": "1",
+			"fieldname": "laravel_sso_enabled",
+			"fieldtype": "Check",
+			"label": "Enable SSO (JWT/OIDC)"
+		},
+		{
+			"depends_on": "eval:doc.laravel_sso_enabled",
+			"fieldname": "laravel_jwt_secret",
+			"fieldtype": "Password",
+			"label": "Shared JWT Secret"
+		},
+		{
+			"depends_on": "eval:doc.enable_laravel_tlms",
+			"fieldname": "laravel_allow_readonly_on_hold",
+			"fieldtype": "Check",
+			"label": "Allow read-only LMS access on financial hold"
+		},
+		{
+			"fieldname": "account_lifecycle_section",
+			"fieldtype": "Section Break",
+			"label": "Student Account Lifecycle"
+		},
+		{
+			"default": "1",
+			"fieldname": "auto_provision_student_user",
+			"fieldtype": "Check",
+			"label": "Auto-provision User on student registration"
+		},
+		{
+			"default": "1",
+			"fieldname": "auto_suspend_on_overdue",
+			"fieldtype": "Check",
+			"label": "Auto suspend on overdue invoices"
+		},
+		{
+			"default": "7",
+			"fieldname": "financial_hold_grace_days",
+			"fieldtype": "Int",
+			"label": "Financial hold grace days"
+		},
+		{
+			"fieldname": "column_break_lifecycle",
+			"fieldtype": "Column Break"
+		},
+		{
+			"default": "Education Student Portal",
+			"fieldname": "student_user_role",
+			"fieldtype": "Link",
+			"label": "Student Portal Role",
+			"options": "Role"
+		},
+		{
+			"default": "Education Parent Portal",
+			"fieldname": "parent_user_role",
+			"fieldtype": "Link",
+			"label": "Parent Portal Role",
+			"options": "Role"
+		},
+		{
+			"default": "Teacher",
+			"fieldname": "teacher_user_role",
+			"fieldtype": "Link",
+			"label": "Teacher Role",
+			"options": "Role"
+		},
+		{
+			"fieldname": "sync_section",
+			"fieldtype": "Section Break",
+			"label": "Sync Status"
+		},
+		{
+			"default": "50",
+			"fieldname": "laravel_sync_batch_size",
+			"fieldtype": "Int",
+			"label": "Sync batch size"
+		},
+		{
+			"fieldname": "laravel_last_ping_at",
+			"fieldtype": "Datetime",
+			"label": "Last Ping At",
+			"read_only": 1
+		},
+		{
+			"fieldname": "laravel_last_ping_status",
+			"fieldtype": "Data",
+			"label": "Last Ping Status",
+			"read_only": 1
 		}
 	]
 }

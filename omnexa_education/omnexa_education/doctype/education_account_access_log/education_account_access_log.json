@@ -1,0 +1,146 @@
+{
+	"actions": [],
+	"autoname": "format:EAL-{#####}",
+	"creation": "2026-06-06 00:00:00",
+	"doctype": "DocType",
+	"engine": "InnoDB",
+	"field_order": [
+		"student",
+		"action",
+		"trigger_source",
+		"column_break_1",
+		"status_before",
+		"status_after",
+		"section_break_1",
+		"performed_by",
+		"success",
+		"laravel_synced",
+		"column_break_2",
+		"remarks",
+		"laravel_response"
+	],
+	"fields": [
+		{
+			"fieldname": "student",
+			"fieldtype": "Link",
+			"in_list_view": 1,
+			"label": "Student",
+			"options": "Education Student",
+			"reqd": 1
+		},
+		{
+			"fieldname": "action",
+			"fieldtype": "Select",
+			"in_list_view": 1,
+			"label": "Action",
+			"options": "Provision\nSuspend\nResume\nFinancial Hold\nRelease Hold\nDeprovision\nSync Enrollment",
+			"reqd": 1
+		},
+		{
+			"fieldname": "trigger_source",
+			"fieldtype": "Select",
+			"label": "Trigger",
+			"options": "Manual\nFinancial\nAdmission\nWithdrawal\nLaravel Webhook\nScheduler\nSystem",
+			"reqd": 1
+		},
+		{
+			"fieldname": "column_break_1",
+			"fieldtype": "Column Break"
+		},
+		{
+			"fieldname": "status_before",
+			"fieldtype": "Data",
+			"label": "Status Before"
+		},
+		{
+			"fieldname": "status_after",
+			"fieldtype": "Data",
+			"in_list_view": 1,
+			"label": "Status After"
+		},
+		{
+			"fieldname": "section_break_1",
+			"fieldtype": "Section Break"
+		},
+		{
+			"fieldname": "performed_by",
+			"fieldtype": "Link",
+			"label": "Performed By",
+			"options": "User"
+		},
+		{
+			"default": "1",
+			"fieldname": "success",
+			"fieldtype": "Check",
+			"label": "Success"
+		},
+		{
+			"fieldname": "laravel_synced",
+			"fieldtype": "Check",
+			"label": "Laravel Synced"
+		},
+		{
+			"fieldname": "column_break_2",
+			"fieldtype": "Column Break"
+		},
+		{
+			"fieldname": "remarks",
+			"fieldtype": "Small Text",
+			"label": "Remarks"
+		},
+		{
+			"fieldname": "laravel_response",
+			"fieldtype": "Code",
+			"label": "Laravel Response",
+			"options": "JSON"
+		}
+	],
+	"index_web_pages_for_search": 1,
+	"links": [],
+	"modified": "2026-06-06 00:00:00",
+	"module": "Omnexa Education",
+	"name": "Education Account Access Log",
+	"owner": "Administrator",
+	"permissions": [
+		{
+			"create": 1,
+			"delete": 1,
+			"email": 1,
+			"export": 1,
+			"print": 1,
+			"read": 1,
+			"report": 1,
+			"role": "System Manager",
+			"share": 1,
+			"write": 1
+		},
+		{
+			"create": 1,
+			"delete": 0,
+			"email": 1,
+			"export": 1,
+			"print": 1,
+			"read": 1,
+			"report": 1,
+			"role": "Education Manager",
+			"share": 0,
+			"write": 1
+		},
+		{
+			"create": 0,
+			"delete": 0,
+			"email": 0,
+			"export": 0,
+			"print": 1,
+			"read": 1,
+			"report": 1,
+			"role": "Accounts User",
+			"share": 0,
+			"write": 0
+		}
+	],
+	"sort_field": "modified",
+	"sort_order": "DESC",
+	"states": [],
+	"track_changes": 1
+}

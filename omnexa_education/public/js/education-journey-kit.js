@@ -1,34 +1,13 @@
 /**
- * Education Journey Kit — Finance-parity desk UI for education role portals
+ * Education Journey Kit — healthcare-parity desk UI (OmnexaJourney shell override)
  */
 /* global frappe */
 (function (window) {
 	"use strict";
+	const OJ = window.OmnexaJourney;
+	if (!OJ) return;
 
-	const FINANCE_ASSETS = [
-		"/assets/omnexa_core/css/omnexa-finance-journey.css",
-		"/assets/omnexa_core/js/omnexa-finance-journey.js",
-	];
-
-	function journeyEngine() {
-		return window.OmnexaFinanceJourney || window.OmnexaJourney;
-	}
-
-	function ensureFinanceAssets(callback, attempt) {
-		const tries = attempt || 0;
-		if (window.OmnexaFinanceJourney) {
-			callback();
-			return;
-		}
-		if (tries >= 80) {
-			callback();
-			return;
-		}
-		frappe.require(FINANCE_ASSETS).then(() => {
-			if (window.OmnexaFinanceJourney) callback();
-			else setTimeout(() => ensureFinanceAssets(callback, tries + 1), 50);
-		});
-	}
+	const LOGO = "/assets/omnexa_education/logo.png";
 
 	function navigateRoute(route) {
 		if (!route || route === "#") return;
@@ -56,25 +35,11 @@
 	}
 
 	function showCallError(err, fallback) {
-		const OJ = journeyEngine();
 		const msg = (err && (err.message || err._error_message)) || fallback || OJ.t("تعذر التحميل", "Could not load data");
 		frappe.msgprint({ title: OJ.t("خطأ", "Error"), indicator: "red", message: msg });
 	}
 
-	function call(method, args) {
-		const OJ = journeyEngine();
-		if (OJ.call) return OJ.call(method, args);
-		return new Promise((resolve, reject) => {
-			frappe.call({ method, args: args || {}, callback: (r) => resolve(r.message), error: reject });
-		});
-	}
-
 	function dataTable(columns, rows) {
-		const OJ = journeyEngine();
-		if (OJ.dataTable) {
-			const result = OJ.dataTable(columns, rows);
-			if (result && result.jquery) return result;
-		}
 		const cols = columns || [];
 		const head = cols.map((c) => `<th>${OJ.esc(c.label)}</th>`).join("");
 		const body = (rows || [])
@@ -87,44 +52,16 @@
 	}
 
 	function linkGrid(links) {
-		const OJ = journeyEngine();
-		if (OJ.linkGrid) return OJ.linkGrid(links);
 		const $g = $('<div class="oj-link-grid"></div>');
 		(links || []).forEach((link) => {
-			const icon = link.logoUrl
-				? `<img class="oj-link-logo" src="${OJ.esc(link.logoUrl)}" alt="" />`
-				: `<div class="oj-link-icon">${link.icon || "•"}</div>`;
-			const $card = $(`<div class="oj-link-card">${icon}<div class="oj-link-label">${OJ.esc(link.label)}</div></div>`);
+			const $card = $(`<div class="oj-link-card"><div class="oj-link-icon">${link.icon || "•"}</div><div class="oj-link-label">${OJ.esc(link.label)}</div></div>`);
 			$card.on("click", () => navigateRoute(link.route));
 			$g.append($card);
 		});
 		return $g;
 	}
 
-	function portalCardGrid(portals, onSelect) {
-		const OJ = journeyEngine();
-		if (OJ.portalCardGrid) return OJ.portalCardGrid(portals, onSelect);
-		const $g = $('<div class="oj-clinic-grid oj-finance-portal-grid"></div>');
-		(portals || []).forEach((p) => {
-			const icon = p.logoUrl
-				? `<img class="oj-portal-logo" src="${OJ.esc(p.logoUrl)}" alt="" />`
-				: `<div class="oj-clinic-icon">${p.icon || "🎓"}</div>`;
-			const $card = $(`
-				<div class="oj-clinic-card">
-					${icon}
-					<h4>${OJ.esc(p.name)}</h4>
-					<p class="oj-muted">${OJ.esc(p.subtitle || "")}</p>
-					<button type="button" class="oj-btn oj-btn-primary oj-btn-sm">${OJ.t("فتح", "Open")}</button>
-				</div>`);
-			$card.on("click", () => (onSelect ? onSelect(p) : navigateRoute(p.route)));
-			$g.append($card);
-		});
-		return $g;
-	}
-
 	function workflowJourneyGrid(steps, onSelect) {
-		const OJ = journeyEngine();
-		if (OJ.workflowJourneyGrid) return OJ.workflowJourneyGrid(steps, onSelect);
 		const $g = $('<div class="oj-workflow-grid"></div>');
 		(steps || []).forEach((s) => {
 			const $card = $(`
@@ -140,137 +77,177 @@
 	}
 
 	function portalCategoryGrid(groups) {
-		const OJ = journeyEngine();
-		if (OJ.portalCategoryGrid) return OJ.portalCategoryGrid(groups, (p) => navigateRoute(p.route));
-		const $root = $('<div class="oj-portal-catalog oj-education-workcenter-portals"></div>');
+		const $root = $('<div class="oj-portal-catalog oj-demo-portals oj-education-portals"></div>');
 		(groups || []).forEach((g) => {
-			const title = OJ.lang && OJ.lang() === "ar" ? g.label_ar : g.label_en;
+			const title = OJ.lang() === "ar" ? g.label_ar : g.label_en;
 			const $sec = $(`<div class="oj-portal-section"><h4 class="oj-portal-cat-title">${OJ.esc(title)}</h4></div>`);
-			const portals = (g.portals || []).map((p) => ({
-				name: OJ.t(p.label_ar, p.label_en),
-				subtitle: OJ.t(p.subtitle_ar, p.subtitle_en),
-				logoUrl: p.logo_url,
+			const clinics = (g.portals || []).map((p) => ({
+				id: p.id,
+				name: OJ.lang() === "ar" ? p.label_ar : p.label_en,
+				subtitle: OJ.t(p.subtitle_ar || "", p.subtitle_en || ""),
+				icon: p.icon || "🎓",
+				doctor_count: 0,
+				waiting_count: 0,
 				route: p.route,
-				icon: "🎓",
+				_disabled: p.exists === false,
 			}));
-			$sec.append(portalCardGrid(portals));
+			const $grid = $('<div class="oj-clinic-grid"></div>');
+			clinics.forEach((c) => {
+				const $card = $(`
+					<div class="oj-clinic-card ${c._disabled ? "oj-muted-card" : ""}">
+						<div class="oj-clinic-icon">${c.icon || "🎓"}</div>
+						<h4>${OJ.esc(c.name)}</h4>
+						<p class="oj-muted">${OJ.esc(c.subtitle)}</p>
+						<button type="button" class="oj-btn oj-btn-primary oj-btn-sm">${OJ.t("فتح", "Open")}</button>
+					</div>`);
+				if (!c._disabled) $card.on("click", () => navigateRoute(c.route));
+				$grid.append($card);
+			});
+			$sec.append($grid);
 			$root.append($sec);
 		});
 		return $root;
 	}
 
-	function mountDeskPage(wrapper, title) {
-		const OJ = journeyEngine();
-		if (OJ.mountDeskPage) return OJ.mountDeskPage(wrapper, title);
-		frappe.ui.make_app_page({ parent: wrapper, title: title, single_column: true });
-		$(wrapper).find(".page-head").hide();
-		return $(wrapper).find(".layout-main-section");
+	function bindSidebarNav($root, homeRoute) {
+		$root.find(".oj-sidebar-item[data-nav-route]").on("click", function (e) {
+			e.preventDefault();
+			navigateRoute($(this).attr("data-nav-route"));
+		});
+		if (homeRoute) {
+			$root.find("[data-oj-home]").on("click", function (e) {
+				e.preventDefault();
+				navigateRoute(homeRoute);
+			});
+		}
 	}
 
-	const LOGO = "/assets/omnexa_education/logo.png";
+	function userMenuHtml() {
+		const name = frappe.session.user_fullname || frappe.session.user;
+		return `<div class="oj-user-menu">
+			<button type="button" class="oj-user-btn" aria-haspopup="true" aria-expanded="false">
+				<span class="oj-user-avatar">${OJ.esc((name || "U").charAt(0).toUpperCase())}</span>
+				<span class="oj-user-name">${OJ.esc(name)}</span>
+				<span class="oj-user-caret">▾</span>
+			</button>
+			<div class="oj-user-dropdown" role="menu">
+				<div class="oj-user-dropdown-title">${OJ.t("الحساب", "Account")}</div>
+				<a href="/app/user-profile" class="oj-user-dropdown-item" role="menuitem">⚙ ${OJ.t("الملف الشخصي", "Profile")}</a>
+			</div>
+		</div>`;
+	}
 
-	const SIDEBARS = {
-		finance: [
-			{ label_ar: "مركز العمل", label_en: "Workcenter", route: "/app/education-workcenter", icon: "🏢" },
-			{ label_ar: "الشؤون المالية", label_en: "Finance Desk", route: "/app/education-finance-desk", logoUrl: LOGO },
-			{ label_ar: "ربط Laravel", label_en: "Laravel Integration", route: "/app/education-laravel-integration", icon: "🔗" },
-		],
-		laravel: [
-			{ label_ar: "مركز العمل", label_en: "Workcenter", route: "/app/education-workcenter", icon: "🏢" },
-			{ label_ar: "ربط Laravel", label_en: "Laravel Integration", route: "/app/education-laravel-integration", logoUrl: LOGO },
-			{ label_ar: "الشؤون المالية", label_en: "Finance Desk", route: "/app/education-finance-desk", icon: "💰" },
-		],
-		parent: [
-			{ label_ar: "بوابة ولي الأمر", label_en: "Parent Portal", route: "/app/education-parent-mobile", logoUrl: LOGO },
-			{ label_ar: "مركز العمل", label_en: "Workcenter", route: "/app/education-workcenter", icon: "🏢" },
-		],
-		student: [
-			{ label_ar: "بوابة الطالب", label_en: "Student Portal", route: "/app/education-student-portal", logoUrl: LOGO },
-			{ label_ar: "مركز العمل", label_en: "Workcenter", route: "/app/education-workcenter", icon: "🏢" },
-		],
-		teacher: [
-			{ label_ar: "سجل الدرجات", label_en: "Gradebook", route: "/app/education-teacher-gradebook", logoUrl: LOGO },
-			{ label_ar: "الجدول", label_en: "Timetable", route: "/app/education-timetable-board", icon: "📅" },
-			{ label_ar: "مركز العمل", label_en: "Workcenter", route: "/app/education-workcenter", icon: "🏢" },
-		],
-		admissions: [
-			{ label_ar: "بوابة القبول", label_en: "Admissions Portal", route: "/app/education-admissions-portal", logoUrl: LOGO },
-			{ label_ar: "مركز العمل", label_en: "Workcenter", route: "/app/education-workcenter", icon: "🏢" },
-		],
-		registrar: [
-			{ label_ar: "مكتب المسجل", label_en: "Registrar Desk", route: "/app/education-registrar-desk", logoUrl: LOGO },
-			{ label_ar: "مركز العمل", label_en: "Workcenter", route: "/app/education-workcenter", icon: "🏢" },
-		],
-		workcenter: [
-			{ label_ar: "مركز العمل", label_en: "Workcenter", route: "/app/education-workcenter", logoUrl: LOGO },
-			{ label_ar: "الشؤون المالية", label_en: "Finance Desk", route: "/app/education-finance-desk", icon: "💰" },
-			{ label_ar: "بوابة القبول", label_en: "Admissions", route: "/app/education-admissions-portal", icon: "📋" },
-		],
+	function bindUserMenu($root) {
+		const $menu = $root.find(".oj-user-menu");
+		$menu.find(".oj-user-btn").on("click", function (e) {
+			e.stopPropagation();
+			$menu.toggleClass("open");
+			$(this).attr("aria-expanded", $menu.hasClass("open"));
+		});
+		$(document).on("click.ojEduUserMenu", () => $menu.removeClass("open"));
+	}
+
+	function installEducationKit() {
+		OJ.shell = function (options) {
+		const opts = options || {};
+		const sidebar = opts.sidebar || OJ.defaultSidebar(opts.sidebarRole || "workcenter", opts.currentPage);
+		const navHtml = sidebar
+			.map(
+				(n) =>
+					`<a class="oj-sidebar-item ${n.active ? "active" : ""}" href="#" data-nav-route="${OJ.esc(n.route || "")}"><span class="oj-sidebar-icon">${n.icon || "•"}</span><span>${OJ.esc(n.label)}</span></a>`
+			)
+			.join("");
+		const isRtl = OJ.lang() === "ar";
+		const brandLogo = `<img class="oj-brand-logo" src="${OJ.esc(opts.brandLogoUrl || LOGO)}" alt="" />`;
+		const $root = $(`<div class="oj-shell oj-desk-page oj-education-shell ${isRtl ? "oj-rtl" : "oj-ltr"}" dir="${isRtl ? "rtl" : "ltr"}"></div>`);
+		const kpiHtml = (opts.kpis || [])
+			.map((k) => `<div class="oj-kpi-card"><div class="oj-kpi-value">${OJ.esc(k.value)}</div><div class="oj-kpi-label">${OJ.esc(k.label)}</div></div>`)
+			.join("");
+		$root.html(`
+			<aside class="oj-sidebar">${navHtml}<div class="oj-sidebar-spacer"></div>
+				<a class="oj-sidebar-item" href="#" data-oj-home="1">🏠 ${OJ.t("الرئيسية", "Home")}</a>
+				<a class="oj-sidebar-item oj-logout" href="/app">⏻ ${OJ.t("خروج", "Logout")}</a>
+			</aside>
+			<div class="oj-main">
+				<header class="oj-topbar">
+					<div class="oj-topbar-brand">${brandLogo}<div><strong>ErpGenEx Education</strong><small>${OJ.esc(opts.subtitle || OJ.t("EduSphere", "EduSphere"))}</small></div></div>
+					<div class="oj-topbar-meta"><span class="oj-pill">${OJ.esc(opts.role || "")}</span>${userMenuHtml()}</div>
+				</header>
+				<div class="oj-title-row"><h1>${OJ.esc(opts.title || "")}</h1></div>
+				${kpiHtml ? `<div class="oj-kpi-row">${kpiHtml}</div>` : ""}
+				<div class="oj-body"></div>
+			</div>`);
+		const $body = $root.find(".oj-body");
+		if (opts.bodyEl) $body.append(opts.bodyEl);
+		else if (opts.body) $body.html(opts.body);
+		bindSidebarNav($root, opts.homeRoute || "/app/education-workcenter");
+		bindUserMenu($root);
+		return $root;
 	};
 
-	function defaultSidebar(role, activeRoute) {
-		const OJ = journeyEngine();
-		const route = activeRoute || "";
-		const items = SIDEBARS[role] || SIDEBARS.workcenter;
-		return items.map((item) => ({
-			label: OJ.t(item.label_ar, item.label_en),
-			route: item.route,
-			icon: item.icon || "•",
-			logoUrl: item.logoUrl || "",
-			active: route && (item.route === route || route.includes(item.route.replace("/app/", ""))),
-		}));
+	function defaultSidebar(role, currentPage) {
+		const page = (currentPage || "").replace(/^\/app\//, "");
+		const mark = (items) =>
+			items.map((item) => ({
+				...item,
+				active: item.route === `/app/${page}` || (page && item.route.includes(page)),
+			}));
+		const menus = {
+			workcenter: [
+				{ label: OJ.t("مركز العمل", "Workcenter"), icon: "🏢", route: "/app/education-workcenter" },
+				{ label: OJ.t("بوابات الأدوار", "Role Portals"), icon: "🌐", route: "/app/education-workcenter" },
+			],
+			finance: [
+				{ label: OJ.t("مركز العمل", "Workcenter"), icon: "🏢", route: "/app/education-workcenter" },
+				{ label: OJ.t("الشؤون المالية", "Finance Desk"), icon: "💰", route: "/app/education-finance-desk" },
+				{ label: OJ.t("ربط Laravel", "Laravel"), icon: "🔗", route: "/app/education-laravel-integration" },
+				{ label: OJ.t("الطلاب", "Students"), icon: "🎓", route: "List/Education Student" },
+			],
+			laravel: [
+				{ label: OJ.t("مركز العمل", "Workcenter"), icon: "🏢", route: "/app/education-workcenter" },
+				{ label: OJ.t("ربط Laravel", "Laravel"), icon: "🔗", route: "/app/education-laravel-integration" },
+				{ label: OJ.t("الشؤون المالية", "Finance Desk"), icon: "💰", route: "/app/education-finance-desk" },
+			],
+			admissions: [
+				{ label: OJ.t("مركز العمل", "Workcenter"), icon: "🏢", route: "/app/education-workcenter" },
+				{ label: OJ.t("بوابة القبول", "Admissions"), icon: "📋", route: "/app/education-admissions-portal" },
+				{ label: OJ.t("الطلبات", "Applications"), icon: "📄", route: "List/Education Admission Application" },
+			],
+			registrar: [
+				{ label: OJ.t("مركز العمل", "Workcenter"), icon: "🏢", route: "/app/education-workcenter" },
+				{ label: OJ.t("مكتب المسجل", "Registrar"), icon: "📚", route: "/app/education-registrar-desk" },
+				{ label: OJ.t("الطلاب", "Students"), icon: "🎓", route: "List/Education Student" },
+			],
+			teacher: [
+				{ label: OJ.t("مركز العمل", "Workcenter"), icon: "🏢", route: "/app/education-workcenter" },
+				{ label: OJ.t("سجل الدرجات", "Gradebook"), icon: "📝", route: "/app/education-teacher-gradebook" },
+				{ label: OJ.t("الجدول", "Timetable"), icon: "📅", route: "/app/education-timetable-board" },
+			],
+			student: [
+				{ label: OJ.t("بوابة الطالب", "Student Portal"), icon: "🎓", route: "/app/education-student-portal" },
+				{ label: OJ.t("مركز العمل", "Workcenter"), icon: "🏢", route: "/app/education-workcenter" },
+			],
+			parent: [
+				{ label: OJ.t("بوابة ولي الأمر", "Parent Portal"), icon: "👪", route: "/app/education-parent-mobile" },
+				{ label: OJ.t("مركز العمل", "Workcenter"), icon: "🏢", route: "/app/education-workcenter" },
+			],
+		};
+		return mark(menus[role] || menus.workcenter);
 	}
 
-	function shell(options) {
-		const OJ = journeyEngine();
-		const opts = options || {};
-		const sidebarItems = typeof opts.sidebar === "object" && opts.sidebar.jquery ? null : opts.sidebar;
-		if (OJ.shell && sidebarItems) {
-			const roleLabel =
-				typeof opts.role === "string" && opts.role.length <= 32
-					? opts.role
-					: OJ.t(opts.roleAr || "", opts.roleEn || opts.role || "");
-			const $shell = OJ.shell({
-				title: opts.title,
-				subtitle: opts.subtitle || OJ.t("ErpGenEx — EduSphere", "ErpGenEx — EduSphere"),
-				role: roleLabel,
-				brandLogoUrl: opts.brandLogoUrl || LOGO,
-				kpis: opts.kpis,
-				sidebar: sidebarItems,
-				bodyEl: opts.bodyEl,
-				currentPage: opts.currentPage || "",
-			});
-			$shell.find(".oj-topbar-brand strong").text(OJ.t("ErpGenEx Education", "ErpGenEx Education"));
-			return $shell;
-		}
-		const $wrap = $('<div class="oj-shell education-journey-shell"></div>');
-		if (opts.bodyEl) $wrap.append(opts.bodyEl);
-		return $wrap;
+	Object.assign(OJ, {
+			navigateRoute,
+		resolveCompanyBranch,
+		showCallError,
+		dataTable,
+		linkGrid,
+			workflowJourneyGrid,
+			portalCategoryGrid,
+		defaultSidebar,
+			educationLogo: LOGO,
+			installEducationKit,
+	});
 	}
 
-	function bootEducationJourney(callback) {
-		ensureFinanceAssets(() => {
-			const OJ = journeyEngine();
-			if (!window.OmnexaJourney) window.OmnexaJourney = {};
-			Object.assign(window.OmnexaJourney, OJ, {
-				resolveCompanyBranch,
-				showCallError,
-				dataTable,
-				linkGrid,
-				portalCardGrid,
-				portalCategoryGrid,
-				workflowJourneyGrid,
-				mountDeskPage,
-				defaultSidebar,
-				shell,
-				navigateRoute,
-				call,
-				educationLogo: LOGO,
-			});
-			if (callback) callback(window.OmnexaJourney);
-		});
-	}
-
-	window.EducationJourney = { boot: bootEducationJourney, LOGO };
-	bootEducationJourney();
+	installEducationKit();
 })(window);

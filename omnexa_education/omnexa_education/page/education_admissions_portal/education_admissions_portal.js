@@ -1,9 +1,8 @@
 frappe.pages["education-admissions-portal"].on_page_load = function (wrapper) {
-	const OJ = window.OmnexaJourney;
-	if (!OJ) return;
-	const { company, branch } = OJ.resolveCompanyBranch();
-	const $mount = OJ.mountDeskPage(wrapper, __("Admissions Portal"));
-	OJ.call("omnexa_education.api.journey_role_desks.get_admissions_dashboard", { company, branch }).then((data) => {
+	omnexa_education.boot.ready(function (OJ) {
+		if (!OJ || !OJ.mountDeskPage) return;
+		const { company, branch } = OJ.resolveCompanyBranch();
+		const $mount = OJ.mountDeskPage(wrapper, __("Admissions Portal"));
 		const $body = $('<div></div>');
 		$body.append(OJ.linkGrid([
 			{ label: OJ.t("طلبات القبول", "Applications"), icon: "📋", route: "List/Education Admission Application" },
@@ -11,18 +10,26 @@ frappe.pages["education-admissions-portal"].on_page_load = function (wrapper) {
 			{ label: OJ.t("القبول الإلكتروني", "Online Applications"), icon: "🌐", route: "List/Education Online Application" },
 			{ label: OJ.t("رسوم القبول", "Admission Fees"), icon: "💳", route: "List/Education Fee Item" },
 		]));
-		$mount.append(OJ.shell({
+		const $shell = OJ.shell({
 			title: OJ.t("بوابة القبول", "Admissions Portal"),
 			subtitle: OJ.t("ErpGenEx — EduSphere", "ErpGenEx — EduSphere"),
 			role: OJ.t("مسؤول القبول", "Admissions Officer"),
 			brandLogoUrl: OJ.educationLogo,
 			kpis: [
-				{ value: data.applications, label: OJ.t("الطلبات", "Applications") },
-				{ value: data.waitlist, label: OJ.t("انتظار", "Waitlist") },
+				{ value: "…", label: OJ.t("الطلبات", "Applications") },
+				{ value: "…", label: OJ.t("انتظار", "Waitlist") },
 			],
-			sidebar: OJ.defaultSidebar("admissions", "/app/education-admissions-portal"),
-			bodyEl: $body,
+			sidebarRole: "admissions",
 			currentPage: "education-admissions-portal",
-		}));
-	}).catch((e) => OJ.showCallError(e));
+			bodyEl: $body,
+			homeRoute: "/app/education-workcenter",
+		});
+		$mount.empty().append($shell);
+		OJ.call("omnexa_education.api.journey_role_desks.get_admissions_dashboard", { company, branch })
+			.then((data) => {
+				$shell.find(".oj-kpi-card").eq(0).find(".oj-kpi-value").text(data.applications ?? "0");
+				$shell.find(".oj-kpi-card").eq(1).find(".oj-kpi-value").text(data.waitlist ?? "0");
+			})
+			.catch((e) => OJ.showCallError(e));
+	});
 };

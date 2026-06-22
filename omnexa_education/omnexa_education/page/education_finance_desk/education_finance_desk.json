@@ -1,0 +1,15 @@
+{
+	"doctype": "Page",
+	"module": "Omnexa Education",
+	"name": "education-finance-desk",
+	"page_name": "education-finance-desk",
+	"standard": "Yes",
+	"title": "Education Finance Desk",
+	"roles": [
+		{"role": "System Manager"},
+		{"role": "Education Manager"},
+		{"role": "Accounts User"},
+		{"role": "Accounts Manager"},
+		{"role": "Company Admin"}
+	]
+}

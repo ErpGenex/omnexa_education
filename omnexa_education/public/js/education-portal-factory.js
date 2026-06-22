@@ -1,59 +1,63 @@
 /**
- * Shared education portal page renderer — Finance Journey parity
+ * Education portal factory — healthcare-parity Journey shell + API data
  */
-/* global frappe */
-window.EducationPortal = {
-	render(wrapper, { title, apiMethod, role, links, onData, pageRoute }) {
-		function boot(OJ) {
-			const { company, branch } = OJ.resolveCompanyBranch();
-			const $mount = OJ.mountDeskPage(wrapper, title);
+frappe.provide("omnexa_education.portal");
 
-			async function renderBody() {
-				const data = await OJ.call(apiMethod, { company, branch });
-				if (onData) onData(data);
-				const kpis = (data.kpis || []).map((k) => ({ value: k.value, label: OJ.t(k.label_ar, k.label_en) }));
-				const $body = $('<div class="education-portal-body"></div>');
-				if (links && links.length) {
-					$body.append(
-						OJ.linkGrid(
-							links.map((l) => ({
-								...l,
-								label: OJ.t(l.label_ar, l.label_en),
-								logoUrl: l.logoUrl || OJ.educationLogo,
-							}))
-						)
-					);
-				}
-				if (data.table) {
-					$body.append(`<h4 class="oj-section-title">${OJ.esc(data.table.title || "")}</h4>`);
-					$body.append(OJ.dataTable(data.table.columns, data.table.rows));
-				}
-				if (data.html) $body.append(data.html);
-				const active = pageRoute || window.location.pathname.replace(/^\//, "");
-				const $shell = OJ.shell({
-					title: OJ.t(data.title_ar || title, data.title_en || title),
-					subtitle: data.subtitle ? OJ.t(data.subtitle_ar, data.subtitle_en) : OJ.t("ErpGenEx — EduSphere", "ErpGenEx — EduSphere"),
-					role: role,
-					brandLogoUrl: OJ.educationLogo,
-					kpis,
-					sidebar: OJ.defaultSidebar(role, active.startsWith("app/") ? `/${active}` : `/app/${active}`),
-					bodyEl: $body,
-					currentPage: (pageRoute || "").replace(/^\/app\//, ""),
-				});
-				$mount.empty().append($shell);
-				$shell.find(".oj-sidebar-item[data-nav-route]").off("click").on("click", function (e) {
-					e.preventDefault();
-					OJ.navigateRoute($(this).attr("data-nav-route"));
-				});
-			}
-
-			renderBody().catch((err) => OJ.showCallError(err));
-		}
-
-		if (window.OmnexaJourney && window.OmnexaJourney.shell) {
-			boot(window.OmnexaJourney);
+omnexa_education.portal.mount = function (wrapper, config) {
+	omnexa_education.boot.ready(function (OJ) {
+		if (!OJ || !OJ.mountDeskPage) {
+			frappe.msgprint(__("Run: bench build --app omnexa_education"));
 			return;
 		}
-		window.EducationJourney.boot(() => boot(window.OmnexaJourney));
-	},
+		const { company, branch } = OJ.resolveCompanyBranch();
+		const $mount = OJ.mountDeskPage(wrapper, config.deskTitle || config.titleEn || __("Portal"));
+
+		async function render() {
+			const args = Object.assign({ company, branch }, config.apiArgs || {});
+			const data = config.api ? await OJ.call(config.api, args) : {};
+			const kpis = (config.kpis || []).map((k) => ({
+				value: data[k.field] ?? k.value ?? "—",
+				label: OJ.t(k.labelAr, k.labelEn),
+			}));
+			if (data.count != null && !config.kpis?.length) {
+				kpis.push({ value: data.count, label: OJ.t("السجلات", "Records") });
+			}
+			const $body = $("<div></div>");
+			if (config.links) {
+				$body.append(
+					OJ.linkGrid(
+						config.links.map((l) => ({
+							icon: l.icon,
+							label: OJ.t(l.labelAr, l.labelEn),
+							route: l.route,
+						}))
+					)
+				);
+			}
+			if (config.columns && config.rowsField) {
+				$body.append(`<h4 class="oj-section-title">${OJ.t(config.tableTitleAr || "", config.tableTitleEn || "")}</h4>`);
+				$body.append(
+					OJ.dataTable(
+						config.columns.map((c) => ({ field: c.field, label: OJ.t(c.ar, c.en) })),
+						data[config.rowsField] || []
+					)
+				);
+			}
+			if (config.renderExtra) config.renderExtra($body, data);
+			const $shell = OJ.shell({
+				title: OJ.t(config.titleAr, config.titleEn),
+				subtitle: OJ.t("ErpGenEx — EduSphere", "ErpGenEx — EduSphere"),
+				role: OJ.t(config.roleAr || "", config.roleEn || ""),
+				brandLogoUrl: OJ.educationLogo,
+				kpis,
+				sidebarRole: config.sidebarRole || "workcenter",
+				currentPage: config.currentPage || "",
+				bodyEl: $body,
+				homeRoute: config.homeRoute || "/app/education-workcenter",
+			});
+			$mount.empty().append($shell);
+		}
+
+		render().catch((e) => OJ.showCallError(e));
+	});
 };

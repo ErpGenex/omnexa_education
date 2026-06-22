@@ -38,3 +38,11 @@ def after_migrate():
 		sync_report_roles()
 	except Exception:
 		frappe.log_error(frappe.get_traceback(), "Omnexa Education: report role sync failed")
+
+	try:
+		from omnexa_education.api.education_role_demo import ensure_education_roles, sync_journey_page_roles
+
+		ensure_education_roles()
+		sync_journey_page_roles()
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), "Omnexa Education: role sync failed")
