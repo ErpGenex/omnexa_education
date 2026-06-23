@@ -27,6 +27,57 @@ frappe.pages["education-laravel-integration"].on_page_load = function (wrapper) 
 			const insts = data.institutions || [];
 			const inst = insts.length ? insts[0].name : null;
 
+			const $hero = $(`
+				<div class="oj-panel" style="margin:16px 0;padding:20px;background:linear-gradient(135deg,#003366,#0055a4);color:#fff;border-radius:12px">
+					<h4 style="margin:0 0 8px;color:#fff">${OJ.t("مزامنة شاملة → Laravel", "Full Sync → Laravel")}</h4>
+					<p style="margin:0 0 12px;opacity:.9">${OJ.t(
+						"زرع الديمو (إن لزم) + ربط بوابات الطالب/ولي الأمر + نقل المؤسسات والطلاب والمعلمين إلى kemetgate",
+						"Seed demo if needed, link student/parent portals, push institutions, students, and teachers to kemetgate"
+					)}</p>
+				</div>`);
+			const $syncAll = $(`<button type="button" class="btn btn-lg" style="background:#fff;color:#003366;font-weight:700">${OJ.t("🚀 مزامنة جميع البيانات", "🚀 Sync All Data")}</button>`);
+			$syncAll.on("click", async () => {
+				$syncAll.prop("disabled", true).text(OJ.t("جاري المزامنة...", "Syncing..."));
+				try {
+					const res = await OJ.call("omnexa_education.api.education_laravel_full_sync.sync_all_data_to_laravel", {
+						seed_demo_if_empty: 1,
+						institution_type: "All 5 Types",
+						process_queue: 1,
+						configure_laravel: 1,
+					});
+					const hint = res.portal_hint || {};
+					frappe.msgprint({
+						title: OJ.t("نتيجة المزامنة", "Sync Result"),
+						message: `
+							<p><strong>${OJ.esc(res.message || "")}</strong></p>
+							<p>Ping: ${res.ping?.ok ? "OK" : OJ.t("فشل", "Failed")}</p>
+							<p>${OJ.t("الطلاب", "Students")}: ${res.students?.provisioned || 0} · ${OJ.t("أولياء", "Parents")}: ${res.parents?.parents_ok || 0}</p>
+							<hr>
+							<p>${OJ.t("لعرض البوابات", "To view portals")}:</p>
+							<p><code>${OJ.esc(hint.student_login || "student@demo.education")}</code> · <code>${OJ.esc(hint.parent_login || "parent@demo.education")}</code></p>
+							<p>${OJ.t("كلمة المرور", "Password")}: <code>${OJ.esc(hint.password || "Education@Demo2026")}</code></p>
+							<p class="text-muted">${OJ.esc(hint.note || "")}</p>
+						`,
+						indicator: res.ok ? "green" : "orange",
+					});
+					render();
+				} catch (e) {
+					OJ.showCallError(e);
+				} finally {
+					$syncAll.prop("disabled", false).text(OJ.t("🚀 مزامنة جميع البيانات", "🚀 Sync All Data"));
+				}
+			});
+			const $linkPortals = $(`<button type="button" class="btn btn-default btn-lg" style="margin-left:8px;border-color:#fff;color:#fff">${OJ.t("ربط البوابات فقط", "Link Portals Only")}</button>`);
+			$linkPortals.on("click", async () => {
+				const res = await OJ.call("omnexa_education.api.education_portal_link.ensure_demo_portal_users_linked");
+				frappe.show_alert({
+					message: `${OJ.t("طالب", "Student")}: ${res.student_linked || "—"} · ${OJ.t("أولياء", "Parents")}: ${res.parent_children || 0}`,
+					indicator: res.student_linked ? "green" : "orange",
+				});
+			});
+			$hero.append($("<div style='display:flex;flex-wrap:wrap;gap:8px'></div>").append($syncAll, $linkPortals));
+			$body.prepend($hero);
+
 			const $actions = $(`<div class="oj-actions" style="margin-top:16px;display:flex;flex-wrap:wrap;gap:8px"></div>`);
 			const $ping = $(`<button type="button" class="btn btn-primary">${OJ.t("اختبار الاتصال", "Test Connection")}</button>`);
 			$ping.on("click", async () => {

@@ -98,6 +98,20 @@ frappe.pages["education-workcenter"].on_page_load = function (wrapper) {
 					}
 				});
 				$demoPanel.append($seedBtn);
+				const $laravelSync = $(`<button type="button" class="btn btn-success" style="margin-left:8px">${OJ.t("مزامنة → Laravel", "Sync → Laravel")}</button>`);
+				$laravelSync.on("click", async () => {
+					$laravelSync.prop("disabled", true).text(OJ.t("جاري المزامنة...", "Syncing..."));
+					try {
+						const res = await OJ.call("omnexa_education.api.education_laravel_full_sync.sync_all_data_to_laravel");
+						frappe.show_alert({ message: res.message || OJ.t("تم", "Done"), indicator: res.ok ? "green" : "orange" });
+						render();
+					} catch (e) {
+						OJ.showCallError(e);
+					} finally {
+						$laravelSync.prop("disabled", false).text(OJ.t("مزامنة → Laravel", "Sync → Laravel"));
+					}
+				});
+				$demoPanel.append($laravelSync);
 				$demoPanel.append(`<p class="oj-muted" style="margin-top:8px">${OJ.t(
 					"أو من فرع: Branch → Demo data → Education → تفعيل ديمو EduSphere",
 					"Or from Branch → Demo data → Education → Activate EduSphere Demo"

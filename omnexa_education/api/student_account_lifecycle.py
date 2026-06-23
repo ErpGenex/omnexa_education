@@ -318,3 +318,30 @@ def bulk_suspend_overdue(company: str | None = None, branch: str | None = None) 
 		apply_financial_hold(row["student"], row["reason"], trigger="Financial")
 		count += 1
 	return {"suspended": count}
+
+
+@frappe.whitelist()
+def bulk_provision_students(
+	company: str | None = None,
+	branch: str | None = None,
+	institution: str | None = None,
+) -> dict:
+	"""Provision all active students to ErpGenEx User + Laravel."""
+	filters: dict = {"status": "Active"}
+	if company:
+		filters["company"] = company
+	if branch:
+		filters["branch"] = branch
+	if institution:
+		filters["institution"] = institution
+
+	names = frappe.get_all("Education Student", filters=filters, pluck="name", limit=500)
+	ok = failed = 0
+	for name in names:
+		try:
+			provision_student(name, trigger="Bulk Sync")
+			ok += 1
+		except Exception:
+			failed += 1
+			frappe.log_error(frappe.get_traceback(), f"Bulk provision failed: {name}")
+	return {"provisioned": ok, "failed": failed, "total": len(names)}
