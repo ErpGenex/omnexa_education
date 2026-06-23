@@ -70,6 +70,10 @@ def get_site_config(institution: str | None = None) -> dict:
 			"apply": "/education/apply",
 			"desk": "/app/education-workcenter",
 			"login": "/login",
+			"laravel_portal": "https://kemetgate.com",
+			"laravel_login": "https://kemetgate.com/login",
+			"laravel_student": "https://kemetgate.com/student-portal/dashboard",
+			"laravel_parent": "https://kemetgate.com/parent-dashboard",
 		},
 	}
 

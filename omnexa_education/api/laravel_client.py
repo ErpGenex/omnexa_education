@@ -44,18 +44,27 @@ def _institution_header_value(student_doc: dict | None = None) -> str:
 	return frappe.db.get_value("Education Institution", {}, "name") or ""
 
 
-def _headers(student_doc: dict | None = None) -> dict[str, str]:
+def _headers(student_doc: dict | None = None, *, include_tenant: bool = True) -> dict[str, str]:
 	s = _settings()
 	header_name = (s.laravel_institution_header or "X-ErpGenEx-School").strip()
-	return {
+	headers = {
 		"Authorization": f"Bearer {_api_key()}",
 		"Content-Type": "application/json",
 		"Accept": "application/json",
-		header_name: _institution_header_value(student_doc),
 	}
+	if include_tenant:
+		headers[header_name] = _institution_header_value(student_doc)
+	return headers
 
 
-def _request(method: str, path: str, payload: dict | None = None, student_doc: dict | None = None) -> dict:
+def _request(
+	method: str,
+	path: str,
+	payload: dict | None = None,
+	student_doc: dict | None = None,
+	*,
+	include_tenant: bool = True,
+) -> dict:
 	if not is_laravel_enabled():
 		return {"ok": False, "skipped": True, "reason": "laravel_disabled"}
 
@@ -64,7 +73,7 @@ def _request(method: str, path: str, payload: dict | None = None, student_doc: d
 		resp = requests.request(
 			method=method.upper(),
 			url=url,
-			headers=_headers(student_doc),
+			headers=_headers(student_doc, include_tenant=include_tenant),
 			json=payload,
 			timeout=30,
 		)
@@ -87,7 +96,7 @@ def _request(method: str, path: str, payload: dict | None = None, student_doc: d
 
 
 def ping() -> dict:
-	result = _request("GET", "/api/v1/health")
+	result = _request("GET", "/api/v1/health", include_tenant=False)
 	status = "OK" if result.get("ok") else "Failed"
 	frappe.db.set_single_value("Education Settings", "laravel_last_ping_at", now_datetime())
 	frappe.db.set_single_value("Education Settings", "laravel_last_ping_status", status)
@@ -136,7 +145,13 @@ def sync_classes(payload: dict, student_doc: dict | None = None) -> dict:
 
 def sync_programs(payload: dict) -> dict:
 	"""University HE — sync programs, degree levels, academic structure to Laravel."""
-	return _request("POST", "/api/v1/programs/sync", payload)
+	ctx = _context_from_payload(payload)
+	return _request("POST", "/api/v1/programs/sync", payload, ctx)
+
+
+def sync_institutions(payload: dict) -> dict:
+	"""Register Education Institution rows as Laravel schools (no tenant header)."""
+	return _request("POST", "/api/v1/institutions/sync", payload, include_tenant=False)
 
 
 def sync_academic_calendar(payload: dict, student_doc: dict | None = None) -> dict:
@@ -234,6 +249,8 @@ def _process_queue_item(name: str) -> bool:
 			result = resume_user(payload["laravel_user_id"], payload.get("_student_context"))
 		elif doc.operation == "sync_enrollment":
 			result = sync_enrollments(payload, payload.get("_student_context"))
+		elif doc.operation == "sync_institutions":
+			result = sync_institutions(payload)
 		elif doc.operation == "sync_programs":
 			result = sync_programs(payload)
 		elif doc.operation == "sync_classes":

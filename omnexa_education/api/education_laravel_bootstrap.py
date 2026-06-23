@@ -20,7 +20,7 @@ from omnexa_education.api.parent_account_lifecycle import provision_parent
 from omnexa_education.api.portal_validation import validate_all_portals
 from omnexa_education.api.teacher_account_lifecycle import bulk_provision_teachers
 
-DEFAULT_LARAVEL_URL = "http://127.0.0.1:8080"
+DEFAULT_LARAVEL_URL = "https://kemetgate.com"
 DEFAULT_API_KEY = "edusphere-demo-api-key-2026"
 DEFAULT_WEBHOOK_SECRET = "edusphere-webhook-secret-2026"
 DEFAULT_JWT_SECRET = "edusphere-jwt-shared-secret-2026"
@@ -161,7 +161,11 @@ def bootstrap_laravel_integration(
 
 	sync_results = []
 	inst_list = [i.strip() for i in (institutions or "").split(",") if i.strip()] or MH_INSTITUTIONS
+	institutions_sync = {}
 	if full_sync:
+		from omnexa_education.api.laravel_sync import sync_institutions_to_laravel
+
+		institutions_sync = sync_institutions_to_laravel(inst_list)
 		for inst in inst_list:
 			if frappe.db.exists("Education Institution", inst):
 				try:
@@ -183,18 +187,28 @@ def bootstrap_laravel_integration(
 		"parents": parents,
 		"teachers": teachers,
 		"sync": sync_results,
+		"institutions_sync": institutions_sync,
 		"inbox_seeded": inbox_seeded,
 		"portals": {"score": portals.get("portal_score"), "pages_ok": portals.get("pages_ok")},
 		"e2e": {"passed": e2e.get("passed"), "total": e2e.get("total")},
 		"institutions": inst_list,
 		"laravel_next_steps": [
-			"Merge LMS/Eschools/.env.erpgenex.integration into .env",
-			"php artisan migrate --force",
-			"php artisan db:seed --class=ErpGenExIntegrationSeeder",
-			"php artisan serve --host=0.0.0.0 --port=8080",
-			"Re-run bootstrap or ping from /app/education-laravel-integration",
+			"On kemetgate.com: merge .env.erpgenex.integration into .env (ERPGENEX_ENABLED=true)",
+			"Deploy Laravel with institutions/sync API (git pull + php artisan route:cache)",
+			"Set ERPGENEX_BASE_URL to your public ErpGenEx URL for webhooks",
+			"Re-run bootstrap from /app/education-laravel-integration",
 		],
 	}
+
+
+@frappe.whitelist()
+def connect_kemetgate_laravel(full_sync: int = 1, provision_accounts: int = 0) -> dict:
+	"""Configure EduSphere ↔ kemetgate.com Eschools and run integration bootstrap."""
+	return bootstrap_laravel_integration(
+		laravel_base_url="https://kemetgate.com",
+		full_sync=full_sync,
+		provision_accounts=provision_accounts,
+	)
 
 
 def execute_bootstrap():

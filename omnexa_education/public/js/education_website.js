@@ -143,6 +143,11 @@
 							<h4>${this.t("desk")}</h4>
 							<p><a href="${cfg.urls?.desk || "/app/education-workcenter"}">${this.t("desk")}</a></p>
 						</div>
+						<div>
+							<h4>Eschools</h4>
+							<p><a href="${cfg.urls?.laravel_portal || "https://kemetgate.com"}" target="_blank" rel="noopener">kemetgate.com</a></p>
+							<p><a href="${cfg.urls?.laravel_login || "https://kemetgate.com/login"}" target="_blank" rel="noopener">${this.t("login")}</a></p>
+						</div>
 					</div>`;
 			}
 		},
@@ -159,6 +164,7 @@
 							<div class="edu-hero-cta">
 								<a class="edu-btn edu-btn-primary" href="/education/apply">${this.t("apply_now")}</a>
 								<a class="edu-btn edu-btn-outline" href="/education/programs" style="color:#fff;border-color:#fff">${this.t("programs")}</a>
+								<a class="edu-btn edu-btn-primary" href="${cfg.urls?.laravel_login || "https://kemetgate.com/login"}" target="_blank" rel="noopener">${this.t("student_portal")}</a>
 							</div>
 						</div>
 						<div class="edu-hero-img">

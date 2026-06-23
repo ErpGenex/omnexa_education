@@ -150,12 +150,51 @@ def sync_institution_enrollments_to_laravel(institution: str, student: str | Non
 
 
 @frappe.whitelist()
+def sync_institutions_to_laravel(institutions: list[str] | None = None) -> dict:
+	"""Push Education Institution master to Laravel schools (sis_external_id)."""
+	if not is_laravel_enabled():
+		return {"ok": False, "skipped": True, "reason": "laravel_disabled"}
+	names = institutions or frappe.get_all(
+		"Education Institution",
+		filters={"status": "Active"},
+		pluck="name",
+		limit=100,
+	)
+	rows = []
+	for name in names:
+		doc = frappe.db.get_value(
+			"Education Institution",
+			name,
+			["name", "institution_name", "institution_type"],
+			as_dict=True,
+		)
+		if not doc:
+			continue
+		code = frappe.db.get_value("Education Institution", name, "institution_code") or name
+		rows.append(
+			{
+				"external_id": doc.name,
+				"name": doc.institution_name or doc.name,
+				"code": code,
+				"institution_type": doc.institution_type or "",
+			}
+		)
+	payload = {"institutions": rows}
+	result = laravel_client.sync_institutions(payload)
+	if not result.get("ok"):
+		laravel_client.enqueue_sync("sync_institutions", "Education Settings", "Education Settings", payload)
+	return {"ok": result.get("ok"), "institutions": len(rows), "result": result}
+
+
+@frappe.whitelist()
 def sync_institution_full_to_laravel(institution: str) -> dict:
 	if not laravel_client.is_laravel_enabled():
 		return {"ok": False, "skipped": True, "reason": "laravel_disabled"}
 	if not frappe.db.exists("Education Institution", institution):
 		frappe.throw(_("Institution {0} not found.").format(institution))
+	institutions_sync = sync_institutions_to_laravel([institution])
 	results = {
+		"institutions": institutions_sync,
 		"programs": laravel_client.sync_institution_programs_to_laravel(institution),
 		"classes": sync_institution_classes_to_laravel(institution),
 		"calendar": sync_institution_academic_calendar_to_laravel(institution),
