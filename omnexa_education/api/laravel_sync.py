@@ -182,7 +182,10 @@ def sync_institutions_to_laravel(institutions: list[str] | None = None) -> dict:
 	payload = {"institutions": rows}
 	result = laravel_client.sync_institutions(payload)
 	if not result.get("ok"):
-		laravel_client.enqueue_sync("sync_institutions", "Education Settings", "Education Settings", payload)
+		frappe.log_error(
+			title="Laravel institutions sync failed",
+			message=frappe.as_json({"institutions": len(rows), "result": result}),
+		)
 	return {"ok": result.get("ok"), "institutions": len(rows), "result": result}
 
 

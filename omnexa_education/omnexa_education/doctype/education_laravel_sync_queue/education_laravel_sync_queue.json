@@ -35,7 +35,7 @@
 			"fieldtype": "Select",
 			"in_list_view": 1,
 			"label": "Operation",
-			"options": "provision\nsuspend\nresume\nsync_enrollment\nsync_classes\nsync_programs\nsync_academic_calendar\nwebhook_replay",
+			"options": "provision\nsuspend\nresume\nsync_enrollment\nsync_classes\nsync_programs\nsync_academic_calendar\nsync_institutions\nwebhook_replay",
 			"reqd": 1
 		},
 		{
