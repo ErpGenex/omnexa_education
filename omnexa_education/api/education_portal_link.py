@@ -6,6 +6,7 @@
 from __future__ import annotations
 
 import frappe
+from frappe import _
 
 from omnexa_education.education_demo.education_demo_seed import _link_portal_users, _resolve_company_branch
 from omnexa_education.education_demo.role_specs import DEMO_PASSWORD, ROLE_SPECS
@@ -20,6 +21,26 @@ def _demo_emails() -> tuple[str, str]:
 		if spec.get("role") == "Education Parent Portal" and spec.get("email"):
 			parent = spec.get("guardian_email") or spec["email"]
 	return student, parent
+
+
+@frappe.whitelist()
+def repair_portal_access(company: str | None = None, branch: str | None = None) -> dict:
+	"""Fix page roles, portal user roles, and student/parent links."""
+	frappe.only_for(("System Manager", "Education Manager"))
+	from omnexa_education.api.education_role_demo import ensure_education_roles, sync_journey_page_roles
+
+	roles = ensure_education_roles()
+	page_stats = sync_journey_page_roles()
+	link = ensure_demo_portal_users_linked(company=company, branch=branch)
+	return {
+		"ok": True,
+		"roles_ensured": roles,
+		"page_sync": page_stats,
+		**link,
+		"message": _("Portal access repaired. Log out and sign in as {0} or {1}.").format(
+			link.get("student_email"), link.get("parent_email")
+		),
+	}
 
 
 @frappe.whitelist()

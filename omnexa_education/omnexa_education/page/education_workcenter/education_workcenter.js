@@ -117,6 +117,24 @@ frappe.pages["education-workcenter"].on_page_load = function (wrapper) {
 					}
 				});
 				$demoPanel.append($seedBtn);
+				const $repairBtn = $(`<button type="button" class="btn btn-default" style="margin-left:8px">${OJ.t("إصلاح البوابات", "Repair Portals")}</button>`);
+				$repairBtn.on("click", async () => {
+					$repairBtn.prop("disabled", true);
+					try {
+						const res = await OJ.call("omnexa_education.api.education_portal_link.repair_portal_access");
+						frappe.msgprint({
+							title: OJ.t("تم", "Done"),
+							message: res.message || OJ.t("تم إصلاح صلاحيات البوابات", "Portal permissions repaired"),
+							indicator: "green",
+						});
+						render();
+					} catch (e) {
+						OJ.showCallError(e);
+					} finally {
+						$repairBtn.prop("disabled", false);
+					}
+				});
+				$demoPanel.append($repairBtn);
 				const $laravelSync = $(`<button type="button" class="btn btn-success" style="margin-left:8px">${OJ.t("مزامنة → Laravel", "Sync → Laravel")}</button>`);
 				$laravelSync.on("click", async () => {
 					$laravelSync.prop("disabled", true).text(OJ.t("جاري المزامنة...", "Syncing..."));

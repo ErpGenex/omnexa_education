@@ -88,6 +88,13 @@ def education_subject_query_conditions(user=None):
 
 
 def education_student_query_conditions(user=None):
+	user = user or frappe.session.user
+	roles = set(frappe.get_roles(user))
+	if "System Manager" not in roles and "Education Manager" not in roles and "Education User" not in roles:
+		if "Education Student Portal" in roles:
+			return f"`tabEducation Student`.user = {frappe.db.escape(user)}"
+		if "Education Parent Portal" in roles:
+			return f"`tabEducation Student`.guardian_email = {frappe.db.escape(user)}"
 	return _get_query_for_table("Education Student", user)
 
 

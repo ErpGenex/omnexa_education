@@ -477,6 +477,11 @@ def _ensure_demo_user(spec: dict, company: str, branch: str) -> str:
 	roles = {r.role for r in user.roles}
 	if role not in roles:
 		user.append("roles", {"role": role})
+	if spec.get("default_route"):
+		user.default_home_page = spec["default_route"]
+	if role in ("Education Student Portal", "Education Parent Portal"):
+		if frappe.get_meta("User").has_field("default_app"):
+			user.default_app = "omnexa_education"
 	user.save(ignore_permissions=True)
 	frappe.defaults.set_user_default("Company", company, email)
 	frappe.defaults.set_user_default("Branch", branch, email)
@@ -516,6 +521,16 @@ def _link_portal_users(company: str, branch: str) -> None:
 		{"company": company, "institution": intsch, "student_code": f"{DEMO_MARKER}-INTSCH-S01"},
 		"name",
 	)
+	if not child:
+		child = frappe.db.sql(
+			"""
+			SELECT name FROM `tabEducation Student`
+			WHERE company = %s AND institution = %s AND status = 'Active'
+			ORDER BY creation ASC LIMIT 1
+			""",
+			(company, intsch),
+		)
+		child = child[0][0] if child else None
 	if child:
 		frappe.db.set_value("Education Student", child, "guardian_email", parent_email)
 
