@@ -172,6 +172,10 @@ def provision_student(student: str, trigger: str = "Manual") -> dict:
 				if isinstance(body, dict):
 					laravel_user_id = body.get("id") or body.get("laravel_user_id") or laravel_user_id
 			else:
+				if result.get("throttled") or (result.get("error") or "").lower().find("throttl") >= 0:
+					import time
+
+					time.sleep(1.5)
 				laravel_client.enqueue_sync("provision", "Education Student", student, payload)
 
 	student_doc.db_set(
@@ -336,12 +340,22 @@ def bulk_provision_students(
 		filters["institution"] = institution
 
 	names = frappe.get_all("Education Student", filters=filters, pluck="name", limit=500)
-	ok = failed = 0
+	ok = failed = skipped = 0
+	laravel_on = laravel_client.is_laravel_enabled()
 	for name in names:
+		row = frappe.db.get_value(
+			"Education Student",
+			name,
+			["account_access_status", "user", "laravel_user_id"],
+			as_dict=True,
+		)
+		if row and row.account_access_status == "Active" and row.user and (not laravel_on or row.laravel_user_id):
+			skipped += 1
+			continue
 		try:
-			provision_student(name, trigger="Bulk Sync")
+			provision_student(name, trigger="System")
 			ok += 1
 		except Exception:
 			failed += 1
 			frappe.log_error(frappe.get_traceback(), f"Bulk provision failed: {name}")
-	return {"provisioned": ok, "failed": failed, "total": len(names)}
+	return {"provisioned": ok, "failed": failed, "skipped": skipped, "total": len(names)}

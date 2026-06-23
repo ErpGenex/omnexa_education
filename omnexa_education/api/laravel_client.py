@@ -87,11 +87,18 @@ def _request(
 		body = {"raw": resp.text[:2000]}
 
 	ok = 200 <= resp.status_code < 300
+	throttled = resp.status_code == 429
 	return {
 		"ok": ok,
 		"status_code": resp.status_code,
 		"body": body,
-		"error": None if ok else (body.get("message") if isinstance(body, dict) else resp.text[:500]),
+		"throttled": throttled,
+		"error": None
+		if ok
+		else (
+			(body.get("message") if isinstance(body, dict) else resp.text[:500])
+			or ("Throttled" if throttled else resp.text[:500])
+		),
 	}
 
 

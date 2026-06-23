@@ -137,7 +137,7 @@ def auto_provision_teacher_if_needed(teacher_name: str):
 		return
 	if not teacher.user:
 		try:
-			provision_teacher(teacher_name, trigger="Teacher Registration")
+			provision_teacher(teacher_name, trigger="Admission")
 		except Exception:
 			frappe.log_error(frappe.get_traceback(), "Teacher auto-provision failed")
 
@@ -149,8 +149,11 @@ def bulk_provision_teachers(company: str | None = None, branch: str | None = Non
 		filters["company"] = company
 	if branch:
 		filters["branch"] = branch
-	count = 0
+	count = skipped = 0
 	for name in frappe.get_all("Education Teacher", filters=filters, pluck="name"):
-		provision_teacher(name, trigger="Bulk")
+		if frappe.db.get_value("Education Teacher", name, "laravel_user_id"):
+			skipped += 1
+			continue
+		provision_teacher(name, trigger="System")
 		count += 1
-	return {"provisioned": count}
+	return {"provisioned": count, "skipped": skipped}

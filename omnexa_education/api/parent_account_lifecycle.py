@@ -131,6 +131,6 @@ def auto_provision_parent_for_student(student_name: str):
 	if not email:
 		return
 	try:
-		provision_parent(email, trigger="Student Registration")
+		provision_parent(email, trigger="Admission")
 	except Exception:
 		frappe.log_error(frappe.get_traceback(), "Parent auto-provision failed")

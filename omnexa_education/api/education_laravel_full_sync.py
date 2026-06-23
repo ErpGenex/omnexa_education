@@ -88,7 +88,7 @@ def sync_all_data_to_laravel(
 
 	queue_stats = None
 	if process_queue:
-		queue_stats = laravel_client.process_sync_queue()
+		queue_stats = laravel_client.process_sync_queue(batch_size=20)
 
 	inbox_seeded = _seed_demo_inbox()
 	frappe.db.commit()

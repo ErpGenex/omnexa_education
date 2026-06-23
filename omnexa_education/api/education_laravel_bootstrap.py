@@ -95,14 +95,22 @@ def _provision_all_parents() -> dict:
 	)
 	ok = 0
 	failed = 0
+	skipped = 0
 	for email in emails:
+		if frappe.db.get_value(
+			"Education Student",
+			{"guardian_email": email, "guardian_laravel_user_id": ["is", "set"]},
+			"name",
+		):
+			skipped += 1
+			continue
 		try:
-			provision_parent(email, trigger="Bootstrap")
+			provision_parent(email, trigger="System")
 			ok += 1
 		except Exception:
 			failed += 1
 			frappe.log_error(frappe.get_traceback(), f"Parent bootstrap failed: {email}")
-	return {"parents_ok": ok, "parents_failed": failed, "unique_emails": len(emails)}
+	return {"parents_ok": ok, "parents_failed": failed, "parents_skipped": skipped, "unique_emails": len(emails)}
 
 
 def _seed_demo_inbox() -> int:
