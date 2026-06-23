@@ -76,6 +76,12 @@ def _today_schedule(section: str | None) -> list:
 	return rows
 
 
+def _education_settings_doc():
+	doc = frappe.get_doc("Education Settings", "Education Settings")
+	doc.flags.ignore_permissions = True
+	return doc
+
+
 def _scope(company: str | None, branch: str | None) -> tuple[str, str]:
 	return (
 		company or frappe.defaults.get_user_default("Company") or "",
@@ -119,7 +125,7 @@ def get_finance_dashboard(company: str | None = None, branch: str | None = None)
 		limit=15,
 	)
 
-	settings = frappe.get_single("Education Settings")
+	settings = _education_settings_doc()
 	return {
 		"total_students": total_students,
 		"active_portal": active_portal,
@@ -136,7 +142,7 @@ def get_finance_dashboard(company: str | None = None, branch: str | None = None)
 
 @frappe.whitelist()
 def get_laravel_integration_dashboard() -> dict:
-	settings = frappe.get_single("Education Settings")
+	settings = _education_settings_doc()
 	queue_stats = {"queued": 0, "failed": 0, "success": 0}
 	if frappe.db.exists("DocType", "Education Laravel Sync Queue"):
 		for status in ("Queued", "Failed", "Success"):
@@ -226,7 +232,7 @@ def get_parent_portal_dashboard(student: str | None = None) -> dict:
 	out["account_access_status"] = st.account_access_status
 	out["financial_hold"] = st.financial_hold
 	out["guardian_laravel_user_id"] = st.guardian_laravel_user_id
-	out["sso_available"] = bool(st.guardian_laravel_user_id and frappe.get_single("Education Settings").laravel_sso_enabled)
+	out["sso_available"] = bool(st.guardian_laravel_user_id and _education_settings_doc().laravel_sso_enabled)
 	out["gpa"] = _student_gpa(student)
 	out["today_schedule"] = _today_schedule(st.section)
 	out["inbox"] = get_unified_inbox(student=student)
@@ -257,7 +263,7 @@ def get_student_portal_dashboard() -> dict:
 	if not student:
 		return {"student": None, "laravel_enabled": laravel_client.is_laravel_enabled()}
 	st = frappe.get_doc("Education Student", student)
-	settings = frappe.get_single("Education Settings")
+	settings = _education_settings_doc()
 	return {
 		"student": student,
 		"student_name": st.student_name,

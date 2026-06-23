@@ -169,6 +169,9 @@ def ensure_full_portal_access(company: str | None = None, branch: str | None = N
 	page_stats = sync_journey_page_roles()
 	perm_stats = ensure_portal_doctype_permissions()
 	staff_perm_stats = ensure_staff_doctype_permissions()
+	from omnexa_education.portal_guard import ensure_education_workspace_portal_roles
+
+	workspace_stats = ensure_education_workspace_portal_roles()
 
 	branch_grants = []
 	portal_users = []
@@ -193,6 +196,7 @@ def ensure_full_portal_access(company: str | None = None, branch: str | None = N
 		"page_sync": page_stats,
 		"permissions": perm_stats,
 		"staff_permissions": staff_perm_stats,
+		"workspace": workspace_stats,
 		"branch_grants": branch_grants,
 		"portal_users": portal_users,
 		"demo_users": demo_users,

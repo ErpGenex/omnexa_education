@@ -16,8 +16,7 @@
 		{ "role": "Education User" },
 		{ "role": "Teacher" },
 		{ "role": "Accounts User" },
-		{ "role": "Education Student Portal" },
-		{ "role": "Education Parent Portal" }
+		{ "role": "Education Finance Officer" }
 	],
 	"script": null,
 	"standard": "Yes",

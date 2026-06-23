@@ -163,10 +163,17 @@
 		const kpiHtml = (opts.kpis || [])
 			.map((k) => `<div class="oj-kpi-card"><div class="oj-kpi-value">${OJ.esc(k.value)}</div><div class="oj-kpi-label">${OJ.esc(k.label)}</div></div>`)
 			.join("");
+		const logoutHref =
+			typeof omnexa_education !== "undefined" &&
+			omnexa_education.boot &&
+			omnexa_education.boot.isPortalOnly &&
+			omnexa_education.boot.isPortalOnly()
+				? "/login"
+				: "/app";
 		$root.html(`
 			<aside class="oj-sidebar">${navHtml}<div class="oj-sidebar-spacer"></div>
 				<a class="oj-sidebar-item" href="#" data-oj-home="1">🏠 ${OJ.t("الرئيسية", "Home")}</a>
-				<a class="oj-sidebar-item oj-logout" href="/app">⏻ ${OJ.t("خروج", "Logout")}</a>
+				<a class="oj-sidebar-item oj-logout" href="${logoutHref}">⏻ ${OJ.t("خروج", "Logout")}</a>
 			</aside>
 			<div class="oj-main">
 				<header class="oj-topbar">

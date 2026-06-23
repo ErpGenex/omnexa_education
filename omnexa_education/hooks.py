@@ -332,7 +332,10 @@ scheduler_events = {
 
 # Request Events
 # ----------------
-before_request = ["omnexa_education.license_gate.before_request"]
+before_request = [
+	"omnexa_education.license_gate.before_request",
+	"omnexa_education.portal_guard.enforce_portal_api_access",
+]
 # after_request = ["omnexa_education.utils.after_request"]
 
 # Job Events
@@ -366,6 +369,8 @@ before_request = ["omnexa_education.license_gate.before_request"]
 
 # Authentication and authorization
 # --------------------------------
+
+extend_bootinfo = ["omnexa_education.portal_guard.extend_bootinfo"]
 
 # auth_hooks = [
 # 	"omnexa_education.auth.validate"
