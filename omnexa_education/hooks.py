@@ -208,6 +208,8 @@ permission_query_conditions = {
 	"Education Attendance Session": "omnexa_education.permissions.education_attendance_session_query_conditions",
 	"Education Assessment Plan": "omnexa_education.permissions.education_assessment_plan_query_conditions",
 	"Education Assessment Result": "omnexa_education.permissions.education_assessment_result_query_conditions",
+	"Education Portal Message": "omnexa_education.permissions.education_portal_message_query_conditions",
+	"Education Announcement": "omnexa_education.permissions.education_announcement_query_conditions",
 	"Education Report Card": "omnexa_education.permissions.education_report_card_query_conditions",
 	"Education Transcript Request": "omnexa_education.permissions.education_transcript_request_query_conditions",
 }

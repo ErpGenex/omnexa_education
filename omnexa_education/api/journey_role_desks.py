@@ -169,6 +169,31 @@ def get_laravel_integration_dashboard() -> dict:
 	}
 
 
+def _sales_invoice_portal_fields() -> list[str]:
+	if not frappe.db.exists("DocType", "Sales Invoice"):
+		return []
+	meta = frappe.get_meta("Sales Invoice")
+	return [f for f in ("name", "posting_date", "grand_total", "outstanding_amount", "status") if meta.has_field(f)]
+
+
+def _parent_child_invoices(customer: str | None) -> list[dict]:
+	if not customer or not frappe.db.exists("DocType", "Sales Invoice"):
+		return []
+	fields = _sales_invoice_portal_fields()
+	if not fields:
+		return []
+	try:
+		return frappe.get_all(
+			"Sales Invoice",
+			filters={"customer": customer, "docstatus": 1},
+			fields=fields,
+			order_by="posting_date desc",
+			limit=10,
+		)
+	except frappe.PermissionError:
+		return []
+
+
 @frappe.whitelist()
 def get_parent_portal_dashboard(student: str | None = None) -> dict:
 	user = frappe.session.user
@@ -203,14 +228,8 @@ def get_parent_portal_dashboard(student: str | None = None) -> dict:
 	out["gpa"] = _student_gpa(student)
 	out["today_schedule"] = _today_schedule(st.section)
 	out["inbox"] = get_unified_inbox(student=student)
-	if st.customer and frappe.db.exists("DocType", "Sales Invoice"):
-		out["invoices"] = frappe.get_all(
-			"Sales Invoice",
-			filters={"customer": st.customer, "docstatus": 1},
-			fields=["name", "posting_date", "grand_total", "outstanding_amount", "status"],
-			order_by="posting_date desc",
-			limit=10,
-		)
+	if st.customer:
+		out["invoices"] = _parent_child_invoices(st.customer)
 	if frappe.db.exists("DocType", "Education Assessment Result"):
 		meta = frappe.get_meta("Education Assessment Result")
 		fields = [f for f in ("name", "score", "max_score", "modified") if meta.has_field(f)]

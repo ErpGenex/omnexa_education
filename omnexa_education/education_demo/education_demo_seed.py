@@ -498,6 +498,10 @@ def _ensure_demo_user(spec: dict, company: str, branch: str) -> str:
 	user.save(ignore_permissions=True)
 	frappe.defaults.set_user_default("Company", company, email)
 	frappe.defaults.set_user_default("Branch", branch, email)
+	if role in ("Education Student Portal", "Education Parent Portal"):
+		from omnexa_education.api.portal_access import ensure_user_branch_access
+
+		ensure_user_branch_access(email, company, branch)
 	return email
 
 

@@ -47,6 +47,20 @@
 			"write": 1,
 			"create": 1,
 			"delete": 0
+		},
+		{
+			"role": "Education Student Portal",
+			"read": 1,
+			"write": 0,
+			"create": 0,
+			"delete": 0
+		},
+		{
+			"role": "Education Parent Portal",
+			"read": 1,
+			"write": 0,
+			"create": 0,
+			"delete": 0
 		}
 	],
 	"track_changes": 1,
