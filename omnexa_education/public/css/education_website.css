@@ -19,14 +19,16 @@ body:has(.edu-site) .page_content {
 }
 
 .edu-site {
-	--edu-primary: #0b1f3a;
-	--edu-primary-light: #163a6b;
+	--edu-primary: #003366;
+	--edu-primary-light: #0a5fa8;
+	--edu-secondary: #0a5fa8;
 	--edu-accent: #eef4fb;
-	--edu-gold: #c9a227;
+	--edu-gold: #d4af37;
 	--edu-gold-soft: #f4e9c8;
-	--edu-teal: #0d9488;
-	--edu-text: #0f172a;
+	--edu-teal: #00b4d8;
+	--edu-text: #1e293b;
 	--edu-muted: #64748b;
+	--edu-bg: #f8fafc;
 	--edu-radius: 16px;
 	--edu-radius-lg: 24px;
 	--edu-shadow: 0 12px 40px rgba(11, 31, 58, 0.08);
@@ -34,7 +36,7 @@ body:has(.edu-site) .page_content {
 	--edu-font: "Tajawal", "Plus Jakarta Sans", "Segoe UI", sans-serif;
 	font-family: var(--edu-font);
 	color: var(--edu-text);
-	background: #f8fafc;
+	background: var(--edu-bg);
 	line-height: 1.6;
 }
 
@@ -1085,5 +1087,355 @@ body:has(.edu-site) .page_content {
 	}
 	.edu-site .edu-actions {
 		margin-inline-start: auto;
+	}
+}
+
+/* ===== Premium Omnexa Education ===== */
+.edu-premium .edu-hero-premium {
+	position: relative;
+	min-height: 88vh;
+	display: flex;
+	align-items: center;
+	padding: 0;
+	overflow: hidden;
+	color: #fff;
+}
+
+.edu-premium .edu-hero-bg {
+	position: absolute;
+	inset: 0;
+	background-size: cover;
+	background-position: center;
+	transform: scale(1.02);
+}
+
+.edu-premium .edu-hero-overlay {
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(135deg, rgba(0, 51, 102, 0.92) 0%, rgba(10, 95, 168, 0.75) 50%, rgba(0, 0, 0, 0.45) 100%);
+}
+
+.edu-premium .edu-hero-premium-inner {
+	position: relative;
+	z-index: 2;
+	padding: 100px 24px 80px;
+	max-width: 720px;
+}
+
+.edu-premium .edu-hero-premium-inner h1 {
+	font-size: clamp(2.2rem, 5vw, 3.4rem);
+	font-weight: 800;
+	margin: 0 0 16px;
+	line-height: 1.15;
+}
+
+.edu-premium .edu-hero-stats {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 16px;
+	margin-top: 40px;
+	max-width: 560px;
+}
+
+.edu-premium .edu-hero-stats div {
+	background: rgba(255, 255, 255, 0.12);
+	border: 1px solid rgba(255, 255, 255, 0.2);
+	border-radius: 12px;
+	padding: 14px;
+	text-align: center;
+	backdrop-filter: blur(8px);
+}
+
+.edu-premium .edu-hero-stats strong {
+	display: block;
+	font-size: 1.5rem;
+	color: var(--edu-gold);
+}
+
+.edu-premium .edu-hero-stats span {
+	font-size: 12px;
+	opacity: 0.9;
+}
+
+.edu-premium .edu-btn-accent {
+	background: linear-gradient(135deg, var(--edu-secondary), var(--edu-teal));
+	color: #fff;
+	box-shadow: 0 8px 28px rgba(10, 95, 168, 0.4);
+}
+
+.edu-premium .edu-value-bar {
+	background: #fff;
+	border-bottom: 1px solid #e2e8f0;
+	padding: 20px 0;
+	margin-top: -40px;
+	position: relative;
+	z-index: 3;
+}
+
+.edu-premium .edu-value-inner {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 24px 40px;
+}
+
+.edu-premium .edu-value-item {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	font-weight: 700;
+	color: var(--edu-primary);
+	font-size: 14px;
+}
+
+.edu-premium .edu-topbar-links a {
+	color: #cbd5e1;
+	margin-inline-start: 16px;
+	font-size: 12px;
+}
+
+.edu-premium .edu-topbar-links a:hover {
+	color: var(--edu-gold);
+}
+
+.edu-premium .edu-college-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+	gap: 24px;
+}
+
+.edu-premium .edu-college-card {
+	background: #fff;
+	border-radius: var(--edu-radius-lg);
+	overflow: hidden;
+	box-shadow: var(--edu-shadow);
+	border: 1px solid #e8eef4;
+	transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.edu-premium .edu-college-card:hover {
+	transform: translateY(-8px);
+	box-shadow: var(--edu-shadow-lg);
+}
+
+.edu-premium .edu-college-img {
+	height: 180px;
+	overflow: hidden;
+}
+
+.edu-premium .edu-college-img img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	transition: transform 0.4s ease;
+}
+
+.edu-premium .edu-college-card:hover .edu-college-img img {
+	transform: scale(1.06);
+}
+
+.edu-premium .edu-college-body {
+	padding: 20px 22px 24px;
+}
+
+.edu-premium .edu-college-body h3 {
+	margin: 0 0 8px;
+	color: var(--edu-primary);
+	font-size: 1.1rem;
+}
+
+.edu-premium .edu-btn-sm {
+	padding: 8px 18px;
+	font-size: 13px;
+	margin-top: 12px;
+}
+
+.edu-premium .edu-admission-band {
+	background: linear-gradient(135deg, var(--edu-primary) 0%, var(--edu-secondary) 100%);
+	color: #fff;
+	padding: 64px 0;
+	text-align: center;
+}
+
+.edu-premium .edu-admission-band h2 {
+	margin: 0 0 32px;
+	font-size: 2rem;
+	font-weight: 800;
+}
+
+.edu-premium .edu-admission-steps {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+	gap: 16px;
+	margin-bottom: 32px;
+}
+
+.edu-premium .edu-adm-step {
+	background: rgba(255, 255, 255, 0.1);
+	border: 1px solid rgba(255, 255, 255, 0.15);
+	border-radius: var(--edu-radius);
+	padding: 20px 12px;
+}
+
+.edu-premium .edu-adm-icon {
+	font-size: 28px;
+	display: block;
+	margin-bottom: 8px;
+}
+
+.edu-premium .edu-adm-num {
+	display: inline-block;
+	background: var(--edu-gold);
+	color: var(--edu-primary);
+	width: 24px;
+	height: 24px;
+	border-radius: 50%;
+	font-size: 12px;
+	font-weight: 800;
+	line-height: 24px;
+	margin-bottom: 6px;
+}
+
+.edu-premium .edu-btn-lg {
+	padding: 16px 36px;
+	font-size: 16px;
+}
+
+.edu-premium .edu-services-grid,
+.edu-premium .edu-online-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+	gap: 16px;
+}
+
+.edu-premium .edu-service-card,
+.edu-premium .edu-online-card {
+	background: #fff;
+	border-radius: var(--edu-radius);
+	padding: 20px;
+	box-shadow: var(--edu-shadow);
+	border: 1px solid #e8eef4;
+	font-weight: 600;
+	color: var(--edu-primary);
+}
+
+.edu-premium .edu-service-card span {
+	color: var(--edu-teal);
+	margin-inline-end: 8px;
+}
+
+.edu-premium .edu-split-section {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 40px;
+	align-items: center;
+}
+
+.edu-premium .edu-split-img {
+	border-radius: var(--edu-radius-lg);
+	overflow: hidden;
+	box-shadow: var(--edu-shadow-lg);
+}
+
+.edu-premium .edu-split-img img {
+	width: 100%;
+	height: 320px;
+	object-fit: cover;
+	display: block;
+}
+
+.edu-premium .edu-check-list {
+	list-style: none;
+	padding: 0;
+	margin: 0 0 24px;
+}
+
+.edu-premium .edu-check-list li {
+	padding: 10px 0;
+	border-bottom: 1px solid #e2e8f0;
+	font-weight: 600;
+}
+
+.edu-premium .edu-check-list li::before {
+	content: "✓ ";
+	color: var(--edu-teal);
+}
+
+.edu-premium .edu-scholarship-grid,
+.edu-premium .edu-news-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+	gap: 24px;
+}
+
+.edu-premium .edu-scholarship-card {
+	background: linear-gradient(135deg, #fff 0%, #f0f7ff 100%);
+	border: 1px solid #dbeafe;
+	border-radius: var(--edu-radius);
+	padding: 28px;
+	border-top: 4px solid var(--edu-gold);
+}
+
+.edu-premium .edu-news-card {
+	background: #fff;
+	border-radius: var(--edu-radius);
+	overflow: hidden;
+	box-shadow: var(--edu-shadow);
+}
+
+.edu-premium .edu-news-img {
+	height: 180px;
+	overflow: hidden;
+}
+
+.edu-premium .edu-news-img img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.edu-premium .edu-news-body {
+	padding: 20px;
+}
+
+.edu-premium .edu-partners-row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+	justify-content: center;
+}
+
+.edu-premium .edu-partner-pill {
+	background: #fff;
+	border: 1px solid #e2e8f0;
+	border-radius: 999px;
+	padding: 12px 24px;
+	font-weight: 700;
+	color: var(--edu-primary);
+	box-shadow: var(--edu-shadow);
+}
+
+.edu-premium .edu-section-cta {
+	text-align: center;
+	margin-top: 32px;
+}
+
+.edu-premium .edu-center {
+	text-align: center;
+	margin-top: 24px;
+}
+
+.edu-premium .edu-footer-contact {
+	opacity: 0.8;
+	margin-top: 12px;
+	font-size: 14px;
+}
+
+@media (max-width: 768px) {
+	.edu-premium .edu-hero-stats {
+		grid-template-columns: repeat(2, 1fr);
+	}
+	.edu-premium .edu-split-section {
+		grid-template-columns: 1fr;
 	}
 }

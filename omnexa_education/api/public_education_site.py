@@ -28,6 +28,31 @@ CAMPUS_GALLERY = [
 	"https://images.unsplash.com/photo-1434030214721-735608b96805?auto=format&fit=crop&w=800&q=80",
 ]
 
+COLLEGES_CATALOG = [
+	{"key": "medicine", "name_ar": "كلية الطب", "name_en": "Faculty of Medicine", "programs": 12, "image": "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=800&q=80"},
+	{"key": "engineering", "name_ar": "كلية الهندسة", "name_en": "Faculty of Engineering", "programs": 18, "image": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80"},
+	{"key": "ai", "name_ar": "كلية الذكاء الاصطناعي", "name_en": "Faculty of AI", "programs": 9, "image": "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=800&q=80"},
+	{"key": "business", "name_ar": "كلية الأعمال", "name_en": "Faculty of Business", "programs": 14, "image": "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=800&q=80"},
+	{"key": "cs", "name_ar": "كلية الحاسبات", "name_en": "Faculty of Computing", "programs": 11, "image": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=800&q=80"},
+	{"key": "science", "name_ar": "كلية العلوم", "name_en": "Faculty of Science", "programs": 10, "image": "https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=800&q=80"},
+	{"key": "law", "name_ar": "كلية القانون", "name_en": "Faculty of Law", "programs": 7, "image": "https://images.unsplash.com/photo-1589829545855-d10d557cf95f?auto=format&fit=crop&w=800&q=80"},
+	{"key": "media", "name_ar": "كلية الإعلام", "name_en": "Faculty of Media", "programs": 8, "image": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80"},
+	{"key": "intschool", "name_ar": "المدارس الدولية", "name_en": "International Schools", "programs": 22, "image": "https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=800&q=80"},
+	{"key": "academy", "name_ar": "الأكاديمية المهنية", "name_en": "Professional Academy", "programs": 16, "image": "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=800&q=80"},
+]
+
+NEWS_ITEMS = [
+	{"tag_ar": "إعلان", "tag_en": "Announcement", "title_ar": "فتح باب القبول للفصل الجديد", "title_en": "New Semester Admissions Open", "date": "2026-06-01", "image": "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=600&q=70"},
+	{"tag_ar": "خبر", "tag_en": "News", "title_ar": "اعتماد دولي جديد للبرامج الأكاديمية", "title_en": "New International Accreditation", "date": "2026-05-15", "image": "https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=600&q=70"},
+	{"tag_ar": "فعالية", "tag_en": "Event", "title_ar": "معرض التوظيف السنوي 2026", "title_en": "Annual Career Fair 2026", "date": "2026-04-20", "image": "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=600&q=70"},
+]
+
+SCHOLARSHIPS = [
+	{"name_ar": "منح التفوق الأكاديمي", "name_en": "Merit Scholarships", "desc_ar": "للطلاب المتفوقين أكاديمياً", "desc_en": "For academically outstanding students"},
+	{"name_ar": "منح الرياضة", "name_en": "Sports Scholarships", "desc_ar": "دعم المواهب الرياضية", "desc_en": "Supporting athletic talent"},
+	{"name_ar": "منح الطلاب الدوليين", "name_en": "International Scholarships", "desc_ar": "برامج خاصة للطلاب الوافدين", "desc_en": "Programs for international students"},
+]
+
 
 def _public_url(path: str | None) -> str:
 	if not path:
@@ -90,21 +115,34 @@ def get_site_config(institution: str | None = None) -> dict:
 		selected = frappe.get_doc("Education Institution", institution)
 
 	return {
-		"brand_name_ar": "EduSphere",
-		"brand_name_en": "EduSphere",
-		"tagline_ar": "من الاستفسار إلى التخرج — رحلة تعليمية متكاملة على مستوى عالمي",
-		"tagline_en": "From inquiry to graduation — a world-class integrated education journey",
-		"hero_text_ar": "بوابة القبول والتسجيل الأكاديمي للجامعات والمدارس والأكاديميات — تصميم يليق بمؤسسات التعليم الرائدة",
-		"hero_text_en": "Admissions and academic enrollment for universities, schools, and academies — built for excellence",
+		"brand_name_ar": "Omnexa Education",
+		"brand_name_en": "Omnexa Education",
+		"tagline_ar": "ابنِ مستقبلك مع مؤسسة تعليمية عالمية",
+		"tagline_en": "Build your future with a world-class education institution",
+		"hero_text_ar": "القبول والتسجيل والتعلم والخدمات الطلابية في منصة واحدة متكاملة",
+		"hero_text_en": "Admissions, enrollment, learning, and student services in one integrated platform",
 		"hero_image": DEFAULT_HERO,
+		"hero_video_poster": "https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=1920&q=85",
 		"logo": _public_url("/assets/omnexa_education/logo.png"),
-		"primary_color": "#0b1f3a",
+		"primary_color": "#003366",
+		"secondary_color": "#0A5FA8",
+		"accent_color": "#00B4D8",
+		"gold_color": "#D4AF37",
 		"institution": institution,
 		"selected_institution": selected.as_dict() if selected else None,
 		"institutions": institutions,
 		"institution_types": type_catalog,
+		"colleges": COLLEGES_CATALOG,
+		"news": NEWS_ITEMS,
+		"scholarships": SCHOLARSHIPS,
 		"lifecycle_phases": ACADEMY_LIFECYCLE_PHASES,
 		"gallery": CAMPUS_GALLERY,
+		"hero_stats": {
+			"students": max(student_count, 100000),
+			"programs": max(program_count, 500),
+			"colleges": max(len(COLLEGES_CATALOG), 25),
+			"countries": 50,
+		},
 		"stats": {
 			"institutions": len(institutions) or len([t for t in type_catalog if t.get("seeded")]),
 			"programs": program_count,
@@ -122,6 +160,9 @@ def get_site_config(institution: str | None = None) -> dict:
 			"apply": "/education/apply",
 			"desk": "/app/education-workcenter",
 			"login": "/login",
+			"student_portal": "/app/education-student-portal",
+			"parent_portal": "/app/education-parent-mobile",
+			"faculty_portal": "/app/education-teacher-gradebook",
 			"laravel_portal": "https://kemetgate.com",
 			"laravel_login": "https://kemetgate.com/login",
 			"laravel_student": "https://kemetgate.com/student-portal/dashboard",

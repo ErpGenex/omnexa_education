@@ -16,23 +16,33 @@
 
 	const NAV_MEGA = [
 		{
+			key: "about",
+			ar: "عن الجامعة",
+			en: "About",
+			items: [
+				{ href: "/education#edu-colleges-section", ar: "الكليات والمدارس", en: "Colleges & Schools" },
+				{ href: "/education#edu-partners-section", ar: "شركاؤنا", en: "Partners" },
+				{ href: "/education#edu-news-section", ar: "الأخبار", en: "News" },
+			],
+		},
+		{
 			key: "academics",
 			ar: "أكاديمي",
 			en: "Academics",
 			items: [
 				{ href: "/education/programs", ar: "البرامج والتخصصات", en: "Programs & Majors" },
-				{ href: "/education#edu-institution-types", ar: "أنواع المؤسسات", en: "Institution Types" },
-				{ href: "/education/programs", ar: "الكليات والأقسام", en: "Colleges & Faculties" },
+				{ href: "/education#edu-colleges-section", ar: "الكليات", en: "Colleges" },
+				{ href: "/education#edu-scholarships-section", ar: "المنح الدراسية", en: "Scholarships" },
 			],
 		},
 		{
 			key: "admissions",
-			ar: "القبول",
+			ar: "القبول والتسجيل",
 			en: "Admissions",
 			items: [
 				{ href: "/education/apply", ar: "التقديم الأونلاين", en: "Online Application" },
-				{ href: "/education/apply", ar: "متطلبات القبول", en: "Admission Requirements" },
-				{ href: "/login", ar: "متابعة الطلب", en: "Track Application" },
+				{ href: "/education#edu-admission-band", ar: "خطوات القبول", en: "Admission Steps" },
+				{ href: "/education#edu-international-section", ar: "الطلاب الدوليون", en: "International Students" },
 			],
 		},
 		{
@@ -40,9 +50,10 @@
 			ar: "البوابات",
 			en: "Portals",
 			items: [
-				{ href: "https://kemetgate.com/student-portal/dashboard", ar: "بوابة الطالب", en: "Student Portal", external: 1 },
-				{ href: "https://kemetgate.com/parent-dashboard", ar: "بوابة ولي الأمر", en: "Parent Portal", external: 1 },
-				{ href: "/app/education-workcenter", ar: "مركز العمل", en: "Workcenter" },
+				{ href: "/app/education-student-portal", ar: "بوابة الطالب", en: "Student Portal" },
+				{ href: "/app/education-parent-mobile", ar: "بوابة ولي الأمر", en: "Parent Portal" },
+				{ href: "/app/education-teacher-gradebook", ar: "بوابة أعضاء هيئة التدريس", en: "Faculty Portal" },
+				{ href: "/app/education-workcenter", ar: "الإدارة", en: "Administration" },
 			],
 		},
 	];
@@ -173,6 +184,15 @@
 			if (this.config.primary_color) {
 				document.documentElement.style.setProperty("--edu-primary", this.config.primary_color);
 			}
+			if (this.config.secondary_color) {
+				document.documentElement.style.setProperty("--edu-secondary", this.config.secondary_color);
+			}
+			if (this.config.accent_color) {
+				document.documentElement.style.setProperty("--edu-teal", this.config.accent_color);
+			}
+			if (this.config.gold_color) {
+				document.documentElement.style.setProperty("--edu-gold", this.config.gold_color);
+			}
 		},
 
 		applyTheme() {
@@ -219,7 +239,10 @@
 				: "🎓";
 			const nav = [
 				{ href: "/education", key: "home", page: "home" },
+				{ href: "/education#edu-colleges-section", ar: "الكليات", en: "Colleges", page: "" },
 				{ href: "/education/programs", key: "programs", page: "programs" },
+				{ href: "/education#edu-gallery-section", ar: "الأنشطة", en: "Activities", page: "" },
+				{ href: "/education#edu-news-section", ar: "الأخبار", en: "News", page: "" },
 				{ href: "/education/apply", key: "apply", page: "apply" },
 			];
 			const megaHtml = NAV_MEGA.map(
@@ -241,19 +264,24 @@
 			if (header) {
 				header.innerHTML = `
 					<div class="edu-topbar"><div class="edu-wrap edu-topbar-inner">
-						<span>📞 +20 100 000 0000</span>
-						<span>✉ admissions@edusphere.edu</span>
-						<span>${this.lang === "ar" ? "معيار SIS عالمي 4.85" : "Global SIS benchmark 4.85"}</span>
+						<span>📞 +966 11 000 0000</span>
+						<span>✉ admissions@omnexa.education</span>
+						<span class="edu-topbar-links">
+							<a href="/app/education-teacher-gradebook">${this.lang === "ar" ? "أعضاء هيئة التدريس" : "Faculty"}</a>
+							<a href="/app/education-student-portal">${this.lang === "ar" ? "الطلاب" : "Students"}</a>
+							<a href="/app/education-parent-mobile">${this.lang === "ar" ? "أولياء الأمور" : "Parents"}</a>
+						</span>
 					</div></div>
 					<div class="edu-wrap edu-header-inner">
 						<a class="edu-brand" href="/education">${logo}<span>${this.esc(name)}</span></a>
 						<button type="button" class="edu-mobile-toggle" id="edu-menu-toggle" aria-label="Menu">☰</button>
 						<nav class="edu-nav" id="edu-nav">
 							${nav
-								.map(
-									(n) =>
-										`<a href="${n.href}" class="${this.page === n.page ? "active" : ""}">${this.t(n.key)}</a>`
-								)
+								.map((n) => {
+									const label = n.key ? this.t(n.key) : this.lang === "ar" ? n.ar : n.en;
+									const active = n.page && this.page === n.page ? "active" : "";
+									return `<a href="${n.href}" class="${active}">${label}</a>`;
+								})
 								.join("")}
 							${megaHtml}
 						</nav>
@@ -271,87 +299,79 @@
 
 			const footer = document.getElementById("edu-footer");
 			if (footer) {
+				const u = cfg.urls || {};
 				footer.innerHTML = `
-					<div class="edu-wrap edu-footer-grid">
+					<div class="edu-wrap edu-footer-grid edu-footer-premium">
 						<div>
 							<h3>${this.esc(name)}</h3>
-							<p>${this.esc(cfg[this.textField("tagline")] || "")}</p>
-							<p style="margin-top:12px;opacity:0.7">EduSphere · ErpGenEx Education</p>
+							<p>${this.esc(cfg[this.textField("hero_text")] || "")}</p>
+							<p class="edu-footer-contact">📞 +966 11 000 0000 · ✉ admissions@omnexa.education</p>
 						</div>
 						<div>
-							<h4>${this.t("programs")}</h4>
+							<h4>${this.lang === "ar" ? "الكليات" : "Colleges"}</h4>
+							<p><a href="/education#edu-colleges-section">${this.lang === "ar" ? "الطب والهندسة" : "Medicine & Engineering"}</a></p>
 							<p><a href="/education/programs">${this.t("programs")}</a></p>
+							<p><a href="/education#edu-scholarships-section">${this.lang === "ar" ? "المنح" : "Scholarships"}</a></p>
+						</div>
+						<div>
+							<h4>${this.lang === "ar" ? "القبول" : "Admissions"}</h4>
 							<p><a href="/education/apply">${this.t("apply_now")}</a></p>
+							<p><a href="/education#edu-admission-band">${this.lang === "ar" ? "خطوات التقديم" : "How to Apply"}</a></p>
+							<p><a href="/education#edu-international-section">${this.lang === "ar" ? "الطلاب الدوليون" : "International"}</a></p>
 						</div>
 						<div>
-							<h4>${this.t("desk")}</h4>
-							<p><a href="${cfg.urls?.desk || "/app/education-workcenter"}">${this.t("desk")}</a></p>
-						</div>
-						<div>
-							<h4>Eschools · kemetgate</h4>
-							<p><a href="${cfg.urls?.laravel_portal || "https://kemetgate.com"}" target="_blank" rel="noopener">kemetgate.com</a></p>
-							<p><a href="${cfg.urls?.laravel_login || "https://kemetgate.com/login"}" target="_blank" rel="noopener">${this.t("login")}</a></p>
+							<h4>${this.lang === "ar" ? "البوابات" : "Portals"}</h4>
+							<p><a href="${u.student_portal || "/app/education-student-portal"}">${this.t("student_portal")}</a></p>
+							<p><a href="${u.parent_portal || "/app/education-parent-mobile"}">${this.t("parent_portal")}</a></p>
+							<p><a href="${u.faculty_portal || "/app/education-teacher-gradebook"}">${this.lang === "ar" ? "هيئة التدريس" : "Faculty"}</a></p>
+							<p><a href="${u.desk || "/app/education-workcenter"}">${this.t("desk")}</a></p>
 						</div>
 					</div>
-					<div class="edu-wrap edu-footer-bottom">© ${new Date().getFullYear()} ${this.esc(name)} · ${this.lang === "ar" ? "جميع الحقوق محفوظة" : "All rights reserved"}</div>`;
+					<div class="edu-wrap edu-footer-bottom">© ${new Date().getFullYear()} ${this.esc(name)} · Omnexa · ErpGenEx</div>`;
 			}
 		},
 
 		init_home() {
 			const cfg = this.config || {};
+			const heroImg = cfg.hero_video_poster || cfg.hero_image || "";
+			const hs = cfg.hero_stats || {};
 			const hero = document.getElementById("edu-hero");
 			if (hero) {
 				hero.innerHTML = `
-					<div class="edu-wrap edu-hero-grid">
-						<div>
-							<span class="edu-eyebrow">EduSphere · World-Class SIS</span>
-							<h1>${this.esc(cfg[this.textField("tagline")] || "")}</h1>
-							<p class="edu-hero-lead">${this.esc(cfg[this.textField("hero_text")] || "")}</p>
-							<div class="edu-hero-cta">
-								<a class="edu-btn edu-btn-gold" href="/education/apply">${this.t("apply_now")}</a>
-								<a class="edu-btn edu-btn-ghost-light" href="/education/programs">${this.t("programs")}</a>
-								<a class="edu-btn edu-btn-ghost-light" href="${cfg.urls?.laravel_portal || "https://kemetgate.com"}" target="_blank" rel="noopener">${this.t("lms")}</a>
-							</div>
+					<div class="edu-hero-bg" style="background-image:url('${this.esc(heroImg)}')"></div>
+					<div class="edu-hero-overlay"></div>
+					<div class="edu-wrap edu-hero-premium-inner">
+						<span class="edu-eyebrow edu-eyebrow-light">Omnexa Education · World-Class</span>
+						<h1>${this.esc(cfg[this.textField("tagline")] || "")}</h1>
+						<p class="edu-hero-lead">${this.esc(cfg[this.textField("hero_text")] || "")}</p>
+						<div class="edu-hero-cta">
+							<a class="edu-btn edu-btn-accent" href="/education/apply">${this.lang === "ar" ? "ابدأ التقديم" : "Start Application"}</a>
+							<a class="edu-btn edu-btn-ghost-light" href="/education/programs">${this.lang === "ar" ? "استكشف البرامج" : "Explore Programs"}</a>
 						</div>
-						<div class="edu-hero-visual">
-							<div class="edu-hero-img">
-								<img src="${this.esc(cfg.hero_image || "")}" alt="" loading="lazy" />
-							</div>
-							<div class="edu-hero-float"><span>🎓</span> ${this.lang === "ar" ? "من القبول إلى التخرج" : "Admissions to Alumni"}</div>
+						<div class="edu-hero-stats">
+							<div><strong>${this._fmtNum(hs.students || 100000)}+</strong><span>${this.t("students")}</span></div>
+							<div><strong>${this._fmtNum(hs.programs || 500)}+</strong><span>${this.t("programs")}</span></div>
+							<div><strong>${hs.colleges || 25}+</strong><span>${this.lang === "ar" ? "كلية" : "Colleges"}</span></div>
+							<div><strong>${hs.countries || 50}+</strong><span>${this.lang === "ar" ? "دولة" : "Countries"}</span></div>
 						</div>
 					</div>`;
 			}
 
 			const trust = document.getElementById("edu-trust-strip");
 			if (trust) {
-				trust.innerHTML = `
-					<div class="edu-wrap edu-trust-inner">
-						<span>✓ <strong>${this.t("trust_iso")}</strong></span>
-						<span>✓ <strong>${this.t("trust_sis")}</strong></span>
-						<span>✓ <strong>${this.t("trust_lms")}</strong></span>
-						<span>✓ <strong>${this.t("trust_secure")}</strong></span>
-					</div>`;
+				const values = [
+					{ icon: "🌍", ar: "تعليم عالمي", en: "Global Education" },
+					{ icon: "🏛️", ar: "كليات متنوعة", en: "Diverse Colleges" },
+					{ icon: "🏫", ar: "مدارس دولية", en: "International Schools" },
+					{ icon: "🎓", ar: "حياة طلابية", en: "Student Life" },
+					{ icon: "🤝", ar: "دعم متكامل", en: "Integrated Support" },
+				];
+				trust.innerHTML = `<div class="edu-wrap edu-value-inner">${values
+					.map((v) => `<div class="edu-value-item"><span>${v.icon}</span><strong>${this.lang === "ar" ? v.ar : v.en}</strong></div>`)
+					.join("")}</div>`;
 			}
 
-			const features = document.getElementById("edu-features-bar");
-			if (features) {
-				const items = [
-					{ icon: "📋", key: "online_apply", sub_ar: "طلب قبول رقمي", sub_en: "Digital admissions" },
-					{ icon: "👨‍👩‍👧", key: "parent_portal", sub_ar: "متابعة الأبناء", sub_en: "Child progress" },
-					{ icon: "🎓", key: "student_portal", sub_ar: "تعلّم ونتائج", sub_en: "Learning & grades" },
-					{ icon: "📊", key: "analytics", sub_ar: "قرارات مبنية على بيانات", sub_en: "Data-driven decisions" },
-				];
-				features.innerHTML = items
-					.map(
-						(i) => `
-					<div class="edu-feature">
-						<div class="edu-feature-icon">${i.icon}</div>
-						<strong>${this.t(i.key)}</strong>
-						<small>${this.lang === "ar" ? i.sub_ar : i.sub_en}</small>
-					</div>`
-					)
-					.join("");
-			}
+			this.renderColleges("edu-colleges-section");
 
 			const stats = document.getElementById("edu-stats");
 			if (stats && cfg.stats) {
@@ -431,8 +451,208 @@
 			}
 
 			this.renderInstitutionTypes("edu-institution-types");
+			this.renderAdmissionBand("edu-admission-band");
+			this.renderServices("edu-services-section");
 			this.renderGallery("edu-gallery-section");
+			this.renderInternational("edu-international-section");
+			this.renderOnlineLearning("edu-online-section");
+			this.renderScholarships("edu-scholarships-section");
+			this.renderNews("edu-news-section");
+			this.renderPartners("edu-partners-section");
 			this.renderInstitutions("edu-institutions");
+		},
+
+		_fmtNum(n) {
+			const v = Number(n) || 0;
+			return v >= 1000 ? Math.round(v / 1000) + "K" : String(v);
+		},
+
+		renderColleges(hostId) {
+			const host = document.getElementById(hostId);
+			if (!host) return;
+			const colleges = (this.config && this.config.colleges) || [];
+			host.innerHTML = `
+				<div class="edu-wrap">
+					<div class="edu-section-title">
+						<span class="edu-eyebrow">Academic Excellence</span>
+						<h2>${this.lang === "ar" ? "الكليات والمدارس" : "Colleges & Schools"}</h2>
+						<p>${this.lang === "ar" ? "برامج أكاديمية متميزة في بيئة تعليمية عالمية" : "Premium academic programs in a world-class environment"}</p>
+					</div>
+					<div class="edu-college-grid">
+						${colleges
+							.map(
+								(c) => `
+							<div class="edu-college-card">
+								<div class="edu-college-img"><img src="${this.esc(c.image)}" alt="" loading="lazy" /></div>
+								<div class="edu-college-body">
+									<h3>${this.esc(this.lang === "ar" ? c.name_ar : c.name_en)}</h3>
+									<p>${c.programs || 0} ${this.lang === "ar" ? "برنامج" : "programs"}</p>
+									<a class="edu-btn edu-btn-sm edu-btn-primary" href="/education/apply">${this.t("apply_now")}</a>
+								</div>
+							</div>`
+							)
+							.join("")}
+					</div>
+					<div class="edu-section-cta"><a class="edu-btn edu-btn-outline" href="/education/programs">${this.lang === "ar" ? "عرض جميع الكليات" : "View All Colleges"}</a></div>
+				</div>`;
+		},
+
+		renderAdmissionBand(hostId) {
+			const host = document.getElementById(hostId);
+			if (!host) return;
+			const steps =
+				this.lang === "ar"
+					? [
+							{ icon: "👤", t: "إنشاء حساب" },
+							{ icon: "📚", t: "اختيار البرنامج" },
+							{ icon: "📄", t: "رفع المستندات" },
+							{ icon: "💳", t: "سداد الرسوم" },
+							{ icon: "🎤", t: "المقابلة" },
+							{ icon: "✅", t: "استلام القبول" },
+						]
+					: [
+							{ icon: "👤", t: "Create Account" },
+							{ icon: "📚", t: "Choose Program" },
+							{ icon: "📄", t: "Upload Documents" },
+							{ icon: "💳", t: "Pay Fees" },
+							{ icon: "🎤", t: "Interview" },
+							{ icon: "✅", t: "Receive Admission" },
+						];
+			host.innerHTML = `
+				<div class="edu-wrap">
+					<h2>${this.lang === "ar" ? "ابدأ رحلتك الأكاديمية" : "Start Your Academic Journey"}</h2>
+					<div class="edu-admission-steps">
+						${steps.map((s, i) => `<div class="edu-adm-step"><span class="edu-adm-icon">${s.icon}</span><span class="edu-adm-num">${i + 1}</span><p>${s.t}</p></div>`).join("")}
+					</div>
+					<a class="edu-btn edu-btn-gold edu-btn-lg" href="/education/apply">${this.t("apply_now")}</a>
+				</div>`;
+		},
+
+		renderServices(hostId) {
+			const host = document.getElementById(hostId);
+			if (!host) return;
+			const items =
+				this.lang === "ar"
+					? ["التسجيل", "الجدول", "الحضور", "الاختبارات", "النتائج", "الشهادات", "الإرشاد الأكاديمي", "شؤون الطلاب"]
+					: ["Registration", "Schedule", "Attendance", "Exams", "Results", "Certificates", "Advising", "Student Affairs"];
+			host.innerHTML = `
+				<div class="edu-wrap">
+					<div class="edu-section-title">
+						<span class="edu-eyebrow">Student Services</span>
+						<h2>${this.lang === "ar" ? "الخدمات الطلابية" : "Student Services"}</h2>
+					</div>
+					<div class="edu-services-grid">
+						${items.map((t) => `<div class="edu-service-card"><span>✓</span>${t}</div>`).join("")}
+					</div>
+				</div>`;
+		},
+
+		renderInternational(hostId) {
+			const host = document.getElementById(hostId);
+			if (!host) return;
+			const items =
+				this.lang === "ar"
+					? ["خدمات التأشيرة", "التأمين الصحي", "السكن", "الاستقبال من المطار", "البرنامج التعريفي"]
+					: ["Visa Services", "Health Insurance", "Accommodation", "Airport Pickup", "Orientation"];
+			host.innerHTML = `
+				<div class="edu-wrap edu-split-section">
+					<div>
+						<span class="edu-eyebrow">Global Campus</span>
+						<h2>${this.lang === "ar" ? "الطلاب الدوليون" : "International Students"}</h2>
+						<ul class="edu-check-list">${items.map((i) => `<li>${i}</li>`).join("")}</ul>
+						<a class="edu-btn edu-btn-primary" href="/education/apply">${this.t("apply_now")}</a>
+					</div>
+					<div class="edu-split-img"><img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=800&q=80" alt="" loading="lazy" /></div>
+				</div>`;
+		},
+
+		renderOnlineLearning(hostId) {
+			const host = document.getElementById(hostId);
+			if (!host) return;
+			const items =
+				this.lang === "ar"
+					? ["محاضرات مباشرة", "دورات مسجّلة", "واجبات", "اختبارات", "شهادات معتمدة"]
+					: ["Live Classes", "Recorded Courses", "Assignments", "Exams", "Certificates"];
+			host.innerHTML = `
+				<div class="edu-wrap">
+					<div class="edu-section-title">
+						<span class="edu-eyebrow">Digital Learning</span>
+						<h2>${this.lang === "ar" ? "التعلّم الإلكتروني" : "Online Learning"}</h2>
+					</div>
+					<div class="edu-online-grid">
+						${items.map((t) => `<div class="edu-online-card">💻 ${t}</div>`).join("")}
+					</div>
+					<p class="edu-center"><a href="${(this.config && this.config.urls && this.config.urls.laravel_portal) || "https://kemetgate.com"}" class="edu-card-link" target="_blank" rel="noopener">kemetgate LMS →</a></p>
+				</div>`;
+		},
+
+		renderScholarships(hostId) {
+			const host = document.getElementById(hostId);
+			if (!host) return;
+			const rows = (this.config && this.config.scholarships) || [];
+			host.innerHTML = `
+				<div class="edu-wrap">
+					<div class="edu-section-title">
+						<span class="edu-eyebrow">Scholarships</span>
+						<h2>${this.lang === "ar" ? "المنح الدراسية" : "Scholarships"}</h2>
+					</div>
+					<div class="edu-scholarship-grid">
+						${rows
+							.map(
+								(s) => `
+							<div class="edu-scholarship-card">
+								<h3>${this.esc(this.lang === "ar" ? s.name_ar : s.name_en)}</h3>
+								<p>${this.esc(this.lang === "ar" ? s.desc_ar : s.desc_en)}</p>
+							</div>`
+							)
+							.join("")}
+					</div>
+				</div>`;
+		},
+
+		renderNews(hostId) {
+			const host = document.getElementById(hostId);
+			if (!host) return;
+			const rows = (this.config && this.config.news) || [];
+			host.innerHTML = `
+				<div class="edu-wrap">
+					<div class="edu-section-title">
+						<span class="edu-eyebrow">News & Events</span>
+						<h2>${this.lang === "ar" ? "آخر الأخبار والإعلانات" : "Latest News & Announcements"}</h2>
+					</div>
+					<div class="edu-news-grid">
+						${rows
+							.map(
+								(n) => `
+							<article class="edu-news-card">
+								<div class="edu-news-img"><img src="${this.esc(n.image)}" alt="" loading="lazy" /></div>
+								<div class="edu-news-body">
+									<span class="edu-badge">${this.esc(this.lang === "ar" ? n.tag_ar : n.tag_en)}</span>
+									<h3>${this.esc(this.lang === "ar" ? n.title_ar : n.title_en)}</h3>
+									<time>${this.esc(n.date)}</time>
+								</div>
+							</article>`
+							)
+							.join("")}
+					</div>
+				</div>`;
+		},
+
+		renderPartners(hostId) {
+			const host = document.getElementById(hostId);
+			if (!host) return;
+			const partners =
+				this.lang === "ar"
+					? ["وزارة التعليم", "القطاع الخاص", "جامعات دولية", "Microsoft", "Oracle", "AWS"]
+					: ["Ministry of Education", "Industry Partners", "International Universities", "Microsoft", "Oracle", "AWS"];
+			host.innerHTML = `
+				<div class="edu-wrap">
+					<div class="edu-section-title">
+						<span class="edu-eyebrow">Partners</span>
+						<h2>${this.lang === "ar" ? "شركاؤنا" : "Our Partners"}</h2>
+					</div>
+					<div class="edu-partners-row">${partners.map((p) => `<span class="edu-partner-pill">${p}</span>`).join("")}</div>
+				</div>`;
 		},
 
 		renderInstitutionTypes(hostId) {
