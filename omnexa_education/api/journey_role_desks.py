@@ -43,15 +43,37 @@ def _student_gpa(student: str) -> float | None:
 def _today_schedule(section: str | None) -> list:
 	if not section or not frappe.db.exists("DocType", "Education Timetable Entry"):
 		return []
+
+	meta = frappe.get_meta("Education Timetable Entry")
+	day_field = "weekday" if meta.has_field("weekday") else ("day_of_week" if meta.has_field("day_of_week") else None)
+	if not day_field:
+		return []
+
 	day_names = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 	day = day_names[frappe.utils.getdate(today()).weekday()]
-	return frappe.get_all(
+
+	fields = ["name", "subject", "teacher", "room"]
+	if meta.has_field("from_time"):
+		fields.extend(["from_time", "to_time"])
+		order_by = "from_time asc"
+	elif meta.has_field("start_time"):
+		fields.extend(["start_time", "end_time"])
+		order_by = "start_time asc"
+	else:
+		order_by = "name asc"
+
+	rows = frappe.get_all(
 		"Education Timetable Entry",
-		filters={"section": section, "day_of_week": day},
-		fields=["name", "subject", "teacher", "start_time", "end_time", "room"],
-		order_by="start_time asc",
+		filters={"section": section, day_field: day},
+		fields=fields,
+		order_by=order_by,
 		limit=20,
 	)
+	for row in rows:
+		if row.get("from_time") is not None and row.get("start_time") is None:
+			row["start_time"] = row.get("from_time")
+			row["end_time"] = row.get("to_time")
+	return rows
 
 
 def _scope(company: str | None, branch: str | None) -> tuple[str, str]:
