@@ -1,3 +1,267 @@
-Finance,مالية
+# Module & workspace
+Education,التعليم
+Omnexa Education,أومنكسا للتعليم
+Student Portal,بوابة الطالب
+Parent Portal,بوابة ولي الأمر
+Edu Student Hub,مركز الطالب
+Edu Parent Hub,مركز ولي الأمر
+
+# Workspace section headers
+✨ Omnexa Journey Experience,✨ تجربة أومنكسا التعليمية
+📊 Dashboards & Portals,📊 لوحات التحكم والبوابات
+🏫 Institution Setup (All),🏫 إعداد المؤسسة (شامل)
+🎓 University (Banner / Workday),🎓 الجامعة (Banner / Workday)
+🏫 K12 School (PowerSchool),🏫 المدارس K12 (PowerSchool)
+👨‍🎓 Admissions & Enrollment,👨‍🎓 القبول والتسجيل
+👩‍🏫 Faculty,👩‍🏫 هيئة التدريس
+📝 Assessment & Grades,📝 التقييم والدرجات
+📅 Scheduling & Timetable,📅 الجدول والمواعيد
+🔒 Compliance & FERPA,🔒 الامتثال وخصوصية FERPA
+📚 Library · Transport · Hostel,📚 المكتبة · النقل · السكن
+🎯 Student Life & Alumni,🎯 الحياة الطلابية والخريجين
+🔗 LMS · Mobile · Analytics,🔗 LMS · الجوال · التحليلات
+💰 Fees & Finance,💰 الرسوم والمالية
+👥 Administration,👥 الإدارة
+📈 Reports · Enrollment & Admissions,📈 تقارير · القبول والتسجيل
+📈 Reports · Attendance & Academics,📈 تقارير · الحضور والأكاديميات
+📈 Reports · Billing & Finance,📈 تقارير · الفوترة والمالية
+📈 Reports · Operations,📈 تقارير · العمليات
+📈 Reports · Other,📈 تقارير · أخرى
+📱 Pages (auto),📱 صفحات (تلقائي)
+📁 Education DocTypes (auto),📁 مستندات التعليم (تلقائي)
+📊 KPIs,📊 مؤشرات الأداء
+📈 Charts,📈 المخططات
+📌 Operations,📌 العمليات
+Institution & people,المؤسسة والأفراد
+Academic structure,الهيكل الأكاديمي
+
+# Journey pages & desks
+Education Workcenter,مركز عمل التعليم
+Finance Workcenter,مركز عمل المالية
+Laravel TLMS Integration,تكامل Laravel TLMS
+Registrar Desk,مكتب التسجيل
+Graduation Desk,مكتب التخرج
+Alumni Desk,مكتب الخريجين
+QA & Accreditation Desk,مكتب الجودة والاعتماد
+QA Desk,مكتب الجودة
+Admissions Portal,بوابة القبول
+Teacher Gradebook,سجل درجات المعلم
+Parent Portal (PWA),بوابة ولي الأمر (PWA)
+Parent Mobile (PWA),بوابة ولي الأمر للجوال (PWA)
+Timetable Board,لوحة الجداول
+Analytics Dashboard,لوحة التحليلات
+Executive Dashboard,لوحة الإدارة التنفيذية
+Education Finance Desk,مكتب الشؤون المالية
+Education Laravel Integration,تكامل Laravel
+Education Student Portal,بوابة الطالب
+Education Parent Mobile,بوابة ولي الأمر للجوال
+Education QA Desk,مكتب ضمان الجودة
+Education Alumni Desk,مكتب الخريجين
+Education Graduation Desk,مكتب التخرج
+Education Admissions Portal,بوابة القبول
+Education Teacher Gradebook,سجل درجات المعلم
+Education Timetable Board,لوحة الجداول
+Education Analytics Dashboard,لوحة التحليلات
+Education Executive Dashboard,لوحة الإدارة التنفيذية
+Education Registrar Desk,مكتب التسجيل
+
+# Workspace link labels (short)
+Company,الشركة
+Branch,الفرع
+Education Settings,إعدادات التعليم
+Institution,المؤسسة
+Campus,الحرم
+Department,القسم
+Curriculum,المنهج
+Academic Year,السنة الأكاديمية
+Term,الفصل الدراسي
+Grade Level,المستوى الدراسي
+Subject,المادة
+Room,القاعة
+Program,البرنامج
+Course,المقرر
+Course Enrollment,تسجيل المقرر
+Transcript Request,طلب كشف درجات
+Section / Homeroom,الشعبة / الفصل
+Teacher Assignment,تكليف المعلم
+Timetable,الجدول الدراسي
+Attendance Session,جلسة الحضور
+Admission Application,طلب القبول
+Online Application,التقديم الإلكتروني
+Waitlist Pool,قائمة الانتظار
+Lottery Run,قرعة القبول
+Student Enrollment,تسجيل الطالب
+Student,الطالب
+Customer (ERP),العميل (ERP)
+Teacher,المعلم
+Employee (HR),الموظف (الموارد البشرية)
+Assessment Plan,خطة التقييم
+Assessment Result,نتيجة التقييم
+Grading Scale,مقياس الدرجات
+Academic Standing,الوضع الأكاديمي
+Report Card,بطاقة الأداء
+Official Transcript,كشف الدرجات الرسمي
+Timetable Template,قالب الجدول
+FERPA Access Log,سجل الوصول FERPA
+Student Consent,موافقة الطالب
+Library Book,كتاب المكتبة
+Library Loan,إعارة المكتبة
+Transport Route,خط النقل
+Hostel Room,غرفة السكن
+Hostel Allocation,تخصيص السكن
+Discipline Incident,حادثة انضباط
+Credit Transfer,تحويل الساعات
+Alumni Record,سجل الخريج
+Scholarship,المنحة الدراسية
+Scholarship Award,منح المنحة
+Announcement,الإعلان
+LMS Course Link,ربط مقرر LMS
+Laravel Sync Queue,طابور مزامنة Laravel
+Account Access Log,سجل الوصول للحساب
+Mobile Device Token,رمز جهاز الجوال
+Predictive Alert,تنبيه تنبؤي
+Fee Item,بند الرسوم
+Fee Plan,خطة الرسوم
+Discount Rule,قاعدة الخصم
+Late Fee Rule,قاعدة الغرامة
+Billing Cycle,دورة الفوترة
+Billing Invoice,فاتورة الرسوم
+Sales Invoice,فاتورة مبيعات
+Payment Entry,سند دفع
+Journal Entry,قيد يومية
 Purchase Invoice,فاتورة شراء
 Supplier,المورد
+Cost Center,مركز التكلفة
+User,المستخدم
+Role,الدور
+Leave Policy,سياسة الإجازات
+Employee,الموظف
+Customer,العميل
+Finance,المالية
+GL Account,حساب أستاذ
+Purchase Approval Rule,قاعدة اعتماد الشراء
+
+# DocType names (full)
+Education Academic Standing,الوضع الأكاديمي
+Education Academic Year,السنة الأكاديمية
+Education Account Access Log,سجل الوصول للحساب
+Education Admission Application,طلب القبول
+Education Alumni Record,سجل الخريج
+Education Announcement,الإعلان
+Education Assessment Plan,خطة التقييم
+Education Assessment Result,نتيجة التقييم
+Education Attendance Record,سجل الحضور
+Education Attendance Session,جلسة الحضور
+Education Billing Cycle,دورة الفوترة
+Education Billing Invoice,فاتورة الرسوم
+Education Billing Invoice Item,بند فاتورة الرسوم
+Education Campus,الحرم التعليمي
+Education Course,المقرر الدراسي
+Education Course Enrollment,تسجيل المقرر
+Education Credit Transfer,تحويل الساعات
+Education Curriculum,المنهج الدراسي
+Education Department,القسم التعليمي
+Education Discipline Incident,حادثة انضباط
+Education Discount Rule,قاعدة الخصم
+Education Fee Item,بند الرسوم
+Education Fee Plan,خطة الرسوم
+Education Fee Plan Item,بند خطة الرسوم
+Education Ferpa Access Log,سجل الوصول FERPA
+Education Grade Level,المستوى الدراسي
+Education Grading Scale,مقياس الدرجات
+Education Hostel Allocation,تخصيص السكن
+Education Hostel Room,غرفة السكن
+Education Institution,المؤسسة التعليمية
+Education Laravel Sync Queue,طابور مزامنة Laravel
+Education Late Fee Rule,قاعدة الغرامة
+Education Library Book,كتاب المكتبة
+Education Library Loan,إعارة المكتبة
+Education Lms Course Link,ربط مقرر LMS
+Education Lottery Run,قرعة القبول
+Education Mobile Device Token,رمز جهاز الجوال
+Education Official Transcript,كشف الدرجات الرسمي
+Education Online Application,التقديم الإلكتروني
+Education Portal Message,رسالة البوابة
+Education Predictive Alert,تنبيه تنبؤي
+Education Program,البرنامج الدراسي
+Education Report Card,بطاقة الأداء
+Education Room,القاعة الدراسية
+Education Scholarship,المنحة الدراسية
+Education Scholarship Award,منح المنحة
+Education Section,الشعبة الدراسية
+Education Student,الطالب
+Education Student Consent,موافقة الطالب
+Education Student Enrollment,تسجيل الطالب
+Education Subject,المادة الدراسية
+Education Teacher,المعلم
+Education Teacher Assignment,تكليف المعلم
+Education Term,الفصل الدراسي
+Education Timetable Entry,إدخال الجدول
+Education Timetable Template,قالب الجدول
+Education Transcript Request,طلب كشف درجات
+Education Transport Route,خط النقل
+Education Waitlist Pool,قائمة الانتظار
+
+# Reports
+Education Enrollment Summary,ملخص التسجيل
+Education Section Utilization,استخدام الشعب
+Education Grade Level Profitability,ربحية المستوى الدراسي
+Education Fee Aging,أعمار الرسوم
+Education Billing Summary,ملخص الفوترة
+Education Fee Revenue by Item,إيراد الرسوم حسب البند
+Education Expense by Branch,مصروفات حسب الفرع
+Enrollment summary,ملخص التسجيل
+Section utilization,استخدام الشعب
+Grade level profitability,ربحية المستوى الدراسي
+Fee aging,أعمار الرسوم
+Billing summary,ملخص الفوترة
+Fee revenue by item,إيراد الرسوم حسب البند
+Expense by branch,مصروفات حسب الفرع
+LMS Sync Status,حالة مزامنة LMS
+Retention Risk Alerts,تنبيهات مخاطر الاستبقاء
+FERPA Audit Trail,سجل تدقيق FERPA
+GPA Summary,ملخص المعدل
+Waitlist Status,حالة قائمة الانتظار
+Transcript Status,حالة كشف الدرجات
+Grade Distribution,توزيع الدرجات
+Attendance Summary,ملخص الحضور
+Admissions Pipeline,مسار القبول
+Enrollment Summary,ملخص التسجيل
+Section Utilization,استخدام الشعب
+Grade Level Profitability,ربحية المستوى الدراسي
+Fee Aging,أعمار الرسوم
+Billing Summary,ملخص الفوترة
+Fee Revenue by Item,إيراد الرسوم حسب البند
+Expense by Branch,مصروفات حسب الفرع
+
+# Charts & dashboards
+Education · Status Bar,التعليم · شريط الحالة
+Education · Education Institution Mix,التعليم · توزيع المؤسسات
+Education · Education Campus Mix,التعليم · توزيع الأحرام
+Education Campus Mix,توزيع الأحرام
+Education Institution Mix,توزيع المؤسسات
+Status Bar,شريط الحالة
+
+# Roles
+Education Student Portal,بوابة الطالب
+Education Parent Portal,بوابة ولي الأمر
+Education Finance Officer,مسؤول الشؤون المالية
+Education Manager,مدير التعليم
+Education User,مستخدم التعليم
+
+# Auto-discovered page labels
+Workcenter,مركز العمل
+Finance Desk,مكتب المالية
+Laravel Integration,تكامل Laravel
+Student Portal,بوابة الطالب
+Parent Mobile,بوابة ولي الأمر
+Timetable Board,لوحة الجداول
+Teacher Gradebook,سجل درجات المعلم
+Admissions Portal,بوابة القبول
+Analytics Dashboard,لوحة التحليلات
+Executive Dashboard,لوحة الإدارة التنفيذية
+Graduation Desk,مكتب التخرج
+Alumni Desk,مكتب الخريجين
+Qa Desk,مكتب الجودة
+Registrar Desk,مكتب التسجيل
+Finance Desk,مكتب المالية
