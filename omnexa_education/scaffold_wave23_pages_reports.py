@@ -14,11 +14,11 @@ PAGES = [
 	("education_executive_dashboard", "education-executive-dashboard", "Education Executive Dashboard"),
 ]
 REPORTS = [
-	("education_waitlist_status", "Education Waitlist Pool", "Waitlist Status"),
-	("education_gpa_summary", "Education Academic Standing", "GPA Summary"),
-	("education_ferpa_audit", "Education Ferpa Access Log", "FERPA Audit Trail"),
-	("education_retention_risk", "Education Predictive Alert", "Retention Risk Alerts"),
-	("education_lms_sync_status", "Education Lms Course Link", "LMS Sync Status"),
+	("waitlist_status", "Education Waitlist Pool", "Waitlist Status"),
+	("gpa_summary", "Education Academic Standing", "GPA Summary"),
+	("ferpa_audit_trail", "Education Ferpa Access Log", "FERPA Audit Trail"),
+	("retention_risk_alerts", "Education Predictive Alert", "Retention Risk Alerts"),
+	("lms_sync_status", "Education Lms Course Link", "LMS Sync Status"),
 ]
 ROLES = [{"role": "System Manager"}, {"role": "Education Manager"}, {"role": "Education User"}, {"role": "Teacher"}]
 
