@@ -14,7 +14,7 @@ required_apps = ["omnexa_core", "omnexa_accounting"]
 add_to_apps_screen = [
 	{
 		"name": "omnexa_education",
-		"logo": "/assets/omnexa_education/logo.png",
+		"logo": "/assets/omnexa_education/education.svg",
 		"title": "EduSphere",
 		"route": "/app/education-workcenter",
 	}

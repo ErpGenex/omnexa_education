@@ -139,7 +139,7 @@
 				hero_text_en: "Admissions, enrollment, learning, and student services in one integrated platform",
 				hero_image: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=1920&q=85",
 				hero_video_poster: "https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=1920&q=85",
-				logo: "/assets/omnexa_education/logo.png",
+				logo: "/assets/omnexa_education/education.svg",
 				primary_color: "#003366",
 				secondary_color: "#0A5FA8",
 				accent_color: "#00B4D8",
@@ -557,7 +557,7 @@
 							.map(
 								(c) => `
 							<div class="edu-college-card">
-								<div class="edu-college-img"><img src="${this.esc(c.image)}" alt="" loading="lazy" onerror="this.src='/assets/omnexa_education/logo.png'" /></div>
+								<div class="edu-college-img"><img src="${this.esc(c.image)}" alt="" loading="lazy" onerror="this.src='/assets/omnexa_education/education.svg'" /></div>
 								<div class="edu-college-body">
 									<h3>${this.esc(this.lang === "ar" ? c.name_ar : c.name_en)}</h3>
 									<p>${c.programs || 0} ${this.lang === "ar" ? "برنامج" : "programs"}</p>
@@ -780,7 +780,7 @@
 										: "Not active";
 							return `
 						<div class="edu-type-card ${statusClass}">
-							<div class="edu-type-img"><img src="${this.esc(row.image)}" alt="" loading="lazy" onerror="this.src='/assets/omnexa_education/logo.png'" /></div>
+							<div class="edu-type-img"><img src="${this.esc(row.image)}" alt="" loading="lazy" onerror="this.src='/assets/omnexa_education/education.svg'" /></div>
 							<div class="edu-type-body">
 								<span class="edu-type-icon">${typeIcons[row.institution_type] || "🏢"}</span>
 								<span class="edu-status-pill ${statusClass}">${statusLabel}</span>

@@ -123,7 +123,7 @@ def get_site_config(institution: str | None = None) -> dict:
 		"hero_text_en": "Admissions, enrollment, learning, and student services in one integrated platform",
 		"hero_image": DEFAULT_HERO,
 		"hero_video_poster": "https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=1920&q=85",
-		"logo": _public_url("/assets/omnexa_education/logo.png"),
+		"logo": _public_url("/assets/omnexa_education/education.svg"),
 		"primary_color": "#003366",
 		"secondary_color": "#0A5FA8",
 		"accent_color": "#00B4D8",
