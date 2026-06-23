@@ -29,16 +29,16 @@ CAMPUS_GALLERY = [
 ]
 
 COLLEGES_CATALOG = [
-	{"key": "medicine", "name_ar": "كلية الطب", "name_en": "Faculty of Medicine", "programs": 12, "image": "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=800&q=80"},
-	{"key": "engineering", "name_ar": "كلية الهندسة", "name_en": "Faculty of Engineering", "programs": 18, "image": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80"},
-	{"key": "ai", "name_ar": "كلية الذكاء الاصطناعي", "name_en": "Faculty of AI", "programs": 9, "image": "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=800&q=80"},
-	{"key": "business", "name_ar": "كلية الأعمال", "name_en": "Faculty of Business", "programs": 14, "image": "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=800&q=80"},
-	{"key": "cs", "name_ar": "كلية الحاسبات", "name_en": "Faculty of Computing", "programs": 11, "image": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=800&q=80"},
+	{"key": "medicine", "name_ar": "كلية الطب", "name_en": "Faculty of Medicine", "programs": 10, "image": "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=800&q=80"},
+	{"key": "engineering", "name_ar": "كلية الهندسة", "name_en": "Faculty of Engineering", "programs": 10, "image": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80"},
+	{"key": "ai", "name_ar": "كلية الذكاء الاصطناعي", "name_en": "Faculty of AI", "programs": 10, "image": "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=800&q=80"},
+	{"key": "business", "name_ar": "كلية الأعمال", "name_en": "Faculty of Business", "programs": 10, "image": "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=800&q=80"},
+	{"key": "cs", "name_ar": "كلية الحاسبات", "name_en": "Faculty of Computing", "programs": 10, "image": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=800&q=80"},
 	{"key": "science", "name_ar": "كلية العلوم", "name_en": "Faculty of Science", "programs": 10, "image": "https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=800&q=80"},
-	{"key": "law", "name_ar": "كلية القانون", "name_en": "Faculty of Law", "programs": 7, "image": "https://images.unsplash.com/photo-1589829545855-d10d557cf95f?auto=format&fit=crop&w=800&q=80"},
-	{"key": "media", "name_ar": "كلية الإعلام", "name_en": "Faculty of Media", "programs": 8, "image": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80"},
-	{"key": "intschool", "name_ar": "المدارس الدولية", "name_en": "International Schools", "programs": 22, "image": "https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=800&q=80"},
-	{"key": "academy", "name_ar": "الأكاديمية المهنية", "name_en": "Professional Academy", "programs": 16, "image": "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=800&q=80"},
+	{"key": "law", "name_ar": "كلية القانون", "name_en": "Faculty of Law", "programs": 10, "image": "https://images.unsplash.com/photo-1589829545855-d10d557cf95f?auto=format&fit=crop&w=800&q=80"},
+	{"key": "media", "name_ar": "كلية الإعلام", "name_en": "Faculty of Media", "programs": 10, "image": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80"},
+	{"key": "intschool", "name_ar": "المدارس الدولية", "name_en": "International Schools", "programs": 20, "image": "https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=800&q=80"},
+	{"key": "academy", "name_ar": "الأكاديمية المهنية", "name_en": "Professional Academy", "programs": 25, "image": "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=800&q=80"},
 ]
 
 NEWS_ITEMS = [
@@ -173,24 +173,46 @@ def get_site_config(institution: str | None = None) -> dict:
 
 @frappe.whitelist(allow_guest=True)
 def get_public_programs(institution: str | None = None) -> list[dict]:
+	from omnexa_education.education_demo.institution_specs import get_demo_program_catalog
+
+	meta = frappe.get_meta("Education Program")
+	fields = ["name", "program_name", "institution", "degree_level"]
+	for fieldname in ("program_type", "duration_years", "department", "total_credits"):
+		if meta.has_field(fieldname):
+			fields.append(fieldname)
+
 	filters: dict = {}
-	if frappe.get_meta("Education Program").has_field("is_active"):
+	if meta.has_field("is_active"):
 		filters["is_active"] = 1
-	elif frappe.get_meta("Education Program").has_field("status"):
+	elif meta.has_field("status"):
 		filters["status"] = "Active"
 	if institution:
 		filters["institution"] = institution
+
 	rows = frappe.get_all(
 		"Education Program",
 		filters=filters,
-		fields=["name", "program_name", "institution", "program_type", "duration_years", "degree_level"],
-		limit=200,
+		fields=fields,
+		limit=500,
 		order_by="program_name asc",
+		ignore_permissions=True,
 	)
+	if not rows:
+		return get_demo_program_catalog()
+
 	for row in rows:
-		row["institution_name"] = frappe.db.get_value(
-			"Education Institution", row.institution, "institution_name"
+		inst = frappe.db.get_value(
+			"Education Institution",
+			row.institution,
+			["institution_name", "institution_type"],
+			as_dict=True,
 		)
+		if inst:
+			row["institution_name"] = inst.institution_name
+			row["institution_type"] = inst.institution_type
+			row["program_type"] = row.get("program_type") or inst.institution_type
+		if row.get("department"):
+			row["department_name"] = frappe.db.get_value("Education Department", row.department, "department_name")
 	return rows
 
 

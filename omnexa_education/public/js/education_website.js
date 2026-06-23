@@ -854,10 +854,25 @@
 			if (!host) return;
 
 			host.innerHTML = `<p style="text-align:center">${this.t("loading")}</p>`;
-			const r = await frappe.call({
-				method: "omnexa_education.api.public_education_site.get_public_programs",
-			});
-			this._programsCache = r.message || [];
+			try {
+				let rows = [];
+				if (typeof frappe !== "undefined" && frappe.call) {
+					const r = await frappe.call({
+						method: "omnexa_education.api.public_education_site.get_public_programs",
+					});
+					rows = r.message || [];
+				} else {
+					const res = await fetch("/api/method/omnexa_education.api.public_education_site.get_public_programs");
+					const data = await res.json();
+					rows = data.message || [];
+				}
+				this._programsCache = rows;
+			} catch (e) {
+				this._programsCache = [];
+				host.innerHTML = `<p style="text-align:center;color:#c62828">${this.lang === "ar" ? "تعذر تحميل البرامج" : "Could not load programs"}</p>`;
+				return;
+			}
+
 			const types = [...new Set(this._programsCache.map((p) => p.program_type || p.institution_type).filter(Boolean))];
 
 			if (filterHost) {
@@ -894,6 +909,7 @@
 							<span class="edu-badge">${this.esc(row.program_type || row.degree_level || "")}</span>
 							<h3>${this.esc(row.program_name)}</h3>
 							<p>${this.esc(row.institution_name || row.institution)}</p>
+							${row.department_name ? `<p>${this.esc(row.department_name)}</p>` : ""}
 							${row.duration_years ? `<p>${row.duration_years} ${this.lang === "ar" ? "سنوات" : "years"}</p>` : ""}
 							<a class="edu-card-link" href="/education/apply?institution=${encodeURIComponent(row.institution || "")}">${this.t("apply_now")} →</a>
 						</div>`

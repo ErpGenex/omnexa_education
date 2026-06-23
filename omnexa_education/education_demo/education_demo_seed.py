@@ -380,8 +380,17 @@ def _seed_institution(company: str, branch: str, spec: dict) -> dict:
 	mode = spec.get("mode", "k12")
 	if mode == "k12":
 		grades = []
+		dept_map: dict[str, str] = {}
 		for idx, stage in enumerate(spec.get("grade_stages") or ["Primary"], start=1):
 			grades.append(_ensure_grade_level(company, institution, curriculum, stage, idx))
+		for dept in spec.get("departments") or []:
+			dept_map[dept["code"]] = _ensure_department(
+				company, branch, campus, f"{spec['code']}-{dept['code']}", dept["name"]
+			)
+		for prog in spec.get("programs") or []:
+			dept = dept_map.get(prog.get("department", ""))
+			_ensure_program(company, branch, institution, prog, department=dept)
+			stats["programs"] += 1
 		section = _ensure_section(company, branch, campus, year, grades[0], f"{spec['code']}-A")
 		subject = _ensure_subject(company, institution, curriculum, f"{spec['code']}-MATH", "Mathematics")
 		course = _ensure_course(
@@ -407,11 +416,15 @@ def _seed_institution(company: str, branch: str, spec: dict) -> dict:
 			college_map[college["code"]] = _ensure_department(
 				company, branch, campus, f"{spec['code']}-{college['code']}", college["name"]
 			)
+		for dept in spec.get("departments") or []:
+			college_map[dept["code"]] = _ensure_department(
+				company, branch, campus, f"{spec['code']}-{dept['code']}", dept["name"]
+			)
 		year_levels = _ensure_he_year_levels(company, institution, curriculum, spec["code"]) if mode == "he" else []
 
 		for prog in spec.get("programs") or []:
 			prog_payload = {**prog}
-			dept = college_map.get(prog.get("college", ""))
+			dept = college_map.get(prog.get("college", "")) or college_map.get(prog.get("department", ""))
 			program_ids.append(_ensure_program(company, branch, institution, prog_payload, department=dept))
 			stats["programs"] += 1
 

@@ -70,6 +70,128 @@ INSTITUTION_TYPE_IMAGES: dict[str, str] = {
 	"Training Center": "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=800&q=80",
 }
 
+PROGRAMS_PER_UNIVERSITY_COLLEGE = 10
+PROGRAMS_PER_DEPARTMENT = 5
+
+_UNIVERSITY_TRACKS = (
+	"Computer Science",
+	"Electrical Engineering",
+	"Mechanical Engineering",
+	"Civil Engineering",
+	"Business Administration",
+	"Economics",
+	"Medicine",
+	"Pharmacy",
+	"Law",
+	"Architecture",
+)
+_DEGREE_CYCLE = ("Bachelor", "Bachelor", "Master", "Bachelor", "Diploma", "Bachelor", "Master", "Bachelor", "Doctorate", "Professional")
+_DEGREE_PREFIX = {
+	"Bachelor": "BSc",
+	"Master": "MSc",
+	"Doctorate": "PhD",
+	"Diploma": "Dip",
+	"Professional": "Prof",
+	"Certificate": "Cert",
+}
+
+
+def programs_for_university_college(college: dict, count: int = PROGRAMS_PER_UNIVERSITY_COLLEGE) -> list[dict]:
+	programs: list[dict] = []
+	for i in range(count):
+		track = _UNIVERSITY_TRACKS[i % len(_UNIVERSITY_TRACKS)]
+		level = _DEGREE_CYCLE[i % len(_DEGREE_CYCLE)]
+		prefix = _DEGREE_PREFIX.get(level, "Prog")
+		programs.append(
+			{
+				"code": f"{college['code']}-P{i + 1:02d}",
+				"name": f"{prefix} {track}",
+				"degree_level": level,
+				"college": college["code"],
+			}
+		)
+	return programs
+
+
+def programs_for_department(inst_code: str, department: dict, count: int = PROGRAMS_PER_DEPARTMENT) -> list[dict]:
+	programs: list[dict] = []
+	levels = ("Certificate", "Diploma", "Bachelor", "Certificate", "Diploma")
+	for i in range(count):
+		level = levels[i % len(levels)]
+		programs.append(
+			{
+				"code": f"{inst_code}-{department['code']}-P{i + 1}",
+				"name": f"{department['name']} — Program {i + 1}",
+				"degree_level": level,
+				"department": department["code"],
+			}
+		)
+	return programs
+
+
+def build_university_program_catalog(colleges: tuple[dict, ...] | list[dict] | None = None) -> list[dict]:
+	colleges = colleges or UNIVERSITY_COLLEGES
+	return [prog for college in colleges for prog in programs_for_university_college(college)]
+
+
+def build_department_program_catalog(inst_code: str, departments: list[dict]) -> list[dict]:
+	return [prog for dept in departments for prog in programs_for_department(inst_code, dept)]
+
+
+def get_demo_program_catalog() -> list[dict]:
+	"""Public website fallback when DB has no seeded programs yet."""
+	rows: list[dict] = []
+	for spec in INSTITUTION_DEMO_SPECS:
+		inst_label = spec.get("name") or spec["code"]
+		inst_type = spec.get("institution_type", "")
+		for prog in spec.get("programs") or []:
+			dept_label = prog.get("department") or prog.get("college") or ""
+			rows.append(
+				{
+					"name": f"{DEMO_MARKER}-{prog['code']}",
+					"program_name": prog["name"],
+					"institution": inst_label,
+					"institution_name": inst_label,
+					"institution_type": inst_type,
+					"degree_level": prog.get("degree_level", "Certificate"),
+					"program_type": inst_type,
+					"department_name": str(dept_label),
+					"duration_years": 4 if prog.get("degree_level") in ("Bachelor", "Master", "Doctorate") else 2,
+				}
+			)
+	return rows
+
+
+INTSCH_DEPARTMENTS: list[dict] = [
+	{"code": "EY", "name": "Early Years"},
+	{"code": "PRI", "name": "Primary"},
+	{"code": "MID", "name": "Middle School"},
+	{"code": "SEC", "name": "Secondary"},
+]
+
+ACADEMY_DEPARTMENTS: list[dict] = [
+	{"code": "SW", "name": "Software Engineering"},
+	{"code": "DATA", "name": "Data & AI"},
+	{"code": "CLOUD", "name": "Cloud & DevOps"},
+	{"code": "SEC", "name": "Cybersecurity"},
+	{"code": "PM", "name": "IT Project Management"},
+]
+
+INSTITUTE_DEPARTMENTS: list[dict] = [
+	{"code": "BUS", "name": "Business Studies"},
+	{"code": "ACC", "name": "Accounting"},
+	{"code": "HR", "name": "Human Resources"},
+	{"code": "MKT", "name": "Marketing"},
+]
+
+TRAINING_DEPARTMENTS: list[dict] = [
+	{"code": "LEAD", "name": "Leadership"},
+	{"code": "TECH", "name": "Technical Skills"},
+	{"code": "SOFT", "name": "Soft Skills"},
+]
+
+DEMO_MARKER = "EDU-DEMO"
+
 # Demo institutions — one per supported type
 INSTITUTION_DEMO_SPECS: list[dict] = [
 	{
@@ -82,6 +204,8 @@ INSTITUTION_DEMO_SPECS: list[dict] = [
 		"demo_students": DEMO_STUDENTS_PER_COLLEGE,
 		"demo_teachers": 40,
 		"grade_stages": ["Early Years", "Primary", "Middle", "Secondary"],
+		"departments": INTSCH_DEPARTMENTS,
+		"programs": build_department_program_catalog("INTSCH", INTSCH_DEPARTMENTS),
 	},
 	{
 		"code": "UNIV",
@@ -94,14 +218,7 @@ INSTITUTION_DEMO_SPECS: list[dict] = [
 		"demo_teachers": 80,
 		"colleges": list(UNIVERSITY_COLLEGES),
 		"students_per_college": DEMO_STUDENTS_PER_COLLEGE,
-		"programs": [
-			{"code": "BSC-CS", "name": "BSc Computer Science", "degree_level": "Bachelor", "college": "ENG"},
-			{"code": "BSC-EE", "name": "BSc Electrical Engineering", "degree_level": "Bachelor", "college": "ENG"},
-			{"code": "MBA", "name": "MBA Business Administration", "degree_level": "Master", "college": "BUS"},
-			{"code": "BBA", "name": "BBA Business Administration", "degree_level": "Bachelor", "college": "BUS"},
-			{"code": "MBBS", "name": "MBBS Medicine", "degree_level": "Bachelor", "college": "MED"},
-			{"code": "BA-ARTS", "name": "BA Arts & Humanities", "degree_level": "Bachelor", "college": "ART"},
-		],
+		"programs": build_university_program_catalog(),
 	},
 	{
 		"code": "ACADIT",
@@ -113,11 +230,8 @@ INSTITUTION_DEMO_SPECS: list[dict] = [
 		"website_slug": "it-academy",
 		"demo_students": DEMO_STUDENTS_PER_COLLEGE,
 		"demo_teachers": 30,
-		"programs": [
-			{"code": "DIP-WEB", "name": "Web Development Diploma", "degree_level": "Diploma"},
-			{"code": "CERT-DATA", "name": "Data Analytics Certificate", "degree_level": "Certificate"},
-			{"code": "BOOT-AI", "name": "AI Bootcamp", "degree_level": "Certificate"},
-		],
+		"departments": ACADEMY_DEPARTMENTS,
+		"programs": build_department_program_catalog("ACADIT", ACADEMY_DEPARTMENTS),
 	},
 	{
 		"code": "INST",
@@ -128,10 +242,8 @@ INSTITUTION_DEMO_SPECS: list[dict] = [
 		"website_slug": "institute",
 		"demo_students": DEMO_STUDENTS_PER_COLLEGE,
 		"demo_teachers": 25,
-		"programs": [
-			{"code": "DIP-BUS", "name": "Business Diploma", "degree_level": "Diploma"},
-			{"code": "DIP-ACC", "name": "Accounting Diploma", "degree_level": "Diploma"},
-		],
+		"departments": INSTITUTE_DEPARTMENTS,
+		"programs": build_department_program_catalog("INST", INSTITUTE_DEPARTMENTS),
 	},
 	{
 		"code": "TRAIN",
@@ -142,8 +254,8 @@ INSTITUTION_DEMO_SPECS: list[dict] = [
 		"website_slug": "training-center",
 		"demo_students": DEMO_STUDENTS_PER_COLLEGE,
 		"demo_teachers": 20,
-		"programs": [{"code": "WS-LEAD", "name": "Leadership Workshop Series", "degree_level": "Certificate"}],
+		"departments": TRAINING_DEPARTMENTS,
+		"programs": build_department_program_catalog("TRAIN", TRAINING_DEPARTMENTS),
 	},
 ]
 
-DEMO_MARKER = "EDU-DEMO"
