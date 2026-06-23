@@ -61,6 +61,9 @@ def seed_education_branch_demo(
 		for spec in ROLE_SPECS:
 			users.append(_ensure_demo_user(spec, company, branch))
 		_link_portal_users(company, branch)
+		from omnexa_education.api.education_portal_link import ensure_demo_portal_users_linked
+
+		ensure_demo_portal_users_linked(company, branch)
 
 	settings = frappe.get_single("Education Settings")
 	settings.enable_k12_modules = 1

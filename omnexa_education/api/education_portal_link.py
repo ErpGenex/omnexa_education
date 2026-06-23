@@ -67,5 +67,25 @@ def ensure_demo_portal_users_linked(company: str | None = None, branch: str | No
 	}
 
 
+@frappe.whitelist()
+def get_portal_empty_hint() -> dict:
+	"""Hints for empty student/parent portal views."""
+	link = ensure_demo_portal_users_linked()
+	user = frappe.session.user
+	student_linked = frappe.db.get_value("Education Student", {"user": user}, "name")
+	parent_children = frappe.db.count("Education Student", {"guardian_email": user, "status": "Active"})
+	return {
+		"current_user": user,
+		"student_linked": student_linked,
+		"parent_children": parent_children,
+		"demo_student_email": link.get("student_email"),
+		"demo_parent_email": link.get("parent_email"),
+		"demo_password": link.get("demo_password"),
+		"can_manage": frappe.session.user == "Administrator"
+		or "System Manager" in frappe.get_roles()
+		or "Education Manager" in frappe.get_roles(),
+	}
+
+
 def execute():
 	return ensure_demo_portal_users_linked()

@@ -540,20 +540,46 @@ def get_institution_demo_stats(company: str | None = None) -> list[dict]:
 	company = company or frappe.defaults.get_user_default("Company") or ""
 	out = []
 	for spec in INSTITUTION_DEMO_SPECS:
-		code = f"{DEMO_MARKER}-{spec['code']}"
-		inst = frappe.db.get_value("Education Institution", {"company": company, "institution_code": code}, "name")
+		inst = _find_demo_institution(company, spec)
 		if not inst:
-			out.append({**spec, "seeded": False, "students": 0, "teachers": 0, "applications": 0})
+			out.append({**spec, "seeded": False, "active": False, "students": 0, "teachers": 0, "applications": 0})
 			continue
+		students = frappe.db.count("Education Student", {"institution": inst, "status": "Active"})
 		out.append(
 			{
 				**spec,
 				"seeded": True,
+				"active": students > 0,
 				"institution": inst,
-				"students": frappe.db.count("Education Student", {"institution": inst, "status": "Active"}),
+				"students": students,
 				"teachers": frappe.db.count("Education Teacher", {"company": company}),
 				"applications": frappe.db.count("Education Admission Application", {"institution": inst}),
 				"programs": frappe.db.count("Education Program", {"institution": inst}),
 			}
 		)
 	return out
+
+
+def _find_demo_institution(company: str, spec: dict) -> str | None:
+	candidate_codes = [
+		f"{DEMO_MARKER}-{spec['code']}",
+		f"ER-{DEMO_MARKER}-{spec['code']}",
+		f"ER-EDU-DEMO-{spec['code']}",
+	]
+	for code in candidate_codes:
+		name = frappe.db.get_value("Education Institution", {"company": company, "institution_code": code}, "name")
+		if name:
+			return name
+	name = frappe.db.get_value(
+		"Education Institution",
+		{"company": company, "institution_name": spec["name"]},
+		"name",
+	)
+	if name:
+		return name
+	return frappe.db.get_value(
+		"Education Institution",
+		{"company": company, "institution_type": spec["institution_type"], "status": "Active"},
+		"name",
+		order_by="modified desc",
+	)

@@ -100,24 +100,6 @@ EDUCATION_JOURNEY_STEPS: list[dict] = [
 		"role_en": "Finance Officer",
 		"route": "/app/education-finance-desk",
 	},
-	{
-		"key": "student_portal",
-		"icon": "🎓",
-		"label_ar": "بوابة الطالب",
-		"label_en": "Student Portal",
-		"role_ar": "طالب",
-		"role_en": "Student",
-		"route": "/app/education-student-portal",
-	},
-	{
-		"key": "parent_portal",
-		"icon": "👪",
-		"label_ar": "بوابة ولي الأمر",
-		"label_en": "Parent Portal",
-		"role_ar": "ولي أمر",
-		"role_en": "Parent",
-		"route": "/app/education-parent-mobile",
-	},
 ]
 
 PORTAL_CATALOG: list[dict] = [

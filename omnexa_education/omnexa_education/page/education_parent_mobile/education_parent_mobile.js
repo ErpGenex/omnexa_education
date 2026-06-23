@@ -60,7 +60,21 @@ frappe.pages["education-parent-mobile"].on_page_load = function (wrapper) {
 			const data = await OJ.call("omnexa_education.api.journey_role_desks.get_parent_portal_dashboard", { student });
 			const $body = $('<div class="education-parent-desk"></div>');
 			if (!data.student && !data.children?.length) {
-				$body.html(`<p class="oj-muted">${OJ.t("اربط بريد ولي الأمر بسجل الطالب", "Link guardian email on student record")}</p>`);
+				const hint = await OJ.call("omnexa_education.api.education_portal_link.get_portal_empty_hint");
+				$body.append(`<p class="oj-muted">${OJ.t("اربط بريد ولي الأمر بسجل الطالب", "Link guardian email on student record")}</p>`);
+				$body.append(`<p>${OJ.t("المستخدم الحالي", "Current user")}: <strong>${OJ.esc(hint.current_user || "")}</strong></p>`);
+				$body.append(`<p>${OJ.t("للتجربة سجّل الخروج وادخل كولي أمر ديمو", "For demo, log out and sign in as")}: <code>${OJ.esc(hint.demo_parent_email || "parent@demo.education")}</code> · ${OJ.t("كلمة المرور", "Password")}: <code>${OJ.esc(hint.demo_password || "Education@Demo2026")}</code></p>`);
+				if (hint.can_manage) {
+					const $link = $(`<button type="button" class="btn btn-primary" style="margin-top:12px">${OJ.t("ربط حسابات البوابات", "Link Portal Accounts")}</button>`);
+					$link.on("click", async () => {
+						const res = await OJ.call("omnexa_education.api.education_portal_link.ensure_demo_portal_users_linked");
+						frappe.show_alert({
+							message: `${OJ.t("أولياء", "Parents")}: ${res.parent_children || 0}`,
+							indicator: res.parent_children ? "green" : "orange",
+						});
+					});
+					$body.append($link);
+				}
 				return $body;
 			}
 			if (data.children?.length > 1) {

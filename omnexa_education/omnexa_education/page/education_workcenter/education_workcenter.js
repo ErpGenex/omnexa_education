@@ -6,9 +6,7 @@ frappe.pages["education-workcenter"].on_page_load = function (wrapper) {
 		async function render() {
 			const ctx = await OJ.call("omnexa_education.api.education_portal_catalog.get_workcenter_context");
 			const groups = ctx.grouped_portals || [];
-			const steps = ctx.journey_steps || [];
 			const fullLifecycle = ctx.full_lifecycle || [];
-			const externalPortals = ctx.external_portals || [];
 			const readiness = ctx.live_readiness || {};
 			const demo = ctx.demo || {};
 			const kpis = (ctx.kpis || []).map((k) => ({
@@ -37,7 +35,7 @@ frappe.pages["education-workcenter"].on_page_load = function (wrapper) {
 					</div>`);
 			}
 
-			// Institution type cards
+			// Institution type cards (click inactive card to seed that type)
 			const institutions = demo.institutions || [];
 			if (institutions.length) {
 				$body.append(`<h4 class="oj-section-title">${OJ.t("أنواع المؤسسات التعليمية", "Education Institution Types")}</h4>`);
@@ -50,9 +48,14 @@ frappe.pages["education-workcenter"].on_page_load = function (wrapper) {
 						Institute: "📖",
 						"Training Center": "🛠️",
 					}[inst.institution_type] || "🏢";
-					const seeded = inst.seeded;
-					$instGrid.append(`
-						<div class="oj-clinic-card ${seeded ? "" : "oj-muted-card"}">
+					const isActive = inst.active || (inst.seeded && (inst.students || 0) > 0);
+					const statusLabel = isActive
+						? OJ.t("نشط", "Active")
+						: inst.seeded
+							? OJ.t("مزروع", "Seeded")
+							: OJ.t("غير مفعّل", "Not active");
+					const $card = $(`
+						<div class="oj-clinic-card ${isActive ? "" : "oj-muted-card"} ${demo.can_seed && !inst.seeded ? "oj-clickable-card" : ""}" style="cursor:${demo.can_seed && !inst.seeded ? "pointer" : "default"}">
 							<div class="oj-clinic-icon">${icon}</div>
 							<h4>${OJ.esc(inst.name || inst.institution_type)}</h4>
 							<p class="oj-muted">${OJ.esc(inst.institution_type)}${inst.academy_type ? " · " + OJ.esc(inst.academy_type) : ""}</p>
@@ -61,8 +64,22 @@ frappe.pages["education-workcenter"].on_page_load = function (wrapper) {
 								<span>👩‍🏫 ${inst.teachers || 0}</span>
 								<span>📋 ${inst.applications || 0}</span>
 							</div>
-							<span class="oj-pill">${seeded ? OJ.t("مزروع", "Seeded") : OJ.t("غير مزروع", "Not seeded")}</span>
+							<span class="oj-pill">${statusLabel}</span>
 						</div>`);
+					if (demo.can_seed && !inst.seeded) {
+						$card.on("click", async () => {
+							try {
+								await OJ.call("omnexa_education.api.education_demo.seed_demo", {
+									institution_type: inst.institution_type,
+								});
+								frappe.show_alert({ message: OJ.t("تم التفعيل", "Activated"), indicator: "green" });
+								render();
+							} catch (e) {
+								OJ.showCallError(e);
+							}
+						});
+					}
+					$instGrid.append($card);
 				});
 				$body.append($instGrid);
 			}
@@ -135,38 +152,17 @@ frappe.pages["education-workcenter"].on_page_load = function (wrapper) {
 				$body.append($demoPanel);
 			}
 
-			// Academy lifecycle (9 phases)
-			const academyPhases = demo.academy_lifecycle || [];
-			if (academyPhases.length) {
-				$body.append(`<h4 class="oj-section-title">${OJ.t("رحلة الأكاديمية — 9 مراحل", "Academy Lifecycle — 9 Phases")}</h4>`);
-				$body.append(
-					OJ.workflowJourneyGrid(
-						academyPhases.map((p) => ({
-							key: p.key,
-							icon: p.icon,
-							label_ar: p.label_ar,
-							label_en: p.label_en,
-							role_ar: p.role_ar,
-							role_en: p.role_en,
-						})),
-						() => {}
-					)
-				);
-			}
-
 			if (readiness.portal_readiness_pct != null) {
 				$body.append(`
 					<div class="oj-panel" style="margin-bottom:16px;padding:10px 14px;background:#fff;border-radius:12px;font-size:0.9rem">
 						<strong>${OJ.t("جاهزية البوابات", "Portal Readiness")}:</strong>
-						${OJ.esc(String(readiness.portal_readiness_pct))}% ·
-						<strong>${OJ.t("مسار الرحلة", "Lifecycle Routing")}:</strong>
-						${OJ.esc(String(readiness.lifecycle_routing_pct || "—"))}%
+						${OJ.esc(String(readiness.portal_readiness_pct))}%
 					</div>`);
 			}
 
 			if (fullLifecycle.length) {
 				$body.append(
-					`<h4 class="oj-section-title">${OJ.t("الرحلة الكاملة — من الموقع إلى التخرج", "Full Lifecycle — Website to Graduation")}</h4>`
+					`<h4 class="oj-section-title">${OJ.t("رحلة الطالب — من التقديم إلى التخرج", "Student Journey — Apply to Graduation")}</h4>`
 				);
 				$body.append(
 					OJ.workflowJourneyGrid(fullLifecycle, (step) => {
@@ -178,34 +174,17 @@ frappe.pages["education-workcenter"].on_page_load = function (wrapper) {
 				);
 			}
 
-			if (steps.length) {
-				$body.append(
-					`<h4 class="oj-section-title">${OJ.t("رحلة SIS — 12 مرحلة", "SIS Journey — 12 Stages")}</h4>`
-				);
-				$body.append(
-					OJ.workflowJourneyGrid(steps, (step) => {
-						if (step.route) OJ.navigateRoute(step.route);
-					})
-				);
-			}
-
 			$body.append(`<h4 class="oj-section-title">${OJ.t("بوابات الأدوار", "Role Portals")}</h4>`);
 			$body.append(OJ.portalCategoryGrid(groups));
 
-			// Website portals
-			$body.append(`<h4 class="oj-section-title">${OJ.t("بوابات الموقع الخارجي", "External Website Portals")}</h4>`);
-			const extLinks = (externalPortals.length ? externalPortals : [
-				{ label_ar: "التقديم الإلكتروني", label_en: "Online Application", route: "/education/apply", icon: "🌐" },
-			]).map((p) => ({
-				label: OJ.t(p.label_ar, p.label_en),
-				icon: p.icon || "🌐",
-				route: p.route,
-			}));
-			extLinks.push(
-				{ label: OJ.t("بوابة ولي الأمر PWA", "Parent PWA"), icon: "📱", route: "/app/education-parent-mobile" },
-				{ label: OJ.t("بوابة الطالب", "Student Portal"), icon: "🎓", route: "/app/education-student-portal" }
+			$body.append(`<h4 class="oj-section-title">${OJ.t("الموقع الخارجي", "Public Website")}</h4>`);
+			$body.append(
+				OJ.linkGrid([
+					{ label: OJ.t("الرئيسية", "Home"), icon: "🏠", route: "/education" },
+					{ label: OJ.t("البرامج", "Programs"), icon: "📚", route: "/education/programs" },
+					{ label: OJ.t("التقديم", "Apply"), icon: "🌐", route: "/education/apply" },
+				])
 			);
-			$body.append(OJ.linkGrid(extLinks));
 
 			const $shell = OJ.shell({
 				title: OJ.t("ErpGenEx Education", "ErpGenEx Education"),

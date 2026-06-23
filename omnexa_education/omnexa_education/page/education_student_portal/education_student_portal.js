@@ -69,11 +69,27 @@ frappe.pages["education-student-portal"].on_page_load = function (wrapper) {
 		$mount.empty().append($shell);
 
 		OJ.call("omnexa_education.api.journey_role_desks.get_student_portal_dashboard")
-			.then((data) => {
+			.then(async (data) => {
 				$body.empty();
 				const blocked = data.financial_hold || ["Suspended", "Financial Hold", "Not Provisioned"].includes(data.account_access_status);
 				if (!data.student) {
-					$body.html(`<p class="oj-muted">${OJ.t("لا يوجد سجل طالب مرتبط بحسابك", "No student record linked to your account")}</p>`);
+					const hint = await OJ.call("omnexa_education.api.education_portal_link.get_portal_empty_hint");
+					const $empty = $('<div class="oj-portal-empty"></div>');
+					$empty.append(`<p class="oj-muted">${OJ.t("لا يوجد سجل طالب مرتبط بحسابك", "No student record linked to your account")}</p>`);
+					$empty.append(`<p>${OJ.t("المستخدم الحالي", "Current user")}: <strong>${OJ.esc(hint.current_user || "")}</strong></p>`);
+					$empty.append(`<p>${OJ.t("للتجربة سجّل الخروج وادخل كطالب ديمو", "For demo, log out and sign in as")}: <code>${OJ.esc(hint.demo_student_email || "student@demo.education")}</code> · ${OJ.t("كلمة المرور", "Password")}: <code>${OJ.esc(hint.demo_password || "Education@Demo2026")}</code></p>`);
+					if (hint.can_manage) {
+						const $link = $(`<button type="button" class="btn btn-primary" style="margin-top:12px">${OJ.t("ربط حسابات البوابات", "Link Portal Accounts")}</button>`);
+						$link.on("click", async () => {
+							const res = await OJ.call("omnexa_education.api.education_portal_link.ensure_demo_portal_users_linked");
+							frappe.show_alert({
+								message: `${OJ.t("طالب", "Student")}: ${res.student_linked || "—"}`,
+								indicator: res.student_linked ? "green" : "orange",
+							});
+						});
+						$empty.append($link);
+					}
+					$body.append($empty);
 					return;
 				}
 				$body.append(`<p><strong>${OJ.esc(data.student_name)}</strong> · ${OJ.esc(data.grade_level || "")} · ${OJ.esc(data.section || "")}</p>`);
