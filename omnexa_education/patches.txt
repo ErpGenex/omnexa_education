@@ -9,3 +9,4 @@ omnexa_education.patches.v1_0.seed_global_sis_wave1
 omnexa_education.patches.v1_0.seed_global_sis_wave23
 omnexa_education.patches.v1_0.sync_education_laravel_integration
 omnexa_education.patches.ensure_education_assessment_result_sis_fields
+omnexa_education.patches.fix_laravel_sync_queue_schema
