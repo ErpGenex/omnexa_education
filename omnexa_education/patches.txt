@@ -11,3 +11,4 @@ omnexa_education.patches.v1_0.sync_education_laravel_integration
 omnexa_education.patches.ensure_education_assessment_result_sis_fields
 omnexa_education.patches.fix_laravel_sync_queue_schema
 omnexa_education.patches.v1_0.sync_education_portal_access
+omnexa_education.patches.v1_0.remove_legacy_portal_workspaces

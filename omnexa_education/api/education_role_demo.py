@@ -126,23 +126,41 @@ def _education_page_names() -> list[str]:
 def sync_journey_page_roles() -> dict:
 	ensure_education_roles()
 	_ensure_staff_roles_desk_access()
-	stats = {"pages": 0, "roles_added": 0, "roles_removed": 0}
+	stats = {"pages": 0, "roles_added": 0, "roles_removed": 0, "pages_skipped": 0}
+	known_pages = set(JOURNEY_PAGE_ROLES)
 	for page_name in _education_page_names():
-		roles = JOURNEY_PAGE_ROLES.get(page_name, EDUCATION_PAGE_DEFAULT_ROLES)
+		if page_name not in known_pages:
+			stats["pages_skipped"] += 1
+			continue
+		roles = JOURNEY_PAGE_ROLES[page_name]
 		page = frappe.get_doc("Page", page_name)
+		dirty = False
 		if page_name in STAFF_ONLY_PAGES:
 			for row in list(page.roles):
 				if row.role in PORTAL_ONLY_ROLES:
 					page.remove(row)
 					stats["roles_removed"] += 1
+					dirty = True
 		existing = {r.role for r in page.roles}
 		for role in roles:
 			if role not in existing and frappe.db.exists("Role", role):
 				page.append("roles", {"role": role})
 				stats["roles_added"] += 1
-		page.save(ignore_permissions=True)
+				dirty = True
+		if dirty:
+			_save_page_roles(page)
 		stats["pages"] += 1
 	return stats
+
+
+def _save_page_roles(page) -> None:
+	"""Save Page role rows without route slug validation (provisioning only)."""
+	prev = getattr(frappe.flags, "in_migrate", False)
+	frappe.flags.in_migrate = True
+	try:
+		page.save(ignore_permissions=True)
+	finally:
+		frappe.flags.in_migrate = prev
 
 
 @frappe.whitelist()

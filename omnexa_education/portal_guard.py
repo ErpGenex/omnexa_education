@@ -20,6 +20,23 @@ PORTAL_HOME_ROUTES: dict[str, str] = {
 	PARENT_PORTAL_ROLE: "/app/education-parent-mobile",
 }
 
+# Workspace name/title must not slug-conflict with desk Pages (see frappe.desk.utils.validate_route_conflict).
+LEGACY_PORTAL_WORKSPACES = frozenset({"education-student-portal", "education-parent-portal"})
+PORTAL_WORKSPACE_SPECS: dict[str, dict] = {
+	STUDENT_PORTAL_ROLE: {
+		"name": "edu-ws-student",
+		"title": "Edu Student Hub",
+		"label": "Student Portal",
+		"icon": "education-student",
+	},
+	PARENT_PORTAL_ROLE: {
+		"name": "edu-ws-parent",
+		"title": "Edu Parent Hub",
+		"label": "Parent Portal",
+		"icon": "education-parent",
+	},
+}
+
 # Desk Page names (slug after /app/)
 STUDENT_ALLOWED_PAGES = frozenset(
 	{
@@ -140,12 +157,26 @@ def extend_bootinfo(bootinfo):
 	}
 
 
+def remove_legacy_portal_workspaces() -> list[str]:
+	"""Drop portal workspaces that slug-conflict with desk Pages."""
+	removed = []
+	for name in LEGACY_PORTAL_WORKSPACES:
+		if not frappe.db.exists("Workspace", name):
+			continue
+		frappe.delete_doc("Workspace", name, force=True, ignore_permissions=True)
+		removed.append(name)
+	if removed:
+		frappe.clear_cache(doctype="Workspace")
+	return removed
+
+
 def ensure_education_workspace_portal_roles() -> dict:
 	"""Hide full Education workspace from portal users; add minimal student/parent workspaces."""
 	from omnexa_education.api.education_role_demo import EDUCATION_STAFF_ROLES
 
-	stats = {"education_roles_set": 0, "student_ws": False, "parent_ws": False}
+	stats = {"education_roles_set": 0, "student_ws": False, "parent_ws": False, "legacy_removed": []}
 	staff_roles = [r for r in EDUCATION_STAFF_ROLES if frappe.db.exists("Role", r)]
+	stats["legacy_removed"] = remove_legacy_portal_workspaces()
 
 	if frappe.db.exists("Workspace", "Education"):
 		ws = frappe.get_doc("Workspace", "Education")
@@ -161,8 +192,6 @@ def ensure_education_workspace_portal_roles() -> dict:
 	stats["parent_ws"] = False
 	try:
 		stats["student_ws"] = _ensure_portal_workspace(
-			"Education Student Portal",
-			"education-student",
 			STUDENT_PORTAL_ROLE,
 			[
 				("Page", "education-student-portal", "Student Portal"),
@@ -175,8 +204,6 @@ def ensure_education_workspace_portal_roles() -> dict:
 		stats["student_ws_error"] = str(exc)[:200]
 	try:
 		stats["parent_ws"] = _ensure_portal_workspace(
-			"Education Parent Portal",
-			"education-parent",
 			PARENT_PORTAL_ROLE,
 			[
 				("Page", "education-parent-mobile", "Parent Portal"),
@@ -191,10 +218,11 @@ def ensure_education_workspace_portal_roles() -> dict:
 	return stats
 
 
-def _ensure_portal_workspace(label: str, icon: str, role: str, links: list[tuple]) -> bool:
+def _ensure_portal_workspace(role: str, links: list[tuple]) -> bool:
 	if not frappe.db.exists("Role", role):
 		return False
-	name = frappe.scrub(label) or label
+	spec = PORTAL_WORKSPACE_SPECS[role]
+	name = spec["name"]
 	if frappe.db.exists("Workspace", name):
 		ws = frappe.get_doc("Workspace", name)
 	else:
@@ -202,10 +230,10 @@ def _ensure_portal_workspace(label: str, icon: str, role: str, links: list[tuple
 		ws.update(
 			{
 				"name": name,
-				"label": label,
-				"title": label,
+				"label": spec["label"],
+				"title": spec["title"],
 				"module": "Omnexa Education",
-				"icon": icon,
+				"icon": spec["icon"],
 				"public": 0,
 				"is_hidden": 0,
 			}
@@ -227,7 +255,7 @@ def _ensure_portal_workspace(label: str, icon: str, role: str, links: list[tuple
 			},
 		)
 	shortcuts = []
-	content = [{"id": "hdr", "type": "header", "data": {"text": f"<b>{label}</b>", "col": 12}}]
+	content = [{"id": "hdr", "type": "header", "data": {"text": f"<b>{spec['label']}</b>", "col": 12}}]
 	for idx, (_lt, link_to, link_label) in enumerate(links):
 		shortcuts.append(
 			{

@@ -166,12 +166,15 @@ def ensure_full_portal_access(company: str | None = None, branch: str | None = N
 	company, branch = _resolve_company_branch(company, branch)
 	roles_created = ensure_education_roles()
 	ensure_portal_roles_desk_access()
+	from omnexa_education.portal_guard import ensure_education_workspace_portal_roles, remove_legacy_portal_workspaces
+
+	legacy_removed = remove_legacy_portal_workspaces()
 	page_stats = sync_journey_page_roles()
 	perm_stats = ensure_portal_doctype_permissions()
 	staff_perm_stats = ensure_staff_doctype_permissions()
-	from omnexa_education.portal_guard import ensure_education_workspace_portal_roles
-
 	workspace_stats = ensure_education_workspace_portal_roles()
+	if legacy_removed:
+		workspace_stats["legacy_removed"] = legacy_removed
 
 	branch_grants = []
 	portal_users = []
