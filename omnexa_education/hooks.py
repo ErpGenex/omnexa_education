@@ -58,13 +58,21 @@ website_route_rules = [
 	{"from_route": "/education", "to_route": "education/index"},
 	{"from_route": "/education/programs", "to_route": "education/programs"},
 	{"from_route": "/education/apply", "to_route": "education/apply"},
+	{"from_route": "/education-student-portal", "to_route": "education-student-portal"},
+	{"from_route": "/education-parent-mobile", "to_route": "education-parent-mobile"},
+	{"from_route": "/education-parent-portal", "to_route": "education-parent-mobile"},
+]
+
+web_include_css = [
+	"/assets/omnexa_education/css/education_website.css",
+]
+
+web_include_js = [
+	"/assets/omnexa_education/js/education_website.js",
 ]
 
 # Desk portal users must land on /app/* after website login (not public marketing pages).
 get_website_user_home_page = "omnexa_education.omnexa_education.website_user_home.get_website_user_home_page"
-
-# Assets load from education www templates (head_include) — available immediately after install.
-# web_include_css / web_include_js intentionally omitted to avoid leaking onto /login and /app.
 
 # Registered with omnexa_experience activity website framework
 activity_website_packs = [

@@ -58,6 +58,36 @@
 		},
 	];
 
+	const DEFAULT_CATALOG = {
+		colleges: [
+			{ key: "medicine", name_ar: "كلية الطب", name_en: "Faculty of Medicine", programs: 12, image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=800&q=80" },
+			{ key: "engineering", name_ar: "كلية الهندسة", name_en: "Faculty of Engineering", programs: 18, image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80" },
+			{ key: "ai", name_ar: "كلية الذكاء الاصطناعي", name_en: "Faculty of AI", programs: 9, image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=800&q=80" },
+			{ key: "business", name_ar: "كلية الأعمال", name_en: "Faculty of Business", programs: 14, image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=800&q=80" },
+			{ key: "cs", name_ar: "كلية الحاسبات", name_en: "Faculty of Computing", programs: 11, image: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=800&q=80" },
+			{ key: "science", name_ar: "كلية العلوم", name_en: "Faculty of Science", programs: 10, image: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=800&q=80" },
+		],
+		gallery: [
+			"https://images.unsplash.com/photo-1541339907198-e08756dedf6d?auto=format&fit=crop&w=800&q=80",
+			"https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=800&q=80",
+			"https://images.unsplash.com/photo-1571260899304-425eee4c7efc?auto=format&fit=crop&w=800&q=80",
+			"https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=800&q=80",
+		],
+		news: [
+			{ tag_ar: "إعلان", tag_en: "Announcement", title_ar: "فتح باب القبول للفصل الجديد", title_en: "New Semester Admissions Open", date: "2026-06-01", image: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=600&q=70" },
+			{ tag_ar: "خبر", tag_en: "News", title_ar: "اعتماد دولي جديد للبرامج الأكاديمية", title_en: "New International Accreditation", date: "2026-05-15", image: "https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=600&q=70" },
+		],
+		scholarships: [
+			{ name_ar: "منح التفوق الأكاديمي", name_en: "Merit Scholarships", desc_ar: "للطلاب المتفوقين أكاديمياً", desc_en: "For academically outstanding students" },
+			{ name_ar: "منح الرياضة", name_en: "Sports Scholarships", desc_ar: "دعم المواهب الرياضية", desc_en: "Supporting athletic talent" },
+		],
+		institution_types: [
+			{ institution_type: "University", name: "University", name_ar: "جامعة", active: false, inactive: false, seeded: false, image: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=800&q=80" },
+			{ institution_type: "International School", name: "International School", name_ar: "مدرسة دولية", active: false, inactive: false, seeded: false, image: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=800&q=80" },
+			{ institution_type: "Academy", name: "Academy", name_ar: "أكاديمية", active: false, inactive: false, seeded: false, image: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=800&q=80" },
+		],
+	};
+
 	const ROLES = [
 		{ icon: "🏛️", ar: "تنفيذي", en: "Executive" },
 		{ icon: "📋", ar: "قبول", en: "Admissions" },
@@ -79,6 +109,7 @@
 
 		init(page) {
 			this.page = page || "home";
+			this.config = this.defaultConfig();
 			this.applyTheme();
 			this.renderChrome();
 			this.loadConfig()
@@ -91,6 +122,7 @@
 				})
 				.catch(() => {
 					this.config = this.config || this.defaultConfig();
+					this.renderChrome();
 					const fn = this[`init_${this.page}`];
 					if (typeof fn === "function") fn.call(this);
 					this.setupReveal();
@@ -99,16 +131,37 @@
 
 		defaultConfig() {
 			return {
-				brand_name_ar: "EduSphere",
-				brand_name_en: "EduSphere",
-				tagline_ar: "من الاستفسار إلى التخرج",
-				tagline_en: "From inquiry to graduation",
-				hero_text_ar: "بوابة القبول والتسجيل الأكاديمي",
-				hero_text_en: "Admissions and enrollment portal",
+				brand_name_ar: "Omnexa Education",
+				brand_name_en: "Omnexa Education",
+				tagline_ar: "ابنِ مستقبلك مع مؤسسة تعليمية عالمية",
+				tagline_en: "Build your future with a world-class education institution",
+				hero_text_ar: "القبول والتسجيل والتعلم والخدمات الطلابية في منصة واحدة متكاملة",
+				hero_text_en: "Admissions, enrollment, learning, and student services in one integrated platform",
 				hero_image: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=1920&q=85",
+				hero_video_poster: "https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=1920&q=85",
 				logo: "/assets/omnexa_education/logo.png",
+				primary_color: "#003366",
+				secondary_color: "#0A5FA8",
+				accent_color: "#00B4D8",
+				gold_color: "#D4AF37",
+				colleges: DEFAULT_CATALOG.colleges,
+				gallery: DEFAULT_CATALOG.gallery,
+				news: DEFAULT_CATALOG.news,
+				scholarships: DEFAULT_CATALOG.scholarships,
+				institution_types: DEFAULT_CATALOG.institution_types,
+				hero_stats: { students: 100000, programs: 500, colleges: 25, countries: 50 },
 				stats: { institutions: 5, programs: 0, students: 0, teachers: 0 },
-				urls: { desk: "/app/education-workcenter", laravel_portal: "https://kemetgate.com", laravel_login: "https://kemetgate.com/login" },
+				urls: {
+					home: "/education",
+					programs: "/education/programs",
+					apply: "/education/apply",
+					desk: "/app/education-workcenter",
+					student_portal: "/app/education-student-portal",
+					parent_portal: "/app/education-parent-mobile",
+					faculty_portal: "/app/education-teacher-gradebook",
+					laravel_portal: "https://kemetgate.com",
+					laravel_login: "https://kemetgate.com/login",
+				},
 			};
 		},
 
@@ -189,12 +242,18 @@
 
 		async loadConfig() {
 			try {
-				const r = await frappe.call({
-					method: "omnexa_education.api.public_education_site.get_site_config",
-				});
-				this.config = r.message || this.defaultConfig();
+				if (typeof frappe !== "undefined" && frappe.call) {
+					const r = await frappe.call({
+						method: "omnexa_education.api.public_education_site.get_site_config",
+					});
+					this.config = Object.assign(this.defaultConfig(), r.message || {});
+				} else {
+					const res = await fetch("/api/method/omnexa_education.api.public_education_site.get_site_config");
+					const data = await res.json();
+					this.config = Object.assign(this.defaultConfig(), data.message || {});
+				}
 			} catch (e) {
-				this.config = this.defaultConfig();
+				this.config = this.config || this.defaultConfig();
 			}
 			if (this.config.primary_color) {
 				document.documentElement.style.setProperty("--edu-primary", this.config.primary_color);
@@ -498,7 +557,7 @@
 							.map(
 								(c) => `
 							<div class="edu-college-card">
-								<div class="edu-college-img"><img src="${this.esc(c.image)}" alt="" loading="lazy" /></div>
+								<div class="edu-college-img"><img src="${this.esc(c.image)}" alt="" loading="lazy" onerror="this.src='/assets/omnexa_education/logo.png'" /></div>
 								<div class="edu-college-body">
 									<h3>${this.esc(this.lang === "ar" ? c.name_ar : c.name_en)}</h3>
 									<p>${c.programs || 0} ${this.lang === "ar" ? "برنامج" : "programs"}</p>
@@ -674,16 +733,23 @@
 			const host = document.getElementById(hostId);
 			if (!host) return;
 			const types = (this.config && this.config.institution_types) || [];
-			if (!types.length) {
+			if (types.length) {
+				this._paintInstitutionTypes(host, types);
+				return;
+			}
+			if (typeof frappe !== "undefined" && frappe.call) {
 				frappe.call({
 					method: "omnexa_education.api.public_education_site.get_public_institution_types",
 					callback: (r) => {
-						this._paintInstitutionTypes(host, r.message || []);
+						this._paintInstitutionTypes(host, r.message || DEFAULT_CATALOG.institution_types);
+					},
+					error: () => {
+						this._paintInstitutionTypes(host, DEFAULT_CATALOG.institution_types);
 					},
 				});
 				return;
 			}
-			this._paintInstitutionTypes(host, types);
+			this._paintInstitutionTypes(host, DEFAULT_CATALOG.institution_types);
 		},
 
 		_paintInstitutionTypes(host, types) {
@@ -714,7 +780,7 @@
 										: "Not active";
 							return `
 						<div class="edu-type-card ${statusClass}">
-							<div class="edu-type-img"><img src="${this.esc(row.image)}" alt="" loading="lazy" /></div>
+							<div class="edu-type-img"><img src="${this.esc(row.image)}" alt="" loading="lazy" onerror="this.src='/assets/omnexa_education/logo.png'" /></div>
 							<div class="edu-type-body">
 								<span class="edu-type-icon">${typeIcons[row.institution_type] || "🏢"}</span>
 								<span class="edu-status-pill ${statusClass}">${statusLabel}</span>

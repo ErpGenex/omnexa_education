@@ -8,8 +8,6 @@ no_header: 1
 
 {% block head_include %}
 {{ super() }}
-<link rel="stylesheet" href="/assets/omnexa_education/css/education_website.css">
-<script src="/assets/omnexa_education/js/education_website.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 {% endblock %}
@@ -57,8 +55,13 @@ no_header: 1
   <footer class="edu-footer" id="edu-footer"></footer>
 </div>
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
-    EduSphereSite.init("home");
-  });
+  (function () {
+    function boot() {
+      if (window.EduSphereSite) window.EduSphereSite.init("home");
+    }
+    if (typeof frappe !== "undefined" && frappe.ready) frappe.ready(boot);
+    else if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
+    else boot();
+  })();
 </script>
 {% endblock %}

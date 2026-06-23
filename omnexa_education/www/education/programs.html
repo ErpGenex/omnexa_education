@@ -8,8 +8,6 @@ no_header: 1
 
 {% block head_include %}
 {{ super() }}
-<link rel="stylesheet" href="/assets/omnexa_education/css/education_website.css">
-<script src="/assets/omnexa_education/js/education_website.js"></script>
 {% endblock %}
 
 {% block title %}EduSphere Programs | البرامج الأكاديمية{% endblock %}
@@ -33,8 +31,13 @@ no_header: 1
   <footer class="edu-footer" id="edu-footer"></footer>
 </div>
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
-    EduSphereSite.init("programs");
-  });
+  (function () {
+    function boot() {
+      if (window.EduSphereSite) window.EduSphereSite.init("programs");
+    }
+    if (typeof frappe !== "undefined" && frappe.ready) frappe.ready(boot);
+    else if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
+    else boot();
+  })();
 </script>
 {% endblock %}
