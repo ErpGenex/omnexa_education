@@ -35,8 +35,13 @@ def get_demo_credentials_api() -> dict:
 
 @frappe.whitelist()
 def get_demo_hub_context(company: str | None = None, branch: str | None = None) -> dict:
-	company = company or frappe.defaults.get_user_default("Company") or ""
-	branch = branch or frappe.defaults.get_user_default("Branch") or ""
+	from omnexa_education.education_demo.education_demo_seed import _resolve_company_branch
+
+	try:
+		company, branch = _resolve_company_branch(company, branch)
+	except Exception:
+		company = company or frappe.defaults.get_user_default("Company") or ""
+		branch = branch or frappe.defaults.get_user_default("Branch") or ""
 	benchmark = get_global_sis_score()
 	institutions = get_institution_demo_stats(company)
 	seeded_count = sum(1 for i in institutions if i.get("seeded"))

@@ -48,12 +48,10 @@ frappe.pages["education-workcenter"].on_page_load = function (wrapper) {
 						Institute: "📖",
 						"Training Center": "🛠️",
 					}[inst.institution_type] || "🏢";
-					const isActive = inst.active || (inst.seeded && (inst.students || 0) > 0);
+					const isActive = !!(inst.active || inst.seeded);
 					const statusLabel = isActive
 						? OJ.t("نشط", "Active")
-						: inst.seeded
-							? OJ.t("مزروع", "Seeded")
-							: OJ.t("غير مفعّل", "Not active");
+						: OJ.t("غير مفعّل", "Not active");
 					const $card = $(`
 						<div class="oj-clinic-card ${isActive ? "" : "oj-muted-card"} ${demo.can_seed && !inst.seeded ? "oj-clickable-card" : ""}" style="cursor:${demo.can_seed && !inst.seeded ? "pointer" : "default"}">
 							<div class="oj-clinic-icon">${icon}</div>

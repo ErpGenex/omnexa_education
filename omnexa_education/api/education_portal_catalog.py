@@ -272,15 +272,8 @@ def get_workcenter_context() -> dict:
 
 	groups = get_grouped_portal_catalog(include_missing=0)
 	is_admin = frappe.session.user == "Administrator" or "System Manager" in frappe.get_roles()
-	company = frappe.defaults.get_user_default("Company") or ""
-	students = frappe.db.count("Education Student", {"status": "Active", "company": company}) if frappe.db.exists("DocType", "Education Student") else 0
-	applications = (
-		frappe.db.count("Education Admission Application", {"company": company})
-		if frappe.db.exists("DocType", "Education Admission Application")
-		else 0
-	)
-	institutions = frappe.db.count("Education Institution", {"company": company, "status": "Active"}) if frappe.db.exists("DocType", "Education Institution") else 0
 	demo_ctx = get_demo_hub_context()
+	company = demo_ctx.get("company") or ""
 	settings = frappe.get_single("Education Settings")
 	lifecycle = filter_lifecycle_for_institution(
 		settings.default_institution_type,
@@ -290,6 +283,15 @@ def get_workcenter_context() -> dict:
 	from omnexa_education.education_global_benchmark import compute_live_readiness
 
 	readiness = compute_live_readiness()
+	students = frappe.db.count("Education Student", {"status": "Active", "company": company}) if company and frappe.db.exists("DocType", "Education Student") else frappe.db.count("Education Student", {"status": "Active"}) if frappe.db.exists("DocType", "Education Student") else 0
+	applications = (
+		frappe.db.count("Education Admission Application", {"company": company})
+		if company and frappe.db.exists("DocType", "Education Admission Application")
+		else frappe.db.count("Education Admission Application")
+		if frappe.db.exists("DocType", "Education Admission Application")
+		else 0
+	)
+	institutions = frappe.db.count("Education Institution", {"company": company, "status": "Active"}) if company and frappe.db.exists("DocType", "Education Institution") else frappe.db.count("Education Institution", {"status": "Active"}) if frappe.db.exists("DocType", "Education Institution") else 0
 	return {
 		"grouped_portals": groups,
 		"journey_steps": EDUCATION_JOURNEY_STEPS,

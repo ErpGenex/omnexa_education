@@ -537,22 +537,34 @@ def get_demo_credentials() -> dict:
 
 
 def get_institution_demo_stats(company: str | None = None) -> list[dict]:
-	company = company or frappe.defaults.get_user_default("Company") or ""
+	try:
+		company, _branch = _resolve_company_branch(company, None)
+	except Exception:
+		company = (company or "").strip() or frappe.db.get_value("Company", {}, "name", order_by="creation asc") or ""
+
 	out = []
 	for spec in INSTITUTION_DEMO_SPECS:
 		inst = _find_demo_institution(company, spec)
 		if not inst:
 			out.append({**spec, "seeded": False, "active": False, "students": 0, "teachers": 0, "applications": 0})
 			continue
+
+		inst_company = frappe.db.get_value("Education Institution", inst, "company") or company
+		campuses = frappe.get_all("Education Campus", filters={"institution": inst}, pluck="name") or []
+		teacher_filters: dict = {"company": inst_company}
+		if campuses:
+			teacher_filters["campus"] = ["in", campuses]
+
 		students = frappe.db.count("Education Student", {"institution": inst, "status": "Active"})
+		inst_status = frappe.db.get_value("Education Institution", inst, "status") or "Active"
 		out.append(
 			{
 				**spec,
 				"seeded": True,
-				"active": students > 0,
+				"active": students > 0 or inst_status == "Active",
 				"institution": inst,
 				"students": students,
-				"teachers": frappe.db.count("Education Teacher", {"company": company}),
+				"teachers": frappe.db.count("Education Teacher", teacher_filters) if frappe.db.exists("DocType", "Education Teacher") else 0,
 				"applications": frappe.db.count("Education Admission Application", {"institution": inst}),
 				"programs": frappe.db.count("Education Program", {"institution": inst}),
 			}
@@ -560,26 +572,53 @@ def get_institution_demo_stats(company: str | None = None) -> list[dict]:
 	return out
 
 
-def _find_demo_institution(company: str, spec: dict) -> str | None:
+def _find_demo_institution(company: str | None, spec: dict) -> str | None:
+	company = (company or "").strip()
+	code_suffix = spec["code"]
 	candidate_codes = [
-		f"{DEMO_MARKER}-{spec['code']}",
-		f"ER-{DEMO_MARKER}-{spec['code']}",
-		f"ER-EDU-DEMO-{spec['code']}",
+		f"{DEMO_MARKER}-{code_suffix}",
+		f"EDU-DEMO-{code_suffix}",
+		f"ER-{DEMO_MARKER}-{code_suffix}",
+		f"ER-EDU-DEMO-{code_suffix}",
+		code_suffix,
 	]
+
+	def _lookup(filters: dict) -> str | None:
+		return frappe.db.get_value("Education Institution", filters, "name", order_by="modified desc")
+
+	if company:
+		for code in candidate_codes:
+			found = _lookup({"company": company, "institution_code": code})
+			if found:
+				return found
+		found = _lookup({"company": company, "institution_name": spec["name"]})
+		if found:
+			return found
+
 	for code in candidate_codes:
-		name = frappe.db.get_value("Education Institution", {"company": company, "institution_code": code}, "name")
-		if name:
-			return name
-	name = frappe.db.get_value(
-		"Education Institution",
-		{"company": company, "institution_name": spec["name"]},
-		"name",
-	)
-	if name:
-		return name
-	return frappe.db.get_value(
-		"Education Institution",
-		{"company": company, "institution_type": spec["institution_type"], "status": "Active"},
-		"name",
-		order_by="modified desc",
-	)
+		found = _lookup({"institution_code": code})
+		if found:
+			return found
+
+	for suffix in (f"EDU-DEMO-{code_suffix}", f"DEMO-{code_suffix}", code_suffix):
+		rows = frappe.db.sql(
+			"""
+			SELECT name FROM `tabEducation Institution`
+			WHERE (name LIKE %s OR institution_code LIKE %s)
+				AND institution_type = %s
+			ORDER BY modified DESC
+			LIMIT 1
+			""",
+			(f"%{suffix}", f"%{suffix}", spec["institution_type"]),
+		)
+		if rows:
+			return rows[0][0]
+
+	found = _lookup({"institution_name": spec["name"]})
+	if found:
+		return found
+
+	type_filters: dict = {"institution_type": spec["institution_type"], "status": "Active"}
+	if company:
+		type_filters["company"] = company
+	return _lookup(type_filters)
