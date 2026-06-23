@@ -9,6 +9,7 @@ from omnexa_education.api.student_account_lifecycle import (
 	auto_provision_if_needed,
 	deprovision_student,
 )
+from omnexa_education.api.parent_account_lifecycle import auto_provision_parent_for_student
 
 
 class EducationStudent(Document):
@@ -21,6 +22,7 @@ class EducationStudent(Document):
 	def after_insert(self):
 		self._ensure_customer()
 		auto_provision_if_needed(self.name)
+		auto_provision_parent_for_student(self.name)
 
 	def on_update(self):
 		if self.customer and self.student_name:
@@ -39,6 +41,8 @@ class EducationStudent(Document):
 			deprovision_student(self.name, trigger="Withdrawal")
 		elif self.status == "Active" and self.account_access_status in (None, "", "Not Provisioned"):
 			auto_provision_if_needed(self.name)
+		if self.guardian_email:
+			auto_provision_parent_for_student(self.name)
 
 	def _customer_display_name(self) -> str:
 		return f"{self.student_name} ({self.student_code})" if self.student_code else self.student_name

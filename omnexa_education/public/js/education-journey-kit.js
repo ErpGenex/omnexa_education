@@ -11,7 +11,7 @@
 
 	function navigateRoute(route) {
 		if (!route || route === "#") return;
-		if (route.startsWith("/app/")) {
+		if (route.startsWith("/app/") || route.startsWith("/education/")) {
 			window.location.href = route;
 			return;
 		}
@@ -195,7 +195,10 @@
 		const menus = {
 			workcenter: [
 				{ label: OJ.t("مركز العمل", "Workcenter"), icon: "🏢", route: "/app/education-workcenter" },
-				{ label: OJ.t("بوابات الأدوار", "Role Portals"), icon: "🌐", route: "/app/education-workcenter" },
+				{ label: OJ.t("التقديم الإلكتروني", "Online Apply"), icon: "🌐", route: "/education/apply" },
+				{ label: OJ.t("المدير التنفيذي", "Executive"), icon: "📊", route: "/app/education-executive-dashboard" },
+				{ label: OJ.t("ضمان الجودة", "QA Desk"), icon: "⭐", route: "/app/education-qa-desk" },
+				{ label: OJ.t("التحليلات", "Analytics"), icon: "📈", route: "/app/education-analytics-dashboard" },
 			],
 			finance: [
 				{ label: OJ.t("مركز العمل", "Workcenter"), icon: "🏢", route: "/app/education-workcenter" },
@@ -211,11 +214,14 @@
 			admissions: [
 				{ label: OJ.t("مركز العمل", "Workcenter"), icon: "🏢", route: "/app/education-workcenter" },
 				{ label: OJ.t("بوابة القبول", "Admissions"), icon: "📋", route: "/app/education-admissions-portal" },
+				{ label: OJ.t("التقديم الخارجي", "Public Apply"), icon: "🌐", route: "/education/apply" },
 				{ label: OJ.t("الطلبات", "Applications"), icon: "📄", route: "List/Education Admission Application" },
 			],
 			registrar: [
 				{ label: OJ.t("مركز العمل", "Workcenter"), icon: "🏢", route: "/app/education-workcenter" },
 				{ label: OJ.t("مكتب المسجل", "Registrar"), icon: "📚", route: "/app/education-registrar-desk" },
+				{ label: OJ.t("مكتب التخرج", "Graduation"), icon: "🎓", route: "/app/education-graduation-desk" },
+				{ label: OJ.t("الخريجون", "Alumni"), icon: "🤝", route: "/app/education-alumni-desk" },
 				{ label: OJ.t("الطلاب", "Students"), icon: "🎓", route: "List/Education Student" },
 			],
 			teacher: [

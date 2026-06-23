@@ -1,0 +1,13 @@
+{
+	"doctype": "Page",
+	"module": "Omnexa Education",
+	"name": "education-qa-desk",
+	"page_name": "education-qa-desk",
+	"standard": "Yes",
+	"title": "Education QA Desk",
+	"roles": [
+		{"role": "System Manager"},
+		{"role": "Education Manager"},
+		{"role": "Education User"}
+	]
+}

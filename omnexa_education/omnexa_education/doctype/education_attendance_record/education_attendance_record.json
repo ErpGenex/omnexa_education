@@ -16,6 +16,19 @@
 			"in_list_view": 1
 		},
 		{
+			"fieldname": "attendance_date",
+			"fieldtype": "Date",
+			"label": "Date",
+			"default": "Today",
+			"in_list_view": 1
+		},
+		{
+			"fieldname": "attendance_session",
+			"fieldtype": "Link",
+			"label": "Attendance Session",
+			"options": "Education Attendance Session"
+		},
+		{
 			"default": "Present",
 			"fieldname": "status",
 			"fieldtype": "Select",

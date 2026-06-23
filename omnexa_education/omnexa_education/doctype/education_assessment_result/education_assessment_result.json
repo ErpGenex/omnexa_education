@@ -97,6 +97,37 @@
 			"in_list_view": 1
 		},
 		{
+			"default": "100",
+			"fieldname": "max_score",
+			"fieldtype": "Float",
+			"label": "Max Score",
+			"in_list_view": 1
+		},
+		{
+			"fieldname": "course",
+			"fieldtype": "Link",
+			"label": "Course",
+			"options": "Education Course"
+		},
+		{
+			"fieldname": "subject",
+			"fieldtype": "Link",
+			"label": "Subject",
+			"options": "Education Subject"
+		},
+		{
+			"fieldname": "academic_year",
+			"fieldtype": "Link",
+			"label": "Academic Year",
+			"options": "Education Academic Year"
+		},
+		{
+			"fieldname": "term",
+			"fieldtype": "Link",
+			"label": "Term",
+			"options": "Education Term"
+		},
+		{
 			"fieldname": "grade_letter",
 			"fieldtype": "Data",
 			"label": "Grade Letter"

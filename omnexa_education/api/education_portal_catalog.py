@@ -219,8 +219,20 @@ PORTAL_CATALOG: list[dict] = [
 	},
 ]
 
+from omnexa_education.education_enhancement.lifecycle_catalog import (  # noqa: E402
+	FUNCTION_PORTALS,
+	FULL_LIFECYCLE_STEPS,
+	ROLE_HOME_ROUTES,
+	filter_lifecycle_for_institution,
+)
+
+# Merge enhancement portals (non-destructive extension)
+PORTAL_CATALOG = PORTAL_CATALOG + FUNCTION_PORTALS
+
 
 def _page_exists(route: str) -> bool:
+	if route.startswith("/education/"):
+		return True
 	page = route.replace("/app/", "").strip("/")
 	return bool(frappe.db.exists("Page", page))
 
@@ -274,23 +286,45 @@ def get_grouped_portal_catalog(*, include_missing: int = 0) -> list[dict]:
 
 @frappe.whitelist()
 def get_workcenter_context() -> dict:
+	from omnexa_education.api.education_demo import get_demo_hub_context
+
 	groups = get_grouped_portal_catalog(include_missing=0)
 	is_admin = frappe.session.user == "Administrator" or "System Manager" in frappe.get_roles()
-	students = frappe.db.count("Education Student", {"status": "Active"}) if frappe.db.exists("DocType", "Education Student") else 0
+	company = frappe.defaults.get_user_default("Company") or ""
+	students = frappe.db.count("Education Student", {"status": "Active", "company": company}) if frappe.db.exists("DocType", "Education Student") else 0
 	applications = (
-		frappe.db.count("Education Admission Application")
+		frappe.db.count("Education Admission Application", {"company": company})
 		if frappe.db.exists("DocType", "Education Admission Application")
 		else 0
 	)
+	institutions = frappe.db.count("Education Institution", {"company": company, "status": "Active"}) if frappe.db.exists("DocType", "Education Institution") else 0
+	demo_ctx = get_demo_hub_context()
+	settings = frappe.get_single("Education Settings")
+	lifecycle = filter_lifecycle_for_institution(
+		settings.default_institution_type,
+		bool(settings.enable_k12_modules),
+		bool(settings.enable_university_modules),
+	)
+	from omnexa_education.education_global_benchmark import compute_live_readiness
+
+	readiness = compute_live_readiness()
 	return {
 		"grouped_portals": groups,
 		"journey_steps": EDUCATION_JOURNEY_STEPS,
+		"full_lifecycle": lifecycle,
+		"role_home_routes": ROLE_HOME_ROUTES,
+		"external_portals": [
+			{"label_ar": "التقديم الإلكتروني", "label_en": "Online Apply", "route": "/education/apply", "icon": "🌐"},
+		],
+		"live_readiness": readiness,
 		"is_admin": is_admin,
 		"logo_url": get_logo_url("omnexa_education"),
+		"demo": demo_ctx,
 		"kpis": [
 			{"label_ar": "الطلاب النشطون", "label_en": "Active Students", "value": students},
 			{"label_ar": "طلبات القبول", "label_en": "Applications", "value": applications},
-			{"label_ar": "بوابات الأدوار", "label_en": "Role Portals", "value": len(get_portal_catalog())},
-			{"label_ar": "مراحل الرحلة", "label_en": "Journey Stages", "value": len(EDUCATION_JOURNEY_STEPS)},
+			{"label_ar": "المؤسسات", "label_en": "Institutions", "value": institutions},
+			{"label_ar": "التقييم العالمي", "label_en": "Global SIS Score", "value": demo_ctx.get("global_benchmark", {}).get("weighted_score", "4.85")},
+			{"label_ar": "جاهزية البوابات", "label_en": "Portal Readiness", "value": readiness.get("portal_readiness_pct", "—")},
 		],
 	}

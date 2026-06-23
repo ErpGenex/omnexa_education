@@ -31,6 +31,8 @@
 		"digital_access_section",
 		"user",
 		"laravel_user_id",
+		"guardian_user",
+		"guardian_laravel_user_id",
 		"account_access_status",
 		"column_break_digital",
 		"financial_hold",
@@ -171,6 +173,19 @@
 			"fieldname": "laravel_user_id",
 			"fieldtype": "Data",
 			"label": "Laravel User ID",
+			"read_only": 1
+		},
+		{
+			"fieldname": "guardian_user",
+			"fieldtype": "Link",
+			"label": "Guardian Portal User",
+			"options": "User",
+			"read_only": 1
+		},
+		{
+			"fieldname": "guardian_laravel_user_id",
+			"fieldtype": "Data",
+			"label": "Guardian Laravel User ID",
 			"read_only": 1
 		},
 		{

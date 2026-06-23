@@ -8,6 +8,7 @@ from frappe.tests.utils import FrappeTestCase
 class TestLaravelIntegration(FrappeTestCase):
 	def setUp(self):
 		super().setUp()
+		frappe.flags.in_import = True
 		frappe.set_user("Administrator")
 		frappe.defaults.set_user_default("omnexa_view_all_branches", 1, "Administrator")
 		frappe.db.set_single_value("Education Settings", "enable_laravel_tlms", 0)

@@ -1,0 +1,13 @@
+{
+	"doctype": "Page",
+	"module": "Omnexa Education",
+	"name": "education-alumni-desk",
+	"page_name": "education-alumni-desk",
+	"standard": "Yes",
+	"title": "Education Alumni Desk",
+	"roles": [
+		{"role": "System Manager"},
+		{"role": "Education Manager"},
+		{"role": "Education User"}
+	]
+}

@@ -1,0 +1,137 @@
+{
+	"actions": [],
+	"autoname": "format:EPM-{YYYY}-{#####}",
+	"creation": "2026-06-22 00:00:00",
+	"doctype": "DocType",
+	"engine": "InnoDB",
+	"field_order": [
+		"title",
+		"channel",
+		"source",
+		"column_break_1",
+		"student",
+		"guardian_email",
+		"is_read",
+		"section_break_1",
+		"message",
+		"section_break_2",
+		"institution",
+		"company",
+		"branch"
+	],
+	"fields": [
+		{
+			"fieldname": "title",
+			"fieldtype": "Data",
+			"label": "Title",
+			"reqd": 1,
+			"in_list_view": 1
+		},
+		{
+			"default": "Administrative",
+			"fieldname": "channel",
+			"fieldtype": "Select",
+			"label": "Channel",
+			"options": "Administrative\nAcademic\nFinancial",
+			"in_list_view": 1
+		},
+		{
+			"default": "ErpGenEx",
+			"fieldname": "source",
+			"fieldtype": "Select",
+			"label": "Source",
+			"options": "ErpGenEx\nLaravel\nAnnouncement"
+		},
+		{
+			"fieldname": "column_break_1",
+			"fieldtype": "Column Break"
+		},
+		{
+			"fieldname": "student",
+			"fieldtype": "Link",
+			"label": "Student",
+			"options": "Education Student"
+		},
+		{
+			"fieldname": "guardian_email",
+			"fieldtype": "Data",
+			"label": "Guardian Email",
+			"options": "Email"
+		},
+		{
+			"default": "0",
+			"fieldname": "is_read",
+			"fieldtype": "Check",
+			"label": "Read"
+		},
+		{
+			"fieldname": "section_break_1",
+			"fieldtype": "Section Break"
+		},
+		{
+			"fieldname": "message",
+			"fieldtype": "Text Editor",
+			"label": "Message",
+			"reqd": 1
+		},
+		{
+			"fieldname": "section_break_2",
+			"fieldtype": "Section Break",
+			"label": "Scope"
+		},
+		{
+			"fieldname": "institution",
+			"fieldtype": "Link",
+			"label": "Institution",
+			"options": "Education Institution"
+		},
+		{
+			"fieldname": "company",
+			"fieldtype": "Link",
+			"label": "Company",
+			"options": "Company"
+		},
+		{
+			"fieldname": "branch",
+			"fieldtype": "Link",
+			"label": "Branch",
+			"options": "Branch"
+		}
+	],
+	"index_web_pages_for_search": 1,
+	"links": [],
+	"modified": "2026-06-22 00:00:00",
+	"module": "Omnexa Education",
+	"name": "Education Portal Message",
+	"owner": "Administrator",
+	"permissions": [
+		{
+			"create": 1,
+			"delete": 1,
+			"read": 1,
+			"role": "System Manager",
+			"write": 1
+		},
+		{
+			"create": 1,
+			"delete": 0,
+			"read": 1,
+			"role": "Education Manager",
+			"write": 1
+		},
+		{
+			"read": 1,
+			"role": "Education Student Portal",
+			"write": 1
+		},
+		{
+			"read": 1,
+			"role": "Education Parent Portal",
+			"write": 1
+		}
+	],
+	"sort_field": "modified",
+	"sort_order": "DESC",
+	"states": [],
+	"track_changes": 1
+}

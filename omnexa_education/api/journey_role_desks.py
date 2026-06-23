@@ -9,7 +9,49 @@ import frappe
 from frappe.utils import flt, today
 
 from omnexa_education.api import laravel_client
+from omnexa_education.api.education_unified_inbox import get_unified_inbox
 from omnexa_education.financial_hold import get_overdue_students
+
+
+def _student_gpa(student: str) -> float | None:
+	if not frappe.db.exists("DocType", "Education Assessment Result"):
+		return None
+	meta = frappe.get_meta("Education Assessment Result")
+	if not meta.has_field("score"):
+		return None
+	rows = frappe.get_all(
+		"Education Assessment Result",
+		filters={"student": student},
+		fields=["score", "max_score"],
+		limit=100,
+	)
+	if not rows:
+		return None
+	total_score = 0.0
+	total_max = 0.0
+	for row in rows:
+		score = flt(row.score)
+		max_score = flt(row.max_score) or 100.0
+		if max_score:
+			total_score += score
+			total_max += max_score
+	if not total_max:
+		return None
+	return round((total_score / total_max) * 100, 1)
+
+
+def _today_schedule(section: str | None) -> list:
+	if not section or not frappe.db.exists("DocType", "Education Timetable Entry"):
+		return []
+	day_names = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+	day = day_names[frappe.utils.getdate(today()).weekday()]
+	return frappe.get_all(
+		"Education Timetable Entry",
+		filters={"section": section, "day_of_week": day},
+		fields=["name", "subject", "teacher", "start_time", "end_time", "room"],
+		order_by="start_time asc",
+		limit=20,
+	)
 
 
 def _scope(company: str | None, branch: str | None) -> tuple[str, str]:
@@ -81,8 +123,14 @@ def get_laravel_integration_dashboard() -> dict:
 	links = frappe.get_all(
 		"Education Lms Course Link",
 		filters={"is_active": 1, "lms_provider": "Laravel TLMS"},
-		fields=["name", "course", "external_course_id"],
+		fields=["name", "course", "external_course_id", "institution"],
 		limit=20,
+	)
+	institutions = frappe.get_all(
+		"Education Institution",
+		filters={"status": "Active"},
+		fields=["name", "institution_name", "institution_type"],
+		limit=10,
 	)
 	return {
 		"enable_laravel_tlms": bool(settings.enable_laravel_tlms),
@@ -91,6 +139,8 @@ def get_laravel_integration_dashboard() -> dict:
 		"laravel_last_ping_status": settings.laravel_last_ping_status,
 		"queue_stats": queue_stats,
 		"lms_links": links,
+		"institutions": institutions,
+		"university_prompt": "/assets/omnexa_education/docs/LARAVEL_UNIVERSITY_SIS_DEVELOPMENT_PROMPT.md",
 		"webhook_url": frappe.utils.get_url(
 			"/api/method/omnexa_education.api.laravel_webhooks.receive"
 		),
@@ -100,15 +150,37 @@ def get_laravel_integration_dashboard() -> dict:
 @frappe.whitelist()
 def get_parent_portal_dashboard(student: str | None = None) -> dict:
 	user = frappe.session.user
-	if not student:
-		student = frappe.db.get_value("Education Student", {"guardian_email": user}, "name")
-	out = {"student": student, "grades": [], "attendance": [], "invoices": []}
+	children = frappe.get_all(
+		"Education Student",
+		filters={"guardian_email": user, "status": "Active"},
+		fields=["name", "student_name", "grade_level", "section", "financial_hold", "account_access_status"],
+		order_by="student_name asc",
+	)
+	if not student and children:
+		student = children[0].name
+	out = {
+		"student": student,
+		"children": children,
+		"grades": [],
+		"attendance": [],
+		"invoices": [],
+		"inbox": {},
+		"today_schedule": [],
+		"gpa": None,
+		"laravel_enabled": laravel_client.is_laravel_enabled(),
+		"sso_available": False,
+	}
 	if not student:
 		return out
 	st = frappe.get_doc("Education Student", student)
 	out["student_name"] = st.student_name
 	out["account_access_status"] = st.account_access_status
 	out["financial_hold"] = st.financial_hold
+	out["guardian_laravel_user_id"] = st.guardian_laravel_user_id
+	out["sso_available"] = bool(st.guardian_laravel_user_id and frappe.get_single("Education Settings").laravel_sso_enabled)
+	out["gpa"] = _student_gpa(student)
+	out["today_schedule"] = _today_schedule(st.section)
+	out["inbox"] = get_unified_inbox(student=student)
 	if st.customer and frappe.db.exists("DocType", "Sales Invoice"):
 		out["invoices"] = frappe.get_all(
 			"Sales Invoice",
@@ -118,13 +190,21 @@ def get_parent_portal_dashboard(student: str | None = None) -> dict:
 			limit=10,
 		)
 	if frappe.db.exists("DocType", "Education Assessment Result"):
-		out["grades"] = frappe.get_all(
-			"Education Assessment Result",
-			filters={"student": student},
-			fields=["name", "score", "max_score", "modified"],
-			order_by="modified desc",
-			limit=10,
-		)
+		meta = frappe.get_meta("Education Assessment Result")
+		fields = [f for f in ("name", "score", "max_score", "modified") if meta.has_field(f)]
+		if fields:
+			out["grades"] = frappe.get_all(
+				"Education Assessment Result",
+				filters={"student": student},
+				fields=fields,
+				order_by="modified desc",
+				limit=10,
+			)
+			for row in out["grades"]:
+				if not row.get("max_score") and meta.has_field("assessment_plan"):
+					plan = frappe.db.get_value("Education Assessment Result", row.name, "assessment_plan")
+					if plan:
+						row.max_score = frappe.db.get_value("Education Assessment Plan", plan, "max_score") or 100
 	return out
 
 
@@ -132,8 +212,9 @@ def get_parent_portal_dashboard(student: str | None = None) -> dict:
 def get_student_portal_dashboard() -> dict:
 	student = frappe.db.get_value("Education Student", {"user": frappe.session.user}, "name")
 	if not student:
-		return {"student": None}
+		return {"student": None, "laravel_enabled": laravel_client.is_laravel_enabled()}
 	st = frappe.get_doc("Education Student", student)
+	settings = frappe.get_single("Education Settings")
 	return {
 		"student": student,
 		"student_name": st.student_name,
@@ -142,6 +223,11 @@ def get_student_portal_dashboard() -> dict:
 		"account_access_status": st.account_access_status,
 		"financial_hold": st.financial_hold,
 		"laravel_enabled": laravel_client.is_laravel_enabled(),
+		"laravel_user_id": st.laravel_user_id,
+		"sso_available": bool(st.laravel_user_id and settings.laravel_sso_enabled),
+		"gpa": _student_gpa(student),
+		"today_schedule": _today_schedule(st.section),
+		"inbox": get_unified_inbox(student=student),
 	}
 
 
@@ -177,7 +263,10 @@ def get_admissions_dashboard(company: str | None = None, branch: str | None = No
 		applications = frappe.db.count("Education Admission Application", filters)
 	if frappe.db.exists("DocType", "Education Waitlist Pool"):
 		waitlist = frappe.db.count("Education Waitlist Pool", filters)
-	return {"applications": applications, "waitlist": waitlist, "company": company, "branch": branch}
+	online = 0
+	if frappe.db.exists("DocType", "Education Online Application"):
+		online = frappe.db.count("Education Online Application", {**filters, "status": ["in", ["Submitted", "Reviewed"]]})
+	return {"applications": applications, "waitlist": waitlist, "online_applications": online, "company": company, "branch": branch}
 
 
 @frappe.whitelist()

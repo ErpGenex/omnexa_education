@@ -24,11 +24,14 @@ def evaluate_at_risk_students(institution: str | None = None) -> dict:
 		if absent >= 5:
 			alert = _upsert_alert(student, "Chronic Absence", min(absent / 20, 1.0), f"{absent} absences")
 			alerts.append(alert)
-		gpa_out = frappe.call(
-			"omnexa_education.api.education_grading.compute_student_gpa",
-			student=student,
-		)
-		if gpa_out.get("gpa", 4) < 2.0:
+		try:
+			gpa_out = frappe.call(
+				"omnexa_education.api.education_grading.compute_student_gpa",
+				student=student,
+			)
+		except Exception:
+			continue
+		if gpa_out.get("gpa", 4) < 2.0 and gpa_out.get("courses", 0) > 0:
 			alert = _upsert_alert(
 				student,
 				"Grade Drop",

@@ -122,8 +122,55 @@ def sync_enrollments(payload: dict, student_doc: dict | None = None) -> dict:
 	return _request("POST", "/api/v1/enrollments/sync", payload, student_doc)
 
 
-def sync_classes(payload: dict) -> dict:
-	return _request("POST", "/api/v1/classes/sync", payload)
+def _context_from_payload(payload: dict) -> dict | None:
+	institution = payload.get("institution_id")
+	if institution:
+		return {"institution": institution}
+	return None
+
+
+def sync_classes(payload: dict, student_doc: dict | None = None) -> dict:
+	ctx = student_doc or _context_from_payload(payload)
+	return _request("POST", "/api/v1/classes/sync", payload, ctx)
+
+
+def sync_programs(payload: dict) -> dict:
+	"""University HE — sync programs, degree levels, academic structure to Laravel."""
+	return _request("POST", "/api/v1/programs/sync", payload)
+
+
+def sync_academic_calendar(payload: dict, student_doc: dict | None = None) -> dict:
+	ctx = student_doc or _context_from_payload(payload)
+	return _request("POST", "/api/v1/academic-calendar/sync", payload, ctx)
+
+
+@frappe.whitelist()
+def sync_institution_programs_to_laravel(institution: str) -> dict:
+	"""Push Education Program records to Laravel TLMS (Banner/Workday parity)."""
+	if not is_laravel_enabled():
+		return {"ok": False, "skipped": True, "reason": "laravel_disabled"}
+	programs = frappe.get_all(
+		"Education Program",
+		filters={"institution": institution, "is_active": 1},
+		fields=["name", "program_code", "program_name", "degree_level", "company", "branch"],
+	)
+	courses = frappe.get_all(
+		"Education Course",
+		filters={"institution": institution},
+		fields=["name", "course_code", "course_title", "credit_hours", "program"],
+		limit=500,
+	)
+	payload = {
+		"institution_id": institution,
+		"institution_type": frappe.db.get_value("Education Institution", institution, "institution_type"),
+		"programs": programs,
+		"courses": courses,
+		"standards": {"obe": True, "credit_hours": True, "sis": "erpgenex-education-v1"},
+	}
+	result = sync_programs(payload)
+	if not result.get("ok"):
+		enqueue_sync("sync_programs", "Education Institution", institution, payload)
+	return {"ok": result.get("ok"), "programs": len(programs), "courses": len(courses), "result": result}
 
 
 def enqueue_sync(
@@ -187,6 +234,12 @@ def _process_queue_item(name: str) -> bool:
 			result = resume_user(payload["laravel_user_id"], payload.get("_student_context"))
 		elif doc.operation == "sync_enrollment":
 			result = sync_enrollments(payload, payload.get("_student_context"))
+		elif doc.operation == "sync_programs":
+			result = sync_programs(payload)
+		elif doc.operation == "sync_classes":
+			result = sync_classes(payload, payload.get("_student_context"))
+		elif doc.operation == "sync_academic_calendar":
+			result = sync_academic_calendar(payload, payload.get("_student_context"))
 		else:
 			result = {"ok": False, "error": f"Unknown operation {doc.operation}"}
 	except Exception as exc:

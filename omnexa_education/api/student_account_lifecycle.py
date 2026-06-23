@@ -29,8 +29,10 @@ def _settings():
 
 
 def _student_email(student) -> str:
-	if student.guardian_email:
-		return student.guardian_email.strip().lower()
+	if student.user and frappe.db.exists("User", student.user):
+		email = frappe.db.get_value("User", student.user, "email")
+		if email:
+			return email.strip().lower()
 	safe_code = (student.student_code or "student").replace(" ", "").lower()
 	company = (student.company or "school").replace(" ", "").lower()
 	return f"{safe_code}@{company}.students.local"
@@ -100,32 +102,45 @@ def _ensure_portal_user(student, role: str) -> str:
 def build_laravel_payload(student) -> dict:
 	enrollments = []
 	if frappe.db.exists("DocType", "Education Course Enrollment"):
+		section = student.section
 		for row in frappe.get_all(
 			"Education Course Enrollment",
 			filters={"student": student.name, "docstatus": ["!=", 2]},
-			fields=["course", "section"],
+			fields=["course"],
 		):
 			course_code = frappe.db.get_value("Education Course", row.course, "course_code") if row.course else row.course
 			enrollments.append(
 				{
+					"student_external_id": student.name,
 					"course_external_id": course_code or row.course,
-					"section_external_id": row.section,
+					"section_external_id": section,
 					"role": "student",
 				}
 			)
-	grade = frappe.db.get_value("Education Grade Level", student.grade_level, "level_name") if student.grade_level else ""
+	grade = frappe.db.get_value("Education Grade Level", student.grade_level, "grade_name") if student.grade_level else ""
+	program = None
+	if frappe.db.exists("DocType", "Education Student Enrollment"):
+		program = frappe.db.get_value(
+			"Education Student Enrollment",
+			{"student": student.name, "enrollment_status": "Enrolled", "docstatus": 1},
+			"program",
+		)
 	return {
 		"external_id": student.name,
+		"student_external_id": student.name,
 		"student_code": student.student_code,
 		"email": _student_email(student),
 		"first_name": (student.student_name or "").split(" ", 1)[0],
 		"last_name": (student.student_name or "").split(" ", 1)[-1] if student.student_name and " " in student.student_name else "",
 		"role": "student",
 		"institution_id": student.institution,
+		"institution_type": frappe.db.get_value("Education Institution", student.institution, "institution_type"),
+		"program_id": program,
 		"grade_level": grade or student.grade_level,
 		"section": student.section,
 		"account_status": "active",
 		"enrollments": enrollments,
+		"academic_model": "university" if program else "k12",
 		"_student_context": _student_context(student),
 	}
 

@@ -98,7 +98,41 @@ def _handle_timetable_approved(payload: dict, envelope: dict) -> dict:
 
 
 def _handle_attendance_recorded(payload: dict, envelope: dict) -> dict:
-	return {"logged": True, "student": payload.get("student_external_id")}
+	if not frappe.db.exists("DocType", "Education Attendance Record"):
+		return {"skipped": True}
+	student = payload.get("student_external_id")
+	if not student or not frappe.db.exists("Education Student", student):
+		return {"skipped": True, "reason": "student_not_found"}
+	status_map = {
+		"present": "Present",
+		"absent": "Absent",
+		"late": "Late",
+		"excused": "Excused",
+		"remote": "Remote",
+	}
+	raw_status = (payload.get("status") or "present").lower()
+	status = status_map.get(raw_status, "Present")
+	attendance_date = payload.get("date") or payload.get("attendance_date") or frappe.utils.today()
+	session = payload.get("session_external_id") or payload.get("attendance_session")
+	filters = {"student": student, "attendance_date": attendance_date}
+	if session and frappe.db.exists("Education Attendance Session", session):
+		filters["attendance_session"] = session
+	existing = frappe.db.get_value("Education Attendance Record", filters, "name")
+	if existing:
+		frappe.db.set_value("Education Attendance Record", existing, "status", status)
+		return {"updated": existing}
+	doc = frappe.get_doc(
+		{
+			"doctype": "Education Attendance Record",
+			"student": student,
+			"status": status,
+			"attendance_date": attendance_date,
+			"attendance_session": session if session and frappe.db.exists("Education Attendance Session", session) else None,
+			"remarks": f"Laravel TLMS · {envelope.get('timestamp', '')}",
+		}
+	)
+	doc.insert(ignore_permissions=True)
+	return {"name": doc.name}
 
 
 def _handle_lesson_completed(payload: dict, envelope: dict) -> dict:

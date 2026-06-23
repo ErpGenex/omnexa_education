@@ -46,10 +46,24 @@ page_js = {
 	"education-student-portal": "public/js/education-journey-kit.js",
 	"education-parent-mobile": "public/js/education-journey-kit.js",
 	"education-timetable-board": "public/js/education-journey-kit.js",
+	"education-executive-dashboard": "public/js/education-journey-kit.js",
+	"education-analytics-dashboard": "public/js/education-journey-kit.js",
+	"education-graduation-desk": "public/js/education-journey-kit.js",
+	"education-alumni-desk": "public/js/education-journey-kit.js",
+	"education-qa-desk": "public/js/education-journey-kit.js",
 }
 
+# Public website — online application entry
+website_route_rules = [
+	{"from_route": "/education/apply", "to_route": "education/apply"},
+]
+
+web_include_css = [
+	"/assets/omnexa_education/css/education-rtl.css",
+	"/assets/omnexa_education/css/omnexa-journey.css",
+]
+
 # include js, css files in header of web template
-# web_include_css = "/assets/omnexa_education/css/omnexa_education.css"
 # web_include_js = "/assets/omnexa_education/js/omnexa_education.js"
 
 # include custom scss in every website theme (without file extension ".scss")
@@ -83,9 +97,16 @@ doctype_js = {
 # home_page = "login"
 
 # website user home page (by Role)
-# role_home_page = {
-# 	"Role": "home_page"
-# }
+role_home_page = {
+	"Education Manager": "education-executive-dashboard",
+	"Education User": "education-admissions-portal",
+	"Education Finance Officer": "education-finance-desk",
+	"Education Student Portal": "education-student-portal",
+	"Education Parent Portal": "education-parent-mobile",
+	"Teacher": "education-teacher-gradebook",
+	"Accounts User": "education-finance-desk",
+	"Accounts Manager": "education-finance-desk",
+}
 
 # Generators
 # ----------
@@ -205,6 +226,13 @@ doc_events = {
 	"Education Section": {
 		"before_validate": "omnexa_education.permissions.populate_company_branch_from_user_context",
 		"validate": "omnexa_education.permissions.enforce_branch_access_for_doc",
+		"on_update": "omnexa_education.api.laravel_doc_events.on_section_update",
+	},
+	"Education Course Enrollment": {
+		"on_submit": "omnexa_education.api.laravel_doc_events.on_course_enrollment_submit",
+	},
+	"Education Program": {
+		"on_update": "omnexa_education.api.laravel_doc_events.on_program_update",
 	},
 	"Education Student": {
 		"before_validate": "omnexa_education.permissions.populate_company_branch_from_user_context",

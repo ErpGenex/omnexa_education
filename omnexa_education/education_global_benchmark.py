@@ -54,6 +54,39 @@ def get_global_sis_score() -> dict:
 		"gaps_open": GAPS_TOTAL - GAPS_CLOSED,
 		"global_leader_gate": score >= GLOBAL_LEADER_TARGET,
 		"app": "omnexa_education",
-		"institution_modes": ["School", "Academy", "University", "Training Center", "Institute"],
+		"institution_modes": [
+			"University",
+			"Institute",
+			"International School",
+			"Training Center",
+			"Academy",
+		],
 		"wave": "global-sis-3",
+		"live_readiness": compute_live_readiness(),
+	}
+
+
+def compute_live_readiness() -> dict:
+	"""Evidence-based portal/lifecycle readiness (enhancement layer — does not replace static matrix)."""
+	from omnexa_education.education_enhancement.lifecycle_catalog import FULL_LIFECYCLE_STEPS, FUNCTION_PORTALS
+
+	portal_routes = [
+		p["route"] for p in (FUNCTION_PORTALS + []) if p.get("route", "").startswith("/app/")
+	]
+	desk_pages = frappe.get_all("Page", filters={"name": ["like", "education-%"]}, pluck="name")
+	implemented = sum(1 for r in portal_routes if r.replace("/app/", "") in desk_pages)
+	lifecycle_routed = sum(
+		1
+		for s in FULL_LIFECYCLE_STEPS
+		if s.get("route", "").startswith("/app/") and s["route"].replace("/app/", "") in desk_pages
+	)
+	external = any(s.get("external") for s in FULL_LIFECYCLE_STEPS)
+	total_portals = max(len(portal_routes), 1)
+	total_lifecycle = max(len([s for s in FULL_LIFECYCLE_STEPS if not s.get("external")]), 1)
+	return {
+		"portal_readiness_pct": round(implemented / total_portals * 100, 1),
+		"lifecycle_routing_pct": round(lifecycle_routed / total_lifecycle * 100, 1),
+		"external_apply_ready": external,
+		"desk_pages_count": len(desk_pages),
+		"implemented_portals": implemented,
 	}

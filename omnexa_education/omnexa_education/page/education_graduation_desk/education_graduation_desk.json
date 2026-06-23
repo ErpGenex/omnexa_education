@@ -1,0 +1,13 @@
+{
+	"doctype": "Page",
+	"module": "Omnexa Education",
+	"name": "education-graduation-desk",
+	"page_name": "education-graduation-desk",
+	"standard": "Yes",
+	"title": "Education Graduation Desk",
+	"roles": [
+		{"role": "System Manager"},
+		{"role": "Education Manager"},
+		{"role": "Education User"}
+	]
+}

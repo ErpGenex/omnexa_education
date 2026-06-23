@@ -79,6 +79,8 @@
 		"laravel_allow_readonly_on_hold",
 		"account_lifecycle_section",
 		"auto_provision_student_user",
+		"auto_provision_parent_user",
+		"auto_sync_enrollments_on_submit",
 		"auto_suspend_on_overdue",
 		"financial_hold_grace_days",
 		"column_break_lifecycle",
@@ -206,6 +208,18 @@
 			"fieldname": "auto_provision_student_user",
 			"fieldtype": "Check",
 			"label": "Auto-provision User on student registration"
+		},
+		{
+			"default": "1",
+			"fieldname": "auto_provision_parent_user",
+			"fieldtype": "Check",
+			"label": "Auto-provision parent user on guardian email"
+		},
+		{
+			"default": "1",
+			"fieldname": "auto_sync_enrollments_on_submit",
+			"fieldtype": "Check",
+			"label": "Auto sync course enrollments to Laravel on submit"
 		},
 		{
 			"default": "1",

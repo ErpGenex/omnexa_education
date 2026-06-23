@@ -8,8 +8,6 @@ from __future__ import annotations
 import frappe
 from frappe import _
 
-from omnexa_core.omnexa_core.vertical_workspace_sync import build_content_from_link_rows
-
 EDUCATION_ROLES = (
 	"Education Student Portal",
 	"Education Parent Portal",
@@ -37,6 +35,9 @@ JOURNEY_PAGE_ROLES: dict[str, list[str]] = {
 	"education-timetable-board": ["System Manager", "Education Manager", "Teacher", "Education User"],
 	"education-analytics-dashboard": ["System Manager", "Education Manager", "Education User"],
 	"education-executive-dashboard": ["System Manager", "Education Manager", "Company Admin"],
+	"education-graduation-desk": ["System Manager", "Education Manager", "Education User"],
+	"education-alumni-desk": ["System Manager", "Education Manager", "Education User"],
+	"education-qa-desk": ["System Manager", "Education Manager", "Education User"],
 }
 
 
@@ -78,3 +79,11 @@ def seed_education_roles() -> dict:
 	roles = ensure_education_roles()
 	page_stats = sync_journey_page_roles()
 	return {"roles_created": roles, "page_sync": page_stats}
+
+
+@frappe.whitelist()
+def seed_education_full_demo(company: str | None = None, branch: str | None = None) -> dict:
+	"""Roles + 5 institution types + demo users."""
+	from omnexa_education.education_demo.education_demo_seed import seed_education_demo
+
+	return seed_education_demo(company=company, branch=branch)

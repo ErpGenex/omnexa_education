@@ -47,33 +47,70 @@ def percentage_to_gpa(score: float, scale_name: str | None = None) -> dict:
 	return {"letter": "F", "gpa": 0.0}
 
 
+def _result_select_fields() -> list[str]:
+	meta = frappe.get_meta("Education Assessment Result")
+	candidates = ["name", "score", "max_score", "course", "subject", "assessment_plan", "academic_year", "term"]
+	return [f for f in candidates if meta.has_field(f)]
+
+
+def _resolve_max_score(row: frappe._dict) -> float:
+	if row.get("max_score"):
+		return float(row.max_score)
+	plan = row.get("assessment_plan")
+	if plan and frappe.db.exists("Education Assessment Plan", plan):
+		return float(frappe.db.get_value("Education Assessment Plan", plan, "max_score") or 100)
+	return 100.0
+
+
+def _fetch_assessment_results(filters: dict) -> list[frappe._dict]:
+	fields = _result_select_fields()
+	rows = frappe.get_all("Education Assessment Result", filters=filters, fields=fields)
+	for row in rows:
+		if "max_score" not in fields:
+			row.max_score = _resolve_max_score(row)
+		if not row.get("course") and row.get("assessment_plan"):
+			row.course = frappe.db.get_value("Education Assessment Plan", row.assessment_plan, "course")
+		if not row.get("subject") and row.get("assessment_plan"):
+			row.subject = frappe.db.get_value("Education Assessment Plan", row.assessment_plan, "subject")
+	return rows
+
+
 @frappe.whitelist()
 def compute_student_gpa(student: str, academic_year: str | None = None, term: str | None = None) -> dict:
 	if not student:
 		frappe.throw(_("Student is required"))
 	filters: dict = {"student": student}
-	if academic_year:
+	if academic_year and frappe.get_meta("Education Assessment Result").has_field("academic_year"):
 		filters["academic_year"] = academic_year
-	if term:
+	if term and frappe.get_meta("Education Assessment Result").has_field("term"):
 		filters["term"] = term
-	results = frappe.get_all(
-		"Education Assessment Result",
-		filters=filters,
-		fields=["name", "score", "max_score", "course", "subject"],
-	)
+	results = _fetch_assessment_results(filters)
 	if not results:
-		return {"student": student, "gpa": 0.0, "credits": 0, "courses": 0}
+		return {"student": student, "gpa": 0.0, "credits": 0, "courses": 0, "breakdown": []}
 	total_points = 0.0
 	total_credits = 0.0
 	rows = []
 	for r in results:
-		max_score = float(r.max_score or 100)
+		max_score = _resolve_max_score(r)
 		pct = (float(r.score or 0) / max_score * 100) if max_score else 0
 		conv = percentage_to_gpa(pct)
-		credits = float(frappe.db.get_value("Education Course", r.course, "credit_hours") or 1)
+		credits = 1.0
+		if r.get("course") and frappe.db.exists("Education Course", r.course):
+			credits = float(frappe.db.get_value("Education Course", r.course, "credit_hours") or 1)
 		total_points += conv["gpa"] * credits
 		total_credits += credits
-		rows.append({**r, "percentage": round(pct, 2), **conv, "credits": credits})
+		rows.append(
+			{
+				"name": r.name,
+				"score": r.score,
+				"max_score": max_score,
+				"course": r.get("course"),
+				"subject": r.get("subject"),
+				"percentage": round(pct, 2),
+				**conv,
+				"credits": credits,
+			}
+		)
 	gpa = round(total_points / total_credits, 3) if total_credits else 0.0
 	return {
 		"student": student,

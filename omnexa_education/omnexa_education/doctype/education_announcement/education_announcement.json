@@ -93,6 +93,13 @@
 			"default": "All"
 		},
 		{
+			"default": "Administrative",
+			"fieldname": "portal_channel",
+			"fieldtype": "Select",
+			"label": "Portal Channel",
+			"options": "Administrative\nAcademic\nFinancial"
+		},
+		{
 			"fieldname": "publish_date",
 			"fieldtype": "Date",
 			"label": "Publish Date",

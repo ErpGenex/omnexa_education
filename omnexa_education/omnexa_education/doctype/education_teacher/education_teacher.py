@@ -7,6 +7,11 @@ from frappe.model.document import Document
 
 
 class EducationTeacher(Document):
+	def after_insert(self):
+		from omnexa_education.api.teacher_account_lifecycle import auto_provision_teacher_if_needed
+
+		auto_provision_teacher_if_needed(self.name)
+
 	def validate(self):
 		self._validate_branch_company_match()
 		self._validate_campus_department_match()

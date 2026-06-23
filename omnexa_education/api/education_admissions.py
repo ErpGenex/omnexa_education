@@ -32,6 +32,8 @@ def submit_online_application(
 			frappe.throw(_("Invalid payload JSON"))
 	company = frappe.db.get_value("Education Institution", institution, "company")
 	branch = frappe.db.get_value("Education Institution", institution, "branch")
+	if not branch and company:
+		branch = frappe.db.get_value("Branch", {"company": company}, "name")
 	doc = frappe.get_doc(
 		{
 			"doctype": "Education Online Application",
@@ -132,4 +134,29 @@ def get_admissions_portal_config(institution: str | None = None) -> dict:
 		"submit_method": "omnexa_education.api.education_admissions.submit_online_application",
 		"institution": institution,
 		"fields": ["applicant_name", "academic_year", "grade_level", "program", "guardian_email"],
+	}
+
+
+@frappe.whitelist(allow_guest=True)
+def get_public_apply_context() -> dict:
+	institutions = frappe.get_all(
+		"Education Institution",
+		filters={"status": "Active"},
+		fields=["name", "institution_name", "institution_type", "company"],
+		limit=50,
+		order_by="institution_name asc",
+	)
+	years_by_inst: dict[str, list] = {}
+	for inst in institutions:
+		years_by_inst[inst.name] = frappe.get_all(
+			"Education Academic Year",
+			filters={"institution": inst.name, "status": "Active"},
+			fields=["name", "title", "year_code"],
+			limit=5,
+		)
+	return {
+		"institutions": institutions,
+		"academic_years": years_by_inst,
+		"submit_method": "omnexa_education.api.education_admissions.submit_online_application",
+		"apply_url": "/education/apply",
 	}

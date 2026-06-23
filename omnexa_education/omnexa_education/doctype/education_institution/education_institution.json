@@ -12,6 +12,8 @@
 		"column_break_omnexa_1",
 		"company",
 		"institution_type",
+		"institution_subtype",
+		"academy_type",
 		"tab_break_1",
 		"profile_section",
 		"curriculum_default",
@@ -61,8 +63,21 @@
 			"fieldtype": "Select",
 			"in_list_view": 1,
 			"label": "Institution Type",
-			"options": "School\nAcademy\nTraining Center\nInstitute\nUniversity",
+			"options": "School\nInternational School\nAcademy\nTraining Center\nInstitute\nUniversity",
 			"reqd": 1
+		},
+		{
+			"fieldname": "institution_subtype",
+			"fieldtype": "Data",
+			"label": "Institution Subtype",
+			"description": "Display label e.g. International School when type is School."
+		},
+		{
+			"depends_on": "eval:doc.institution_type=='Academy'",
+			"fieldname": "academy_type",
+			"fieldtype": "Select",
+			"label": "Academy Type",
+			"options": "Professional Academy\nTechnical Academy\nBusiness Academy\nTourism Academy\nHealthcare Academy\nIT Academy\nArtificial Intelligence Academy\nMedia Academy\nSports Academy\nArts Academy"
 		},
 		{
 			"fieldname": "profile_section",
