@@ -72,6 +72,8 @@
 			"https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=800&q=80",
 			"https://images.unsplash.com/photo-1571260899304-425eee4c7efc?auto=format&fit=crop&w=800&q=80",
 			"https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=800&q=80",
+			"https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=800&q=80",
+			"https://images.unsplash.com/photo-1434030214721-735608b96805?auto=format&fit=crop&w=800&q=80",
 		],
 		news: [
 			{ tag_ar: "إعلان", tag_en: "Announcement", title_ar: "فتح باب القبول للفصل الجديد", title_en: "New Semester Admissions Open", date: "2026-06-01", image: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=600&q=70" },
@@ -347,9 +349,12 @@
 						</span>
 					</div></div>
 					<div class="edu-wrap edu-header-inner">
-						<a class="edu-brand" href="/education">${logo}<span>${this.esc(name)}</span></a>
+						<a class="edu-brand edu-brand-stack" href="/education">
+							<span class="edu-brand-logo">${logo}</span>
+							<span class="edu-brand-name">${this.esc(name)}</span>
+						</a>
 						<button type="button" class="edu-mobile-toggle" id="edu-menu-toggle" aria-label="Menu">☰</button>
-						<nav class="edu-nav" id="edu-nav">
+						<nav class="edu-nav edu-nav-single" id="edu-nav">
 							${nav
 								.map((n) => {
 									const label = n.key ? this.t(n.key) : this.lang === "ar" ? n.ar : n.en;
@@ -802,7 +807,11 @@
 		renderGallery(hostId) {
 			const host = document.getElementById(hostId);
 			if (!host) return;
-			const imgs = (this.config && this.config.gallery) || [];
+			const fallback = "/assets/omnexa_education/education.svg";
+			const imgs = ((this.config && this.config.gallery) || []).slice();
+			while (imgs.length < 6) {
+				imgs.push(imgs[imgs.length % Math.max(imgs.length, 1)] || fallback);
+			}
 			host.innerHTML = `
 				<div class="edu-wrap">
 					<div class="edu-section-title">
@@ -812,9 +821,10 @@
 					</div>
 					<div class="edu-gallery-grid">
 						${imgs
+							.slice(0, 6)
 							.map(
 								(src, i) =>
-									`<div class="edu-gallery-item ${i === 0 ? "edu-gallery-featured" : ""}"><img src="${this.esc(src)}" alt="" loading="lazy" /></div>`
+									`<div class="edu-gallery-item ${i === 0 ? "edu-gallery-featured" : ""}"><img src="${this.esc(src)}" alt="" loading="lazy" onerror="this.onerror=null;this.src='${fallback}'" /></div>`
 							)
 							.join("")}
 					</div>
