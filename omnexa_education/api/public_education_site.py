@@ -62,6 +62,26 @@ def _public_url(path: str | None) -> str:
 	return get_url(path)
 
 
+def _institution_public_fields() -> list[str]:
+	meta = frappe.get_meta("Education Institution")
+	fields = ["name", "institution_name", "institution_type", "company"]
+	for fieldname in ("city", "branch"):
+		if meta.has_field(fieldname):
+			fields.append(fieldname)
+	return fields
+
+
+def _public_institutions(limit: int = 50) -> list[dict]:
+	return frappe.get_all(
+		"Education Institution",
+		filters={"status": "Active"},
+		fields=_institution_public_fields(),
+		limit=limit,
+		order_by="institution_name asc",
+		ignore_permissions=True,
+	)
+
+
 def _institution_type_catalog() -> list[dict]:
 	from omnexa_education.education_demo.education_demo_seed import get_institution_demo_stats
 
@@ -95,13 +115,7 @@ def _institution_type_catalog() -> list[dict]:
 
 @frappe.whitelist(allow_guest=True)
 def get_site_config(institution: str | None = None) -> dict:
-	institutions = frappe.get_all(
-		"Education Institution",
-		filters={"status": "Active"},
-		fields=["name", "institution_name", "institution_type", "company", "city"],
-		limit=30,
-		order_by="institution_name asc",
-	)
+	institutions = _public_institutions(limit=30)
 	program_count = frappe.db.count(
 		"Education Program",
 		{"is_active": 1} if frappe.get_meta("Education Program").has_field("is_active") else {"status": "Active"},
@@ -112,7 +126,14 @@ def get_site_config(institution: str | None = None) -> dict:
 
 	selected = None
 	if institution and frappe.db.exists("Education Institution", institution):
-		selected = frappe.get_doc("Education Institution", institution)
+		rows = frappe.get_all(
+			"Education Institution",
+			filters={"name": institution},
+			fields=_institution_public_fields(),
+			limit=1,
+			ignore_permissions=True,
+		)
+		selected = rows[0] if rows else None
 
 	return {
 		"brand_name_ar": "Omnexa Education",
@@ -129,7 +150,7 @@ def get_site_config(institution: str | None = None) -> dict:
 		"accent_color": "#00B4D8",
 		"gold_color": "#D4AF37",
 		"institution": institution,
-		"selected_institution": selected.as_dict() if selected else None,
+		"selected_institution": selected,
 		"institutions": institutions,
 		"institution_types": type_catalog,
 		"colleges": COLLEGES_CATALOG,
@@ -218,13 +239,7 @@ def get_public_programs(institution: str | None = None) -> list[dict]:
 
 @frappe.whitelist(allow_guest=True)
 def get_public_institutions() -> list[dict]:
-	return frappe.get_all(
-		"Education Institution",
-		filters={"status": "Active"},
-		fields=["name", "institution_name", "institution_type", "city", "company"],
-		limit=50,
-		order_by="institution_name asc",
-	)
+	return _public_institutions(limit=50)
 
 
 @frappe.whitelist(allow_guest=True)

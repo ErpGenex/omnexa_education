@@ -67,7 +67,8 @@ body:has(.edu-site) .page_content {
 	border-bottom: 1px solid rgba(11, 31, 58, 0.06);
 	position: sticky;
 	top: 0;
-	z-index: 100;
+	z-index: 200;
+	overflow: visible;
 }
 
 .edu-site .edu-header-inner {
@@ -77,6 +78,7 @@ body:has(.edu-site) .page_content {
 	gap: 12px;
 	padding: 12px 0;
 	flex-wrap: nowrap;
+	overflow: visible;
 }
 
 .edu-site .edu-brand {
@@ -140,12 +142,30 @@ body:has(.edu-site) .page_content {
 	flex: 1;
 	justify-content: center;
 	min-width: 0;
+	overflow: visible;
+}
+
+.edu-site .edu-nav-links {
+	display: flex;
+	flex-wrap: nowrap;
+	gap: 4px 12px;
+	align-items: center;
+	min-width: 0;
 	overflow-x: auto;
 	scrollbar-width: none;
 }
 
-.edu-site .edu-nav::-webkit-scrollbar {
+.edu-site .edu-nav-links::-webkit-scrollbar {
 	display: none;
+}
+
+.edu-site .edu-nav-mega {
+	display: flex;
+	flex-wrap: nowrap;
+	gap: 4px 12px;
+	align-items: center;
+	flex-shrink: 0;
+	overflow: visible;
 }
 
 .edu-site .edu-nav-single {
@@ -924,7 +944,7 @@ body:has(.edu-site) .page_content {
 	box-shadow: var(--edu-shadow-lg);
 	border: 1px solid #e8eef4;
 	padding: 10px 0;
-	z-index: 50;
+	z-index: 1000;
 }
 
 .edu-site .edu-mega-item:hover .edu-mega-panel,
@@ -1143,6 +1163,24 @@ body:has(.edu-site) .page_content {
 	}
 	.edu-site .edu-nav.open {
 		display: flex;
+	}
+	.edu-site .edu-nav.open .edu-nav-links,
+	.edu-site .edu-nav.open .edu-nav-mega {
+		flex-direction: column;
+		align-items: stretch;
+		width: 100%;
+		overflow: visible;
+	}
+	.edu-site .edu-nav.open .edu-mega-panel {
+		position: static;
+		display: none;
+		box-shadow: none;
+		border: none;
+		padding-inline-start: 12px;
+	}
+	.edu-site .edu-nav.open .edu-mega-item:focus-within .edu-mega-panel,
+	.edu-site .edu-nav.open .edu-mega-item:hover .edu-mega-panel {
+		display: block;
 	}
 	.edu-site .edu-actions {
 		margin-inline-start: auto;

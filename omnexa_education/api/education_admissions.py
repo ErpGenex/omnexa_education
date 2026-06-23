@@ -139,20 +139,20 @@ def get_admissions_portal_config(institution: str | None = None) -> dict:
 
 @frappe.whitelist(allow_guest=True)
 def get_public_apply_context() -> dict:
-	institutions = frappe.get_all(
-		"Education Institution",
-		filters={"status": "Active"},
-		fields=["name", "institution_name", "institution_type", "company"],
-		limit=50,
-		order_by="institution_name asc",
-	)
+	from omnexa_education.api.public_education_site import _public_institutions
+
+	institutions = _public_institutions(limit=50)
 	years_by_inst: dict[str, list] = {}
+	year_fields = ["name", "title"]
+	if frappe.get_meta("Education Academic Year").has_field("year_code"):
+		year_fields.append("year_code")
 	for inst in institutions:
 		years_by_inst[inst.name] = frappe.get_all(
 			"Education Academic Year",
 			filters={"institution": inst.name, "status": "Active"},
-			fields=["name", "title", "year_code"],
+			fields=year_fields,
 			limit=5,
+			ignore_permissions=True,
 		)
 	return {
 		"institutions": institutions,

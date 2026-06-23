@@ -355,6 +355,7 @@
 						</a>
 						<button type="button" class="edu-mobile-toggle" id="edu-menu-toggle" aria-label="Menu">☰</button>
 						<nav class="edu-nav edu-nav-single" id="edu-nav">
+							<div class="edu-nav-links">
 							${nav
 								.map((n) => {
 									const label = n.key ? this.t(n.key) : this.lang === "ar" ? n.ar : n.en;
@@ -362,7 +363,8 @@
 									return `<a href="${n.href}" class="${active}">${label}</a>`;
 								})
 								.join("")}
-							${megaHtml}
+							</div>
+							<div class="edu-nav-mega">${megaHtml}</div>
 						</nav>
 						<div class="edu-actions">
 							<button type="button" class="edu-lang" id="edu-lang-toggle">${this.lang === "ar" ? "EN" : "AR"}</button>

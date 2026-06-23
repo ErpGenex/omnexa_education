@@ -145,7 +145,7 @@ frappe.pages["education-parent-mobile"].on_page_load = function (wrapper) {
 			sidebarRole: "parent",
 			currentPage: "education-parent-mobile",
 			bodyEl: $('<div class="education-parent-desk"></div>'),
-			homeRoute: "/app/education-workcenter",
+			homeRoute: "/app/education-parent-mobile",
 		});
 		$mount.empty().append($shell);
 		loadDashboard(selectedStudent)

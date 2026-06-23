@@ -64,7 +64,7 @@ frappe.pages["education-student-portal"].on_page_load = function (wrapper) {
 			sidebarRole: "student",
 			currentPage: "education-student-portal",
 			bodyEl: $body,
-			homeRoute: "/app/education-workcenter",
+			homeRoute: "/app/education-student-portal",
 		});
 		$mount.empty().append($shell);
 

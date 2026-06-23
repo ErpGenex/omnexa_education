@@ -231,11 +231,11 @@
 			],
 			student: [
 				{ label: OJ.t("بوابة الطالب", "Student Portal"), icon: "🎓", route: "/app/education-student-portal" },
-				{ label: OJ.t("مركز العمل", "Workcenter"), icon: "🏢", route: "/app/education-workcenter" },
+				{ label: OJ.t("الجدول", "Timetable"), icon: "📅", route: "/app/education-timetable-board" },
 			],
 			parent: [
 				{ label: OJ.t("بوابة ولي الأمر", "Parent Portal"), icon: "👪", route: "/app/education-parent-mobile" },
-				{ label: OJ.t("مركز العمل", "Workcenter"), icon: "🏢", route: "/app/education-workcenter" },
+				{ label: OJ.t("الجدول", "Timetable"), icon: "📅", route: "/app/education-timetable-board" },
 			],
 		};
 		return mark(menus[role] || menus.workcenter);
