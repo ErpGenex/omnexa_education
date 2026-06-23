@@ -1,0 +1,33 @@
+---
+no_breadcrumbs: 1
+full_width: 1
+no_header: 1
+---
+
+{% extends "templates/web.html" %}
+
+{% block title %}EduSphere | التعليم{% endblock %}
+
+{% block page_content %}
+<div class="edu-site" data-page="home">
+  <header class="edu-header" id="edu-header"></header>
+  <section class="edu-hero" id="edu-hero"></section>
+  <div class="edu-wrap"><div class="edu-features-bar" id="edu-features-bar"></div></div>
+  <section class="edu-stats" id="edu-stats"></section>
+  <section class="edu-section">
+    <div class="edu-wrap">
+      <div class="edu-section-title">
+        <h2>المؤسسات التعليمية</h2>
+        <p>Educational Institutions</p>
+      </div>
+      <div id="edu-institutions"></div>
+    </div>
+  </section>
+  <footer class="edu-footer" id="edu-footer"></footer>
+</div>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    EduSphereSite.init("home");
+  });
+</script>
+{% endblock %}

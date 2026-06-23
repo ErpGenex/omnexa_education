@@ -55,16 +55,18 @@ page_js = {
 
 # Public website — online application entry
 website_route_rules = [
+	{"from_route": "/education", "to_route": "education/index"},
+	{"from_route": "/education/programs", "to_route": "education/programs"},
 	{"from_route": "/education/apply", "to_route": "education/apply"},
 ]
 
 web_include_css = [
-	"/assets/omnexa_education/css/education-rtl.css",
-	"/assets/omnexa_education/css/omnexa-journey.css",
+	"/assets/omnexa_education/css/education_website.css",
 ]
 
-# include js, css files in header of web template
-# web_include_js = "/assets/omnexa_education/js/omnexa_education.js"
+web_include_js = [
+	"/assets/omnexa_education/js/education_website.js",
+]
 
 # include custom scss in every website theme (without file extension ".scss")
 # website_theme_scss = "omnexa_education/public/scss/website"

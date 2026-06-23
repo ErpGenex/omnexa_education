@@ -6,25 +6,25 @@ no_header: 1
 
 {% extends "templates/web.html" %}
 
-{% block title %}EduSphere Apply | التقديم{% endblock %}
+{% block title %}EduSphere Programs | البرامج{% endblock %}
 
 {% block page_content %}
-<div class="edu-site" data-page="apply">
+<div class="edu-site" data-page="programs">
   <header class="edu-header" id="edu-header"></header>
   <section class="edu-section" style="padding-top:48px">
     <div class="edu-wrap">
       <div class="edu-section-title">
-        <h2>التقديم الأونلاين</h2>
-        <p>Online Application</p>
+        <h2>البرامج الأكاديمية</h2>
+        <p>Academic Programs</p>
       </div>
-      <div class="edu-apply-box" id="edu-apply-form-host"></div>
+      <div id="edu-programs-list"></div>
     </div>
   </section>
   <footer class="edu-footer" id="edu-footer"></footer>
 </div>
 <script>
   document.addEventListener("DOMContentLoaded", function () {
-    EduSphereSite.init("apply");
+    EduSphereSite.init("programs");
   });
 </script>
 {% endblock %}
