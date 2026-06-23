@@ -152,7 +152,7 @@ def sync_institution_enrollments_to_laravel(institution: str, student: str | Non
 @frappe.whitelist()
 def sync_institutions_to_laravel(institutions: list[str] | None = None) -> dict:
 	"""Push Education Institution master to Laravel schools (sis_external_id)."""
-	if not is_laravel_enabled():
+	if not laravel_client.is_laravel_enabled():
 		return {"ok": False, "skipped": True, "reason": "laravel_disabled"}
 	names = institutions or frappe.get_all(
 		"Education Institution",
