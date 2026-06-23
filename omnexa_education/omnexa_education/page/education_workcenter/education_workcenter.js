@@ -48,12 +48,16 @@ frappe.pages["education-workcenter"].on_page_load = function (wrapper) {
 						Institute: "📖",
 						"Training Center": "🛠️",
 					}[inst.institution_type] || "🏢";
-					const isActive = !!(inst.active || inst.seeded);
+					const isActive = !!inst.active;
+					const isInactive = !!inst.inactive || (inst.seeded && !inst.active);
+					const statusClass = isActive ? "oj-pill-active" : isInactive ? "oj-pill-inactive" : "oj-pill-off";
 					const statusLabel = isActive
 						? OJ.t("نشط", "Active")
-						: OJ.t("غير مفعّل", "Not active");
+						: isInactive
+							? OJ.t("غير نشط", "Inactive")
+							: OJ.t("غير مفعّل", "Not active");
 					const $card = $(`
-						<div class="oj-clinic-card ${isActive ? "" : "oj-muted-card"} ${demo.can_seed && !inst.seeded ? "oj-clickable-card" : ""}" style="cursor:${demo.can_seed && !inst.seeded ? "pointer" : "default"}">
+						<div class="oj-clinic-card ${isActive ? "oj-active-card" : isInactive ? "oj-inactive-card" : "oj-muted-card"} ${demo.can_seed && !inst.seeded ? "oj-clickable-card" : ""}" style="cursor:${demo.can_seed && !inst.seeded ? "pointer" : "default"}">
 							<div class="oj-clinic-icon">${icon}</div>
 							<h4>${OJ.esc(inst.name || inst.institution_type)}</h4>
 							<p class="oj-muted">${OJ.esc(inst.institution_type)}${inst.academy_type ? " · " + OJ.esc(inst.academy_type) : ""}</p>
@@ -62,7 +66,7 @@ frappe.pages["education-workcenter"].on_page_load = function (wrapper) {
 								<span>👩‍🏫 ${inst.teachers || 0}</span>
 								<span>📋 ${inst.applications || 0}</span>
 							</div>
-							<span class="oj-pill">${statusLabel}</span>
+							<span class="oj-pill ${statusClass}">${statusLabel}</span>
 						</div>`);
 					if (demo.can_seed && !inst.seeded) {
 						$card.on("click", async () => {
@@ -87,8 +91,8 @@ frappe.pages["education-workcenter"].on_page_load = function (wrapper) {
 				const $demoPanel = $(`<div class="oj-panel" style="margin:16px 0;padding:16px;background:#fff;border-radius:12px"></div>`);
 				$demoPanel.append(`<h4>${OJ.t("🎯 محاكاة الديمو", "Demo Simulation")}</h4>`);
 				$demoPanel.append(`<p class="oj-muted">${OJ.t(
-					"زرع مؤسسات + مستخدمي جميع الأدوار (كلمة المرور: Education@Demo2026)",
-					"Seed institutions + all role users (password: Education@Demo2026)"
+					"محاكاة كاملة: 500 طالب/كلية · 4 فرق · من التقديم للتخرج · كلمة المرور: Education@Demo2026",
+					"Full simulation: 500 students/college · 4 years · apply-to-graduate · password: Education@Demo2026"
 				)}</p>`);
 				const typeOpts = (demo.institution_type_options || ["All 5 Types"]).map((t) =>
 					`<option value="${OJ.esc(t)}">${OJ.esc(t)}</option>`

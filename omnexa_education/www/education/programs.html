@@ -6,6 +6,11 @@ no_header: 1
 
 {% extends "templates/web.html" %}
 
+{% block head_include %}
+{{ super() }}
+<link rel="stylesheet" href="/assets/omnexa_education/css/education_website.css">
+{% endblock %}
+
 {% block title %}EduSphere Programs | البرامج الأكاديمية{% endblock %}
 
 {% block page_content %}

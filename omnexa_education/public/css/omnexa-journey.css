@@ -277,6 +277,29 @@
 	font-weight: 600;
 }
 
+.oj-pill-active {
+	background: #dcfce7;
+	color: #166534;
+}
+
+.oj-pill-inactive {
+	background: #fef3c7;
+	color: #92400e;
+}
+
+.oj-pill-off {
+	background: #f1f5f9;
+	color: #64748b;
+}
+
+.oj-active-card {
+	border: 2px solid #86efac;
+}
+
+.oj-inactive-card {
+	border: 2px solid #fcd34d;
+}
+
 .oj-title-row h1 {
 	margin: 0 0 16px;
 	font-size: calc(1.65rem * var(--oj-portal-font-scale));

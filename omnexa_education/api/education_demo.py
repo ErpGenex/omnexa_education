@@ -18,12 +18,40 @@ from omnexa_education.education_demo.education_demo_seed import (
 	get_demo_credentials,
 	get_institution_demo_stats,
 	seed_education_demo,
+	_resolve_company_branch,
 )
 from omnexa_education.education_global_benchmark import get_global_sis_score
 
 
 @frappe.whitelist()
 def seed_demo(company: str | None = None, branch: str | None = None, institution_type: str | None = None) -> dict:
+	frappe.only_for(("System Manager", "Education Manager"))
+	from omnexa_education.education_demo.branch_demo_seed import seed_education_branch_demo, _filter_specs
+
+	specs = _filter_specs(institution_type)
+	total_students = sum(s.get("demo_students", 500) for s in specs)
+	company, branch = _resolve_company_branch(company, branch)
+
+	if total_students > 300:
+		job = frappe.enqueue(
+			"omnexa_education.education_demo.branch_demo_seed.seed_education_branch_demo",
+			queue="long",
+			timeout=7200,
+			company=company,
+			branch=branch,
+			institution_type=institution_type or "All 5 Types",
+			seed_roles=1,
+			sync_laravel=0,
+		)
+		return {
+			"ok": True,
+			"queued": True,
+			"job_id": job,
+			"message": _("Full lifecycle demo seed started in background (~{0} students). Refresh Workcenter in a few minutes.").format(
+				total_students
+			),
+		}
+
 	return seed_education_demo(company=company, branch=branch, institution_type=institution_type)
 
 

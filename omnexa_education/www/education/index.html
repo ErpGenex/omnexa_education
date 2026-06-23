@@ -6,6 +6,13 @@ no_header: 1
 
 {% extends "templates/web.html" %}
 
+{% block head_include %}
+{{ super() }}
+<link rel="stylesheet" href="/assets/omnexa_education/css/education_website.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+{% endblock %}
+
 {% block title %}EduSphere | التعليم العالمي{% endblock %}
 
 {% block page_content %}
@@ -16,12 +23,23 @@ no_header: 1
   <div class="edu-wrap"><div class="edu-features-bar" id="edu-features-bar"></div></div>
   <section class="edu-stats edu-reveal" id="edu-stats"></section>
   <section class="edu-section edu-section-alt edu-reveal" id="edu-journey-section"></section>
+  <section class="edu-section edu-reveal" id="edu-institution-types-section">
+    <div class="edu-wrap">
+      <div class="edu-section-title">
+        <span class="edu-eyebrow">Institution Types</span>
+        <h2>أنواع المؤسسات التعليمية</h2>
+        <p>خمسة أنواع — نشطة وغير نشطة — مدارس · جامعات · أكاديميات · معاهد · مراكز تدريب</p>
+      </div>
+      <div id="edu-institution-types"></div>
+    </div>
+  </section>
+  <section class="edu-section edu-section-alt edu-reveal" id="edu-gallery-section"></section>
   <section class="edu-section edu-reveal">
     <div class="edu-wrap">
       <div class="edu-section-title">
-        <span class="edu-eyebrow">Institutions</span>
-        <h2>المؤسسات التعليمية</h2>
-        <p>مدارس · أكاديميات · جامعات · معاهد · مراكز تدريب</p>
+        <span class="edu-eyebrow">Campuses</span>
+        <h2>المؤسسات المسجّلة</h2>
+        <p>استكشف مؤسسات EduSphere وقدّم طلبك مباشرة</p>
       </div>
       <div id="edu-institutions"></div>
     </div>

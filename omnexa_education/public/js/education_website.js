@@ -3,11 +3,48 @@
 	const STORAGE_LANG = "edu_site_lang";
 
 	const JOURNEY_STEPS = [
-		{ ar: "استفسار", en: "Inquiry", desc_ar: "تقديم أونلاين", desc_en: "Online apply" },
-		{ ar: "قبول", en: "Admission", desc_ar: "مراجعة الطلب", desc_en: "Application review" },
-		{ ar: "تسجيل", en: "Enrollment", desc_ar: "المسجل الأكاديمي", desc_en: "Registrar desk" },
-		{ ar: "تعلّم", en: "Learning", desc_ar: "kemetgate TLMS", desc_en: "kemetgate TLMS" },
-		{ ar: "تخرج", en: "Graduation", desc_ar: "شهادات وخريجون", desc_en: "Alumni & credentials" },
+		{ ar: "استفسار", en: "Inquiry", desc_ar: "تقديم أونلاين", desc_en: "Online apply", icon: "📩" },
+		{ ar: "قبول", en: "Admission", desc_ar: "مراجعة الطلب", desc_en: "Application review", icon: "📋" },
+		{ ar: "تسجيل", en: "Enrollment", desc_ar: "المسجل الأكاديمي", desc_en: "Registrar desk", icon: "🎓" },
+		{ ar: "جدول", en: "Timetable", desc_ar: "محاضرات وحصص", desc_en: "Classes & labs", icon: "📅" },
+		{ ar: "حضور", en: "Attendance", desc_ar: "متابعة يومية", desc_en: "Daily tracking", icon: "✅" },
+		{ ar: "تقييم", en: "Assessment", desc_ar: "اختبارات ومشاريع", desc_en: "Exams & projects", icon: "📝" },
+		{ ar: "درجات", en: "Grading", desc_ar: "كشوف النتائج", desc_en: "Grade reports", icon: "📊" },
+		{ ar: "تعلّم", en: "Learning", desc_ar: "kemetgate TLMS", desc_en: "kemetgate TLMS", icon: "💻" },
+		{ ar: "تخرج", en: "Graduation", desc_ar: "شهادات وخريجون", desc_en: "Alumni & credentials", icon: "🏅" },
+	];
+
+	const NAV_MEGA = [
+		{
+			key: "academics",
+			ar: "أكاديمي",
+			en: "Academics",
+			items: [
+				{ href: "/education/programs", ar: "البرامج والتخصصات", en: "Programs & Majors" },
+				{ href: "/education#edu-institution-types", ar: "أنواع المؤسسات", en: "Institution Types" },
+				{ href: "/education/programs", ar: "الكليات والأقسام", en: "Colleges & Faculties" },
+			],
+		},
+		{
+			key: "admissions",
+			ar: "القبول",
+			en: "Admissions",
+			items: [
+				{ href: "/education/apply", ar: "التقديم الأونلاين", en: "Online Application" },
+				{ href: "/education/apply", ar: "متطلبات القبول", en: "Admission Requirements" },
+				{ href: "/login", ar: "متابعة الطلب", en: "Track Application" },
+			],
+		},
+		{
+			key: "portals",
+			ar: "البوابات",
+			en: "Portals",
+			items: [
+				{ href: "https://kemetgate.com/student-portal/dashboard", ar: "بوابة الطالب", en: "Student Portal", external: 1 },
+				{ href: "https://kemetgate.com/parent-dashboard", ar: "بوابة ولي الأمر", en: "Parent Portal", external: 1 },
+				{ href: "/app/education-workcenter", ar: "مركز العمل", en: "Workcenter" },
+			],
+		},
 	];
 
 	const ROLES = [
@@ -31,13 +68,37 @@
 
 		init(page) {
 			this.page = page || "home";
-			this.loadConfig().then(() => {
-				this.applyTheme();
-				this.renderChrome();
-				this.setupReveal();
-				const fn = this[`init_${this.page}`];
-				if (typeof fn === "function") fn.call(this);
-			});
+			this.applyTheme();
+			this.renderChrome();
+			this.loadConfig()
+				.then(() => {
+					this.applyTheme();
+					this.renderChrome();
+					const fn = this[`init_${this.page}`];
+					if (typeof fn === "function") fn.call(this);
+					this.setupReveal();
+				})
+				.catch(() => {
+					this.config = this.config || this.defaultConfig();
+					const fn = this[`init_${this.page}`];
+					if (typeof fn === "function") fn.call(this);
+					this.setupReveal();
+				});
+		},
+
+		defaultConfig() {
+			return {
+				brand_name_ar: "EduSphere",
+				brand_name_en: "EduSphere",
+				tagline_ar: "من الاستفسار إلى التخرج",
+				tagline_en: "From inquiry to graduation",
+				hero_text_ar: "بوابة القبول والتسجيل الأكاديمي",
+				hero_text_en: "Admissions and enrollment portal",
+				hero_image: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=1920&q=85",
+				logo: "/assets/omnexa_education/logo.png",
+				stats: { institutions: 5, programs: 0, students: 0, teachers: 0 },
+				urls: { desk: "/app/education-workcenter", laravel_portal: "https://kemetgate.com", laravel_login: "https://kemetgate.com/login" },
+			};
 		},
 
 		t(key) {
@@ -84,7 +145,12 @@
 		},
 
 		esc(v) {
-			return frappe.utils.escape_html(v == null ? "" : String(v));
+			if (typeof frappe !== "undefined" && frappe.utils && frappe.utils.escape_html) {
+				return frappe.utils.escape_html(v == null ? "" : String(v));
+			}
+			const d = document.createElement("div");
+			d.textContent = v == null ? "" : String(v);
+			return d.innerHTML;
 		},
 
 		nameField() {
@@ -96,10 +162,14 @@
 		},
 
 		async loadConfig() {
-			const r = await frappe.call({
-				method: "omnexa_education.api.public_education_site.get_site_config",
-			});
-			this.config = r.message || {};
+			try {
+				const r = await frappe.call({
+					method: "omnexa_education.api.public_education_site.get_site_config",
+				});
+				this.config = r.message || this.defaultConfig();
+			} catch (e) {
+				this.config = this.defaultConfig();
+			}
 			if (this.config.primary_color) {
 				document.documentElement.style.setProperty("--edu-primary", this.config.primary_color);
 			}
@@ -142,7 +212,7 @@
 		},
 
 		renderChrome() {
-			const cfg = this.config || {};
+			const cfg = this.config || this.defaultConfig();
 			const name = cfg[this.nameField()] || "EduSphere";
 			const logo = cfg.logo
 				? `<img src="${this.esc(cfg.logo)}" alt="" onerror="this.style.display='none'">`
@@ -152,10 +222,29 @@
 				{ href: "/education/programs", key: "programs", page: "programs" },
 				{ href: "/education/apply", key: "apply", page: "apply" },
 			];
+			const megaHtml = NAV_MEGA.map(
+				(m) => `
+				<div class="edu-mega-item">
+					<button type="button" class="edu-mega-trigger">${this.lang === "ar" ? m.ar : m.en} ▾</button>
+					<div class="edu-mega-panel">
+						${m.items
+							.map(
+								(it) =>
+									`<a href="${this.esc(it.href)}" ${it.external ? 'target="_blank" rel="noopener"' : ""}>${this.lang === "ar" ? it.ar : it.en}</a>`
+							)
+							.join("")}
+					</div>
+				</div>`
+			).join("");
 
 			const header = document.getElementById("edu-header");
 			if (header) {
 				header.innerHTML = `
+					<div class="edu-topbar"><div class="edu-wrap edu-topbar-inner">
+						<span>📞 +20 100 000 0000</span>
+						<span>✉ admissions@edusphere.edu</span>
+						<span>${this.lang === "ar" ? "معيار SIS عالمي 4.85" : "Global SIS benchmark 4.85"}</span>
+					</div></div>
 					<div class="edu-wrap edu-header-inner">
 						<a class="edu-brand" href="/education">${logo}<span>${this.esc(name)}</span></a>
 						<button type="button" class="edu-mobile-toggle" id="edu-menu-toggle" aria-label="Menu">☰</button>
@@ -166,6 +255,7 @@
 										`<a href="${n.href}" class="${this.page === n.page ? "active" : ""}">${this.t(n.key)}</a>`
 								)
 								.join("")}
+							${megaHtml}
 						</nav>
 						<div class="edu-actions">
 							<button type="button" class="edu-lang" id="edu-lang-toggle">${this.lang === "ar" ? "EN" : "AR"}</button>
@@ -277,6 +367,13 @@
 
 			const journey = document.getElementById("edu-journey-section");
 			if (journey) {
+				const steps = (cfg.lifecycle_phases || JOURNEY_STEPS).map((step, i) => ({
+					icon: step.icon || JOURNEY_STEPS[i % JOURNEY_STEPS.length]?.icon || "•",
+					ar: step.label_ar || step.ar,
+					en: step.label_en || step.en,
+					desc_ar: step.role_ar || step.desc_ar,
+					desc_en: step.role_en || step.desc_en,
+				}));
 				journey.innerHTML = `
 					<div class="edu-wrap">
 						<div class="edu-section-title">
@@ -284,15 +381,17 @@
 							<h2>${this.t("journey_title")}</h2>
 							<p>${this.t("journey_sub")}</p>
 						</div>
-						<div class="edu-journey">
-							${JOURNEY_STEPS.map(
-								(step, i) => `
+						<div class="edu-journey edu-journey-full">
+							${steps
+								.map(
+									(step, i) => `
 								<div class="edu-journey-step">
-									<div class="edu-journey-num">${i + 1}</div>
+									<div class="edu-journey-num">${step.icon || i + 1}</div>
 									<h4>${this.lang === "ar" ? step.ar : step.en}</h4>
 									<p>${this.lang === "ar" ? step.desc_ar : step.desc_en}</p>
 								</div>`
-							).join("")}
+								)
+								.join("")}
 						</div>
 					</div>`;
 			}
@@ -331,7 +430,94 @@
 					</div>`;
 			}
 
+			this.renderInstitutionTypes("edu-institution-types");
+			this.renderGallery("edu-gallery-section");
 			this.renderInstitutions("edu-institutions");
+		},
+
+		renderInstitutionTypes(hostId) {
+			const host = document.getElementById(hostId);
+			if (!host) return;
+			const types = (this.config && this.config.institution_types) || [];
+			if (!types.length) {
+				frappe.call({
+					method: "omnexa_education.api.public_education_site.get_public_institution_types",
+					callback: (r) => {
+						this._paintInstitutionTypes(host, r.message || []);
+					},
+				});
+				return;
+			}
+			this._paintInstitutionTypes(host, types);
+		},
+
+		_paintInstitutionTypes(host, types) {
+			const typeIcons = {
+				"International School": "🏫",
+				University: "🎓",
+				Academy: "🏛️",
+				Institute: "📖",
+				"Training Center": "🛠️",
+			};
+			host.innerHTML = `
+				<div class="edu-type-grid">
+					${types
+						.map((row) => {
+							const active = !!row.active;
+							const inactive = !!row.inactive || (row.seeded && !active);
+							const statusClass = active ? "edu-status-active" : inactive ? "edu-status-inactive" : "edu-status-off";
+							const statusLabel = active
+								? this.lang === "ar"
+									? "نشط"
+									: "Active"
+								: inactive
+									? this.lang === "ar"
+										? "غير نشط"
+										: "Inactive"
+									: this.lang === "ar"
+										? "غير مفعّل"
+										: "Not active";
+							return `
+						<div class="edu-type-card ${statusClass}">
+							<div class="edu-type-img"><img src="${this.esc(row.image)}" alt="" loading="lazy" /></div>
+							<div class="edu-type-body">
+								<span class="edu-type-icon">${typeIcons[row.institution_type] || "🏢"}</span>
+								<span class="edu-status-pill ${statusClass}">${statusLabel}</span>
+								<h3>${this.esc(row.name)}</h3>
+								<p class="edu-muted">${this.esc(row.institution_type)}${row.academy_type ? " · " + this.esc(row.academy_type) : ""}</p>
+								<div class="edu-type-stats">
+									<span>👨‍🎓 ${row.students || 0}</span>
+									<span>👩‍🏫 ${row.teachers || 0}</span>
+									<span>📋 ${row.applications || 0}</span>
+								</div>
+								${row.institution ? `<a class="edu-card-link" href="/education/apply?institution=${encodeURIComponent(row.institution)}">${this.t("apply_now")} →</a>` : ""}
+							</div>
+						</div>`;
+						})
+						.join("")}
+				</div>`;
+		},
+
+		renderGallery(hostId) {
+			const host = document.getElementById(hostId);
+			if (!host) return;
+			const imgs = (this.config && this.config.gallery) || [];
+			host.innerHTML = `
+				<div class="edu-wrap">
+					<div class="edu-section-title">
+						<span class="edu-eyebrow">Campus Life</span>
+						<h2>${this.lang === "ar" ? "حياة جامعية متميزة" : "Excellence in Campus Life"}</h2>
+						<p>${this.lang === "ar" ? "بيئة تعليمية راقية تليق بأفضل الجامعات العالمية" : "A premium learning environment worthy of world-class universities"}</p>
+					</div>
+					<div class="edu-gallery-grid">
+						${imgs
+							.map(
+								(src, i) =>
+									`<div class="edu-gallery-item ${i === 0 ? "edu-gallery-featured" : ""}"><img src="${this.esc(src)}" alt="" loading="lazy" /></div>`
+							)
+							.join("")}
+					</div>
+				</div>`;
 		},
 
 		async renderInstitutions(hostId) {
@@ -347,11 +533,14 @@
 					${rows
 						.map(
 							(row) => `
-						<div class="edu-card">
+						<div class="edu-card edu-card-rich">
+							<div class="edu-card-img"><img src="https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=600&q=70" alt="" loading="lazy" /></div>
+							<div class="edu-card-body">
 							<span class="edu-badge">${this.esc(row.institution_type || "")}</span>
 							<h3>${this.esc(row.institution_name)}</h3>
 							<p>${this.esc(row.city || "")}</p>
 							<a class="edu-card-link" href="/education/apply?institution=${encodeURIComponent(row.name)}">${this.t("apply_now")} →</a>
+							</div>
 						</div>`
 						)
 						.join("") || `<p style="text-align:center">—</p>`}

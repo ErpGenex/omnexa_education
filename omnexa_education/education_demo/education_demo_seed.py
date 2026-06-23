@@ -164,19 +164,22 @@ def _ensure_section(company: str, branch: str, campus: str, year: str, grade: st
 	)
 
 
-def _ensure_program(company: str, branch: str, institution: str, prog: dict) -> str:
+def _ensure_program(company: str, branch: str, institution: str, prog: dict, department: str | None = None) -> str:
+	payload = {
+		"program_code": f"{DEMO_MARKER}-{prog['code']}",
+		"program_name": prog["name"],
+		"company": company,
+		"branch": branch,
+		"institution": institution,
+		"degree_level": prog.get("degree_level", "Certificate"),
+		"is_active": 1,
+	}
+	if department and frappe.get_meta("Education Program").has_field("department"):
+		payload["department"] = department
 	return _get_or_insert(
 		"Education Program",
-		{"company": company, "program_code": f"{DEMO_MARKER}-{prog['code']}"},
-		{
-			"program_code": f"{DEMO_MARKER}-{prog['code']}",
-			"program_name": prog["name"],
-			"company": company,
-			"branch": branch,
-			"institution": institution,
-			"degree_level": prog.get("degree_level", "Certificate"),
-			"is_active": 1,
-		},
+		{"company": company, "program_code": payload["program_code"]},
+		payload,
 	)
 
 
@@ -355,6 +358,14 @@ def _seed_demo_assessments(
 
 
 def _seed_institution(company: str, branch: str, spec: dict) -> dict:
+	from omnexa_education.education_demo.education_demo_bulk import (
+		bulk_seed_students,
+		seed_college_students,
+		seed_lifecycle_pipeline,
+		_ensure_department,
+		_ensure_he_year_levels,
+	)
+
 	curriculum = _ensure_curriculum(company, spec["curriculum_framework"])
 	institution = _ensure_institution(company, spec, curriculum)
 	campus = _ensure_campus(company, branch, institution, f"{spec['code']}-MAIN")
@@ -377,27 +388,33 @@ def _seed_institution(company: str, branch: str, spec: dict) -> dict:
 			company, branch, institution, subject, f"{spec['code']}-MATH101", "Mathematics 101", credit_hours=1
 		)
 		stats["courses"] += 1
-		for i in range(spec.get("demo_students", 5)):
-			student_ids.append(
-				_ensure_student(
-				company,
-				branch,
-				institution,
-				campus,
-				f"{spec['code']}-S{i+1:02d}",
-				f"Student {spec['name']} {i+1}",
-				grade_level=grades[i % len(grades)],
-				section=section,
-				guardian_email=f"parent-{spec['code'].lower()}-{i+1}@demo.education",
-			)
-			)
-			stats["students"] += 1
+		created, student_ids = bulk_seed_students(
+			company,
+			branch,
+			institution,
+			campus,
+			spec["code"],
+			spec.get("demo_students", 500),
+			grade_levels=grades,
+			section=section,
+		)
+		stats["students"] += created
 		_seed_demo_assessments(company, branch, institution, year, student_ids, subject=subject, course=course)
 	else:
 		program_ids = []
+		college_map: dict[str, str] = {}
+		for college in spec.get("colleges") or []:
+			college_map[college["code"]] = _ensure_department(
+				company, branch, campus, f"{spec['code']}-{college['code']}", college["name"]
+			)
+		year_levels = _ensure_he_year_levels(company, institution, curriculum, spec["code"]) if mode == "he" else []
+
 		for prog in spec.get("programs") or []:
-			program_ids.append(_ensure_program(company, branch, institution, prog))
+			prog_payload = {**prog}
+			dept = college_map.get(prog.get("college", ""))
+			program_ids.append(_ensure_program(company, branch, institution, prog_payload, department=dept))
 			stats["programs"] += 1
+
 		subject = _ensure_subject(company, institution, curriculum, f"{spec['code']}-CORE", "Core Studies")
 		course = _ensure_course(
 			company,
@@ -410,31 +427,30 @@ def _seed_institution(company: str, branch: str, spec: dict) -> dict:
 			credit_hours=3,
 		)
 		stats["courses"] += 1
-		for i in range(spec.get("demo_students", 5)):
-			student_ids.append(
-				_ensure_student(
+
+		if spec.get("colleges") and year_levels:
+			for college in spec["colleges"]:
+				created, samples = seed_college_students(
+					company, branch, institution, campus, spec["code"], college, year_levels
+				)
+				stats["students"] += created
+				student_ids.extend(samples[:10])
+		else:
+			created, student_ids = bulk_seed_students(
 				company,
 				branch,
 				institution,
 				campus,
-				f"{spec['code']}-S{i+1:02d}",
-				f"Learner {spec['name']} {i+1}",
-				guardian_email=f"parent-{spec['code'].lower()}-{i+1}@demo.education",
+				spec["code"],
+				spec.get("demo_students", 500),
+				grade_levels=year_levels or None,
 			)
-			)
-			stats["students"] += 1
+			stats["students"] += created
+
 		_seed_demo_assessments(company, branch, institution, year, student_ids, subject=subject, course=course)
 
-	for i in range(3):
-		_ensure_application(
-			company,
-			branch,
-			institution,
-			year,
-			f"Applicant {spec['code']}-{i+1}",
-			grade=None,
-		)
-		stats["applications"] += 3
+	lifecycle = seed_lifecycle_pipeline(company, branch, institution, year, spec["code"], applications=40)
+	stats["applications"] = lifecycle.get("applications", 0)
 
 	return stats
 
@@ -561,7 +577,8 @@ def get_institution_demo_stats(company: str | None = None) -> list[dict]:
 			{
 				**spec,
 				"seeded": True,
-				"active": students > 0 or inst_status == "Active",
+				"active": students > 0,
+				"inactive": students == 0 and inst_status == "Active",
 				"institution": inst,
 				"students": students,
 				"teachers": frappe.db.count("Education Teacher", teacher_filters) if frappe.db.exists("DocType", "Education Teacher") else 0,
