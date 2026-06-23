@@ -50,10 +50,10 @@
 			ar: "البوابات",
 			en: "Portals",
 			items: [
-				{ href: "/app/education-student-portal", ar: "بوابة الطالب", en: "Student Portal" },
-				{ href: "/app/education-parent-mobile", ar: "بوابة ولي الأمر", en: "Parent Portal" },
-				{ href: "/app/education-teacher-gradebook", ar: "بوابة أعضاء هيئة التدريس", en: "Faculty Portal" },
-				{ href: "/app/education-workcenter", ar: "الإدارة", en: "Administration" },
+				{ href: "__DESK__/education-student-portal", ar: "بوابة الطالب", en: "Student Portal" },
+				{ href: "__DESK__/education-parent-mobile", ar: "بوابة ولي الأمر", en: "Parent Portal" },
+				{ href: "__DESK__/education-teacher-gradebook", ar: "بوابة أعضاء هيئة التدريس", en: "Faculty Portal" },
+				{ href: "__DESK__/education-workcenter", ar: "الإدارة", en: "Administration" },
 			],
 		},
 	];
@@ -164,6 +164,21 @@
 			return d.innerHTML;
 		},
 
+		deskPortalHref(page) {
+			const dest = `/app/${String(page || "").replace(/^\/+/, "")}`;
+			const user = typeof frappe !== "undefined" && frappe.session ? frappe.session.user : "Guest";
+			if (user && user !== "Guest") return dest;
+			return `/login?redirect-to=${encodeURIComponent(dest)}`;
+		},
+
+		resolveHref(href) {
+			if (!href) return "#";
+			if (href.startsWith("__DESK__/")) {
+				return this.deskPortalHref(href.slice("__DESK__/".length));
+			}
+			return href;
+		},
+
 		nameField() {
 			return this.lang === "ar" ? "brand_name_ar" : "brand_name_en";
 		},
@@ -253,7 +268,7 @@
 						${m.items
 							.map(
 								(it) =>
-									`<a href="${this.esc(it.href)}" ${it.external ? 'target="_blank" rel="noopener"' : ""}>${this.lang === "ar" ? it.ar : it.en}</a>`
+									`<a href="${this.esc(this.resolveHref(it.href))}" ${it.external ? 'target="_blank" rel="noopener"' : ""}>${this.lang === "ar" ? it.ar : it.en}</a>`
 							)
 							.join("")}
 					</div>
@@ -267,9 +282,9 @@
 						<span>📞 +966 11 000 0000</span>
 						<span>✉ admissions@omnexa.education</span>
 						<span class="edu-topbar-links">
-							<a href="/app/education-teacher-gradebook">${this.lang === "ar" ? "أعضاء هيئة التدريس" : "Faculty"}</a>
-							<a href="/app/education-student-portal">${this.lang === "ar" ? "الطلاب" : "Students"}</a>
-							<a href="/app/education-parent-mobile">${this.lang === "ar" ? "أولياء الأمور" : "Parents"}</a>
+							<a href="${this.esc(this.deskPortalHref("education-teacher-gradebook"))}">${this.lang === "ar" ? "أعضاء هيئة التدريس" : "Faculty"}</a>
+							<a href="${this.esc(this.deskPortalHref("education-student-portal"))}">${this.lang === "ar" ? "الطلاب" : "Students"}</a>
+							<a href="${this.esc(this.deskPortalHref("education-parent-mobile"))}">${this.lang === "ar" ? "أولياء الأمور" : "Parents"}</a>
 						</span>
 					</div></div>
 					<div class="edu-wrap edu-header-inner">
@@ -321,10 +336,10 @@
 						</div>
 						<div>
 							<h4>${this.lang === "ar" ? "البوابات" : "Portals"}</h4>
-							<p><a href="${u.student_portal || "/app/education-student-portal"}">${this.t("student_portal")}</a></p>
-							<p><a href="${u.parent_portal || "/app/education-parent-mobile"}">${this.t("parent_portal")}</a></p>
-							<p><a href="${u.faculty_portal || "/app/education-teacher-gradebook"}">${this.lang === "ar" ? "هيئة التدريس" : "Faculty"}</a></p>
-							<p><a href="${u.desk || "/app/education-workcenter"}">${this.t("desk")}</a></p>
+							<p><a href="${this.esc(this.deskPortalHref("education-student-portal"))}">${this.t("student_portal")}</a></p>
+							<p><a href="${this.esc(this.deskPortalHref("education-parent-mobile"))}">${this.t("parent_portal")}</a></p>
+							<p><a href="${this.esc(this.deskPortalHref("education-teacher-gradebook"))}">${this.lang === "ar" ? "هيئة التدريس" : "Faculty"}</a></p>
+							<p><a href="${this.esc(this.deskPortalHref("education-workcenter"))}">${this.t("desk")}</a></p>
 						</div>
 					</div>
 					<div class="edu-wrap edu-footer-bottom">© ${new Date().getFullYear()} ${this.esc(name)} · Omnexa · ErpGenEx</div>`;

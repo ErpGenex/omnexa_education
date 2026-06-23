@@ -33,6 +33,13 @@ def after_migrate():
 		frappe.log_error(frappe.get_traceback(), "Omnexa Education: workspace sync failed")
 
 	try:
+		from omnexa_education.patches.v1_0.sync_education_portal_access import execute as sync_portal_access
+
+		sync_portal_access()
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), "Omnexa Education: portal access sync failed")
+
+	try:
 		from omnexa_education.patches.v1_0.sync_education_report_roles import execute as sync_report_roles
 
 		sync_report_roles()

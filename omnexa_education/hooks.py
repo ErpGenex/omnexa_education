@@ -60,12 +60,27 @@ website_route_rules = [
 	{"from_route": "/education/apply", "to_route": "education/apply"},
 ]
 
-web_include_css = [
-	"/assets/omnexa_education/css/education_website.css",
-]
+# Desk portal users must land on /app/* after website login (not public marketing pages).
+get_website_user_home_page = "omnexa_education.omnexa_education.website_user_home.get_website_user_home_page"
 
-web_include_js = [
-	"/assets/omnexa_education/js/education_website.js",
+# Assets load from education www templates (head_include) — available immediately after install.
+# web_include_css / web_include_js intentionally omitted to avoid leaking onto /login and /app.
+
+# Registered with omnexa_experience activity website framework
+activity_website_packs = [
+	{
+		"business_activity": "Education",
+		"app": "omnexa_education",
+		"base_path": "/education",
+		"legacy_base_path": "/campus",
+		"site_config_api": "omnexa_education.api.public_education_site.get_site_config",
+		"seed_demo_method": "omnexa_education.education_demo.education_demo_seed.seed_education_demo",
+		"nav": [
+			{"key": "home", "ar": "الرئيسية", "en": "Home", "href": "/education"},
+			{"key": "programs", "ar": "البرامج", "en": "Programs", "href": "/education/programs"},
+			{"key": "apply", "ar": "قدّم الآن", "en": "Apply now", "href": "/education/apply", "cta": True},
+		],
+	}
 ]
 
 # include custom scss in every website theme (without file extension ".scss")
@@ -98,17 +113,8 @@ doctype_js = {
 # application home page (will override Website Settings)
 # home_page = "login"
 
-# website user home page (by Role)
-role_home_page = {
-	"Education Manager": "education-executive-dashboard",
-	"Education User": "education-admissions-portal",
-	"Education Finance Officer": "education-finance-desk",
-	"Education Student Portal": "education-student-portal",
-	"Education Parent Portal": "education-parent-mobile",
-	"Teacher": "education-teacher-gradebook",
-	"Accounts User": "education-finance-desk",
-	"Accounts Manager": "education-finance-desk",
-}
+# website user home page (by Role) — use get_website_user_home_page for desk portal routes
+# role_home_page removed: education-student-portal is a desk Page, not a www route
 
 # Generators
 # ----------
@@ -131,6 +137,7 @@ role_home_page = {
 before_install = "omnexa_education.install.enforce_supported_frappe_version"
 before_migrate = "omnexa_education.install.enforce_supported_frappe_version"
 after_migrate = "omnexa_education.install.after_migrate"
+after_install = "omnexa_education.install.after_migrate"
 
 # Uninstallation
 # ------------
