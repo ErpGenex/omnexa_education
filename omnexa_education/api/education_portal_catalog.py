@@ -274,7 +274,8 @@ def get_workcenter_context() -> dict:
 	is_admin = frappe.session.user == "Administrator" or "System Manager" in frappe.get_roles()
 	demo_ctx = get_demo_hub_context()
 	company = demo_ctx.get("company") or ""
-	settings = frappe.get_single("Education Settings")
+	settings = frappe.get_doc("Education Settings", "Education Settings")
+	settings.flags.ignore_permissions = True
 	lifecycle = filter_lifecycle_for_institution(
 		settings.default_institution_type,
 		bool(settings.enable_k12_modules),

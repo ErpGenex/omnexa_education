@@ -147,12 +147,14 @@ def get_laravel_integration_dashboard() -> dict:
 		filters={"is_active": 1, "lms_provider": "Laravel TLMS"},
 		fields=["name", "course", "external_course_id", "institution"],
 		limit=20,
+		ignore_permissions=True,
 	)
 	institutions = frappe.get_all(
 		"Education Institution",
 		filters={"status": "Active"},
 		fields=["name", "institution_name", "institution_type"],
 		limit=10,
+		ignore_permissions=True,
 	)
 	return {
 		"enable_laravel_tlms": bool(settings.enable_laravel_tlms),

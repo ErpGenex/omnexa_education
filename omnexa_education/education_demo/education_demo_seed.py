@@ -598,7 +598,7 @@ def get_institution_demo_stats(company: str | None = None) -> list[dict]:
 			continue
 
 		inst_company = frappe.db.get_value("Education Institution", inst, "company") or company
-		campuses = frappe.get_all("Education Campus", filters={"institution": inst}, pluck="name") or []
+		campuses = frappe.get_all("Education Campus", filters={"institution": inst}, pluck="name", ignore_permissions=True) or []
 		teacher_filters: dict = {"company": inst_company}
 		if campuses:
 			teacher_filters["campus"] = ["in", campuses]

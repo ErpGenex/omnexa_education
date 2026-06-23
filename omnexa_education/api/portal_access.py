@@ -15,6 +15,7 @@ PORTAL_READ_DOCTYPES: dict[str, dict] = {
 	"Education Settings": {"read": 1},
 	"Education Student": {"read": 1},
 	"Education Timetable Entry": {"read": 1},
+	"Education Timetable Template": {"read": 1},
 	"Education Assessment Result": {"read": 1},
 	"Education Assessment Plan": {"read": 1},
 	"Education Portal Message": {"read": 1},
@@ -22,6 +23,7 @@ PORTAL_READ_DOCTYPES: dict[str, dict] = {
 	"Education Section": {"read": 1},
 	"Education Grade Level": {"read": 1},
 	"Education Institution": {"read": 1},
+	"Education Campus": {"read": 1},
 	"Education Attendance Session": {"read": 1},
 	"Education Attendance Record": {"read": 1},
 	"Education Report Card": {"read": 1},
@@ -29,7 +31,34 @@ PORTAL_READ_DOCTYPES: dict[str, dict] = {
 	"Education Term": {"read": 1},
 	"Education Subject": {"read": 1},
 	"Education Course": {"read": 1},
+	"Education Program": {"read": 1},
+	"Education Room": {"read": 1},
+	"Education Teacher": {"read": 1},
 }
+
+STAFF_READ_DOCTYPES: dict[str, dict] = {
+	"Education Settings": {"read": 1},
+	"Education Institution": {"read": 1},
+	"Education Campus": {"read": 1},
+	"Education Timetable Template": {"read": 1},
+	"Education Timetable Entry": {"read": 1},
+	"Education Laravel Sync Queue": {"read": 1},
+	"Education Lms Course Link": {"read": 1},
+	"Education Account Access Log": {"read": 1},
+	"Education Assessment Plan": {"read": 1},
+	"Education Assessment Result": {"read": 1},
+	"Education Attendance Session": {"read": 1},
+	"Education Teacher": {"read": 1},
+	"Education Section": {"read": 1},
+	"Education Program": {"read": 1},
+}
+
+STAFF_ROLES = (
+	"Education Manager",
+	"Education User",
+	"Teacher",
+	"Education Finance Officer",
+)
 
 PORTAL_ROLE_DOCTYPE_PERMS: list[tuple[str, str, dict]] = [
 	("Sales Invoice", "Education Parent Portal", {"read": 1}),
@@ -41,31 +70,34 @@ def ensure_portal_doctype_permissions() -> dict:
 	"""Grant read permissions on portal-facing doctypes (idempotent)."""
 	added = []
 	for doctype, perms in PORTAL_READ_DOCTYPES.items():
-		if not frappe.db.exists("DocType", doctype):
-			continue
-		meta = frappe.get_meta(doctype)
-		existing = {(p.role, p.permlevel) for p in meta.permissions}
-		for role in PORTAL_ROLES:
-			if (role, 0) in existing:
-				continue
-			frappe.get_doc(
-				{
-					"doctype": "Custom DocPerm",
-					"parent": doctype,
-					"parenttype": "DocType",
-					"parentfield": "permissions",
-					"role": role,
-					"permlevel": 0,
-					**perms,
-				}
-			).insert(ignore_permissions=True)
-			added.append(f"{doctype}:{role}")
+		added.extend(_ensure_custom_docperm(doctype, PORTAL_ROLES, perms))
 	for doctype, role, perms in PORTAL_ROLE_DOCTYPE_PERMS:
-		if not frappe.db.exists("DocType", doctype):
-			continue
-		meta = frappe.get_meta(doctype)
-		existing = {(p.role, p.permlevel) for p in meta.permissions}
+		added.extend(_ensure_custom_docperm(doctype, (role,), perms))
+	if added:
+		frappe.clear_cache(doctype="DocType")
+	return {"added": added, "count": len(added)}
+
+
+def ensure_staff_doctype_permissions() -> dict:
+	"""Read permissions for teacher/registrar/manager desk pages."""
+	added = []
+	for doctype, perms in STAFF_READ_DOCTYPES.items():
+		added.extend(_ensure_custom_docperm(doctype, STAFF_ROLES, perms))
+	if added:
+		frappe.clear_cache(doctype="DocType")
+	return {"added": added, "count": len(added)}
+
+
+def _ensure_custom_docperm(doctype: str, roles: tuple[str, ...] | list[str], perms: dict) -> list[str]:
+	if not frappe.db.exists("DocType", doctype):
+		return []
+	meta = frappe.get_meta(doctype)
+	existing = {(p.role, p.permlevel) for p in meta.permissions}
+	added = []
+	for role in roles:
 		if (role, 0) in existing:
+			continue
+		if not frappe.db.exists("Role", role):
 			continue
 		frappe.get_doc(
 			{
@@ -79,9 +111,7 @@ def ensure_portal_doctype_permissions() -> dict:
 			}
 		).insert(ignore_permissions=True)
 		added.append(f"{doctype}:{role}")
-	if added:
-		frappe.clear_cache(doctype="DocType")
-	return {"added": added, "count": len(added)}
+	return added
 
 
 def ensure_portal_roles_desk_access() -> None:
@@ -138,14 +168,16 @@ def ensure_full_portal_access(company: str | None = None, branch: str | None = N
 	ensure_portal_roles_desk_access()
 	page_stats = sync_journey_page_roles()
 	perm_stats = ensure_portal_doctype_permissions()
+	staff_perm_stats = ensure_staff_doctype_permissions()
 
 	branch_grants = []
 	portal_users = []
+	demo_users = []
 	for spec in ROLE_SPECS:
-		if spec.get("role") not in PORTAL_ROLES:
-			continue
 		email = _ensure_demo_user(spec, company, branch)
-		portal_users.append(email)
+		demo_users.append(email)
+		if spec.get("role") in PORTAL_ROLES:
+			portal_users.append(email)
 		if ensure_user_branch_access(email, company, branch):
 			branch_grants.append(email)
 
@@ -160,11 +192,13 @@ def ensure_full_portal_access(company: str | None = None, branch: str | None = N
 		"roles_created": roles_created,
 		"page_sync": page_stats,
 		"permissions": perm_stats,
+		"staff_permissions": staff_perm_stats,
 		"branch_grants": branch_grants,
 		"portal_users": portal_users,
+		"demo_users": demo_users,
 		"students_activated": activated,
 		**link,
-		"message": _("Student and parent portal access configured."),
+		"message": _("Education desk and portal access configured."),
 	}
 
 
