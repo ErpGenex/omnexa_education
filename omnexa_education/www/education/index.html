@@ -6,23 +6,28 @@ no_header: 1
 
 {% extends "templates/web.html" %}
 
-{% block title %}EduSphere | التعليم{% endblock %}
+{% block title %}EduSphere | التعليم العالمي{% endblock %}
 
 {% block page_content %}
 <div class="edu-site" data-page="home">
   <header class="edu-header" id="edu-header"></header>
   <section class="edu-hero" id="edu-hero"></section>
+  <div class="edu-trust-strip" id="edu-trust-strip"></div>
   <div class="edu-wrap"><div class="edu-features-bar" id="edu-features-bar"></div></div>
-  <section class="edu-stats" id="edu-stats"></section>
-  <section class="edu-section">
+  <section class="edu-stats edu-reveal" id="edu-stats"></section>
+  <section class="edu-section edu-section-alt edu-reveal" id="edu-journey-section"></section>
+  <section class="edu-section edu-reveal">
     <div class="edu-wrap">
       <div class="edu-section-title">
+        <span class="edu-eyebrow">Institutions</span>
         <h2>المؤسسات التعليمية</h2>
-        <p>Educational Institutions</p>
+        <p>مدارس · أكاديميات · جامعات · معاهد · مراكز تدريب</p>
       </div>
       <div id="edu-institutions"></div>
     </div>
   </section>
+  <section class="edu-section edu-section-dark edu-reveal" id="edu-roles-section"></section>
+  <section class="edu-cta-band edu-reveal" id="edu-cta-band"></section>
   <footer class="edu-footer" id="edu-footer"></footer>
 </div>
 <script>

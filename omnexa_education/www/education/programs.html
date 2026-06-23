@@ -6,17 +6,21 @@ no_header: 1
 
 {% extends "templates/web.html" %}
 
-{% block title %}EduSphere Programs | البرامج{% endblock %}
+{% block title %}EduSphere Programs | البرامج الأكاديمية{% endblock %}
 
 {% block page_content %}
 <div class="edu-site" data-page="programs">
   <header class="edu-header" id="edu-header"></header>
-  <section class="edu-section" style="padding-top:48px">
+  <section class="edu-page-hero">
     <div class="edu-wrap">
-      <div class="edu-section-title">
-        <h2>البرامج الأكاديمية</h2>
-        <p>Academic Programs</p>
-      </div>
+      <span class="edu-eyebrow edu-eyebrow-light">Academic Excellence</span>
+      <h1>البرامج الأكاديمية</h1>
+      <p>استكشف مسارات التعليم في مؤسسات EduSphere — من K12 إلى الجامعة والتدريب المهني</p>
+    </div>
+  </section>
+  <section class="edu-section">
+    <div class="edu-wrap">
+      <div class="edu-filter-bar" id="edu-program-filters"></div>
       <div id="edu-programs-list"></div>
     </div>
   </section>

@@ -2,16 +2,39 @@
 (function () {
 	const STORAGE_LANG = "edu_site_lang";
 
+	const JOURNEY_STEPS = [
+		{ ar: "استفسار", en: "Inquiry", desc_ar: "تقديم أونلاين", desc_en: "Online apply" },
+		{ ar: "قبول", en: "Admission", desc_ar: "مراجعة الطلب", desc_en: "Application review" },
+		{ ar: "تسجيل", en: "Enrollment", desc_ar: "المسجل الأكاديمي", desc_en: "Registrar desk" },
+		{ ar: "تعلّم", en: "Learning", desc_ar: "kemetgate TLMS", desc_en: "kemetgate TLMS" },
+		{ ar: "تخرج", en: "Graduation", desc_ar: "شهادات وخريجون", desc_en: "Alumni & credentials" },
+	];
+
+	const ROLES = [
+		{ icon: "🏛️", ar: "تنفيذي", en: "Executive" },
+		{ icon: "📋", ar: "قبول", en: "Admissions" },
+		{ icon: "📚", ar: "مسجل", en: "Registrar" },
+		{ icon: "👨‍🏫", ar: "معلّم", en: "Teacher" },
+		{ icon: "🎓", ar: "طالب", en: "Student" },
+		{ icon: "👨‍👩‍👧", ar: "ولي أمر", en: "Parent" },
+		{ icon: "💰", ar: "مالية", en: "Finance" },
+		{ icon: "📊", ar: "تحليلات", en: "Analytics" },
+		{ icon: "✅", ar: "جودة", en: "QA" },
+	];
+
 	window.EduSphereSite = {
 		config: null,
 		lang: localStorage.getItem(STORAGE_LANG) || "ar",
 		page: "home",
+		_programsCache: null,
+		_programFilter: "all",
 
 		init(page) {
 			this.page = page || "home";
 			this.loadConfig().then(() => {
 				this.applyTheme();
 				this.renderChrome();
+				this.setupReveal();
 				const fn = this[`init_${this.page}`];
 				if (typeof fn === "function") fn.call(this);
 			});
@@ -26,9 +49,20 @@
 				apply_now: { ar: "قدّم الآن", en: "Apply Now" },
 				login: { ar: "دخول", en: "Login" },
 				desk: { ar: "مركز العمل", en: "Workcenter" },
-				features: { ar: "مميزات EduSphere", en: "EduSphere Features" },
-				our_institutions: { ar: "مؤسساتنا التعليمية", en: "Our Institutions" },
-				our_programs: { ar: "البرامج الأكاديمية", en: "Academic Programs" },
+				journey_title: { ar: "رحلة الطالب المتكاملة", en: "Complete Student Journey" },
+				journey_sub: { ar: "من أول استفسار حتى التخرج — إدارة واحدة", en: "From first inquiry to graduation" },
+				roles_title: { ar: "بوابات لكل دور", en: "Portal for Every Role" },
+				roles_sub: { ar: "تسعة أدوار — لوحة مخصصة لكل مستوى", en: "Nine roles — tailored dashboards" },
+				cta_title: { ar: "جاهزون لرفع تجربة التعليم؟", en: "Ready to elevate education?" },
+				cta_sub: {
+					ar: "انضم إلى مؤسسات EduSphere أو سجّل دخولك إلى المنصة التعليمية",
+					en: "Join EduSphere institutions or sign in to the learning platform",
+				},
+				online_apply: { ar: "تقديم أونلاين", en: "Online Application" },
+				parent_portal: { ar: "بوابة أولياء الأمور", en: "Parent Portal" },
+				student_portal: { ar: "بوابة الطالب", en: "Student Portal" },
+				analytics: { ar: "تحليلات وتقارير", en: "Analytics & Reports" },
+				lms: { ar: "منصة التعلّم", en: "Learning Platform" },
 				students: { ar: "طلاب", en: "Students" },
 				teachers: { ar: "معلّمون", en: "Teachers" },
 				loading: { ar: "جاري التحميل...", en: "Loading..." },
@@ -40,12 +74,11 @@
 				guardian_email: { ar: "بريد ولي الأمر", en: "Guardian Email" },
 				select: { ar: "اختر", en: "Select" },
 				success: { ar: "تم استلام طلبك", en: "Application received" },
-				admissions: { ar: "القبول والتسجيل", en: "Admissions" },
-				journey: { ar: "رحلة تعليمية متكاملة", en: "Complete education journey" },
-				online_apply: { ar: "تقديم أونلاين", en: "Online Application" },
-				parent_portal: { ar: "بوابة أولياء الأمور", en: "Parent Portal" },
-				student_portal: { ar: "بوابة الطالب", en: "Student Portal" },
-				analytics: { ar: "تحليلات وتقارير", en: "Analytics & Reports" },
+				all_programs: { ar: "الكل", en: "All" },
+				trust_iso: { ar: "معايير دولية", en: "Global Standards" },
+				trust_sis: { ar: "SIS متكامل", en: "Integrated SIS" },
+				trust_lms: { ar: "ربط kemetgate", en: "kemetgate Linked" },
+				trust_secure: { ar: "أمان وحوكمة", en: "Security & Governance" },
 			};
 			return (map[key] && map[key][this.lang]) || key;
 		},
@@ -88,6 +121,26 @@
 			if (typeof fn === "function") fn.call(this);
 		},
 
+		setupReveal() {
+			const els = document.querySelectorAll(".edu-reveal");
+			if (!els.length || !("IntersectionObserver" in window)) {
+				els.forEach((el) => el.classList.add("edu-visible"));
+				return;
+			}
+			const obs = new IntersectionObserver(
+				(entries) => {
+					entries.forEach((e) => {
+						if (e.isIntersecting) {
+							e.target.classList.add("edu-visible");
+							obs.unobserve(e.target);
+						}
+					});
+				},
+				{ threshold: 0.12 }
+			);
+			els.forEach((el) => obs.observe(el));
+		},
+
 		renderChrome() {
 			const cfg = this.config || {};
 			const name = cfg[this.nameField()] || "EduSphere";
@@ -105,7 +158,7 @@
 				header.innerHTML = `
 					<div class="edu-wrap edu-header-inner">
 						<a class="edu-brand" href="/education">${logo}<span>${this.esc(name)}</span></a>
-						<button type="button" class="edu-mobile-toggle" id="edu-menu-toggle">☰</button>
+						<button type="button" class="edu-mobile-toggle" id="edu-menu-toggle" aria-label="Menu">☰</button>
 						<nav class="edu-nav" id="edu-nav">
 							${nav
 								.map(
@@ -133,10 +186,11 @@
 						<div>
 							<h3>${this.esc(name)}</h3>
 							<p>${this.esc(cfg[this.textField("tagline")] || "")}</p>
+							<p style="margin-top:12px;opacity:0.7">EduSphere · ErpGenEx Education</p>
 						</div>
 						<div>
 							<h4>${this.t("programs")}</h4>
-							<p><a href="/education/programs">${this.t("our_programs")}</a></p>
+							<p><a href="/education/programs">${this.t("programs")}</a></p>
 							<p><a href="/education/apply">${this.t("apply_now")}</a></p>
 						</div>
 						<div>
@@ -144,11 +198,12 @@
 							<p><a href="${cfg.urls?.desk || "/app/education-workcenter"}">${this.t("desk")}</a></p>
 						</div>
 						<div>
-							<h4>Eschools</h4>
+							<h4>Eschools · kemetgate</h4>
 							<p><a href="${cfg.urls?.laravel_portal || "https://kemetgate.com"}" target="_blank" rel="noopener">kemetgate.com</a></p>
 							<p><a href="${cfg.urls?.laravel_login || "https://kemetgate.com/login"}" target="_blank" rel="noopener">${this.t("login")}</a></p>
 						</div>
-					</div>`;
+					</div>
+					<div class="edu-wrap edu-footer-bottom">© ${new Date().getFullYear()} ${this.esc(name)} · ${this.lang === "ar" ? "جميع الحقوق محفوظة" : "All rights reserved"}</div>`;
 			}
 		},
 
@@ -159,32 +214,51 @@
 				hero.innerHTML = `
 					<div class="edu-wrap edu-hero-grid">
 						<div>
-							<h1>${this.esc(cfg[this.textField("tagline")] || this.t("journey"))}</h1>
-							<p>${this.esc(cfg[this.textField("hero_text")] || "")}</p>
+							<span class="edu-eyebrow">EduSphere · World-Class SIS</span>
+							<h1>${this.esc(cfg[this.textField("tagline")] || "")}</h1>
+							<p class="edu-hero-lead">${this.esc(cfg[this.textField("hero_text")] || "")}</p>
 							<div class="edu-hero-cta">
-								<a class="edu-btn edu-btn-primary" href="/education/apply">${this.t("apply_now")}</a>
-								<a class="edu-btn edu-btn-outline" href="/education/programs" style="color:#fff;border-color:#fff">${this.t("programs")}</a>
-								<a class="edu-btn edu-btn-primary" href="${cfg.urls?.laravel_login || "https://kemetgate.com/login"}" target="_blank" rel="noopener">${this.t("student_portal")}</a>
+								<a class="edu-btn edu-btn-gold" href="/education/apply">${this.t("apply_now")}</a>
+								<a class="edu-btn edu-btn-ghost-light" href="/education/programs">${this.t("programs")}</a>
+								<a class="edu-btn edu-btn-ghost-light" href="${cfg.urls?.laravel_portal || "https://kemetgate.com"}" target="_blank" rel="noopener">${this.t("lms")}</a>
 							</div>
 						</div>
-						<div class="edu-hero-img">
-							<img src="${this.esc(cfg.hero_image || "")}" alt="" />
+						<div class="edu-hero-visual">
+							<div class="edu-hero-img">
+								<img src="${this.esc(cfg.hero_image || "")}" alt="" loading="lazy" />
+							</div>
+							<div class="edu-hero-float"><span>🎓</span> ${this.lang === "ar" ? "من القبول إلى التخرج" : "Admissions to Alumni"}</div>
 						</div>
+					</div>`;
+			}
+
+			const trust = document.getElementById("edu-trust-strip");
+			if (trust) {
+				trust.innerHTML = `
+					<div class="edu-wrap edu-trust-inner">
+						<span>✓ <strong>${this.t("trust_iso")}</strong></span>
+						<span>✓ <strong>${this.t("trust_sis")}</strong></span>
+						<span>✓ <strong>${this.t("trust_lms")}</strong></span>
+						<span>✓ <strong>${this.t("trust_secure")}</strong></span>
 					</div>`;
 			}
 
 			const features = document.getElementById("edu-features-bar");
 			if (features) {
 				const items = [
-					{ icon: "📋", key: "online_apply" },
-					{ icon: "👨‍👩‍👧", key: "parent_portal" },
-					{ icon: "🎓", key: "student_portal" },
-					{ icon: "📊", key: "analytics" },
+					{ icon: "📋", key: "online_apply", sub_ar: "طلب قبول رقمي", sub_en: "Digital admissions" },
+					{ icon: "👨‍👩‍👧", key: "parent_portal", sub_ar: "متابعة الأبناء", sub_en: "Child progress" },
+					{ icon: "🎓", key: "student_portal", sub_ar: "تعلّم ونتائج", sub_en: "Learning & grades" },
+					{ icon: "📊", key: "analytics", sub_ar: "قرارات مبنية على بيانات", sub_en: "Data-driven decisions" },
 				];
 				features.innerHTML = items
 					.map(
-						(i) =>
-							`<div class="edu-feature"><div class="edu-feature-icon">${i.icon}</div><strong>${this.t(i.key)}</strong></div>`
+						(i) => `
+					<div class="edu-feature">
+						<div class="edu-feature-icon">${i.icon}</div>
+						<strong>${this.t(i.key)}</strong>
+						<small>${this.lang === "ar" ? i.sub_ar : i.sub_en}</small>
+					</div>`
 					)
 					.join("");
 			}
@@ -194,10 +268,66 @@
 				const s = cfg.stats;
 				stats.innerHTML = `
 					<div class="edu-wrap edu-stats-grid">
-						<div><div class="edu-stat-num">${s.institutions || 0}</div><div>${this.t("institutions")}</div></div>
-						<div><div class="edu-stat-num">${s.programs || 0}</div><div>${this.t("programs")}</div></div>
-						<div><div class="edu-stat-num">${s.students || 0}</div><div>${this.t("students")}</div></div>
-						<div><div class="edu-stat-num">${s.teachers || 0}</div><div>${this.t("teachers")}</div></div>
+						<div><div class="edu-stat-num">${s.institutions || 0}</div><div class="edu-stat-label">${this.t("institutions")}</div></div>
+						<div><div class="edu-stat-num">${s.programs || 0}</div><div class="edu-stat-label">${this.t("programs")}</div></div>
+						<div><div class="edu-stat-num">${s.students || 0}</div><div class="edu-stat-label">${this.t("students")}</div></div>
+						<div><div class="edu-stat-num">${s.teachers || 0}</div><div class="edu-stat-label">${this.t("teachers")}</div></div>
+					</div>`;
+			}
+
+			const journey = document.getElementById("edu-journey-section");
+			if (journey) {
+				journey.innerHTML = `
+					<div class="edu-wrap">
+						<div class="edu-section-title">
+							<span class="edu-eyebrow">Student Lifecycle</span>
+							<h2>${this.t("journey_title")}</h2>
+							<p>${this.t("journey_sub")}</p>
+						</div>
+						<div class="edu-journey">
+							${JOURNEY_STEPS.map(
+								(step, i) => `
+								<div class="edu-journey-step">
+									<div class="edu-journey-num">${i + 1}</div>
+									<h4>${this.lang === "ar" ? step.ar : step.en}</h4>
+									<p>${this.lang === "ar" ? step.desc_ar : step.desc_en}</p>
+								</div>`
+							).join("")}
+						</div>
+					</div>`;
+			}
+
+			const roles = document.getElementById("edu-roles-section");
+			if (roles) {
+				roles.innerHTML = `
+					<div class="edu-wrap">
+						<div class="edu-section-title">
+							<span class="edu-eyebrow edu-eyebrow-light">Role-Based Access</span>
+							<h2>${this.t("roles_title")}</h2>
+							<p>${this.t("roles_sub")}</p>
+						</div>
+						<div class="edu-roles-grid">
+							${ROLES.map(
+								(r) => `
+								<div class="edu-role-card">
+									<div class="edu-role-icon">${r.icon}</div>
+									<span>${this.lang === "ar" ? r.ar : r.en}</span>
+								</div>`
+							).join("")}
+						</div>
+					</div>`;
+			}
+
+			const cta = document.getElementById("edu-cta-band");
+			if (cta) {
+				cta.innerHTML = `
+					<div class="edu-wrap">
+						<h2>${this.t("cta_title")}</h2>
+						<p>${this.t("cta_sub")}</p>
+						<div class="edu-cta-actions">
+							<a class="edu-btn edu-btn-gold" href="/education/apply">${this.t("apply_now")}</a>
+							<a class="edu-btn edu-btn-ghost-light" href="${cfg.urls?.laravel_login || "https://kemetgate.com/login"}" target="_blank" rel="noopener">${this.t("login")}</a>
+						</div>
 					</div>`;
 			}
 
@@ -207,7 +337,7 @@
 		async renderInstitutions(hostId) {
 			const host = document.getElementById(hostId);
 			if (!host) return;
-			host.innerHTML = `<p>${this.t("loading")}</p>`;
+			host.innerHTML = `<p style="text-align:center">${this.t("loading")}</p>`;
 			const r = await frappe.call({
 				method: "omnexa_education.api.public_education_site.get_public_institutions",
 			});
@@ -221,38 +351,89 @@
 							<span class="edu-badge">${this.esc(row.institution_type || "")}</span>
 							<h3>${this.esc(row.institution_name)}</h3>
 							<p>${this.esc(row.city || "")}</p>
-							<p style="margin-top:12px"><a href="/education/apply?institution=${this.esc(row.name)}">${this.t("apply_now")} →</a></p>
+							<a class="edu-card-link" href="/education/apply?institution=${encodeURIComponent(row.name)}">${this.t("apply_now")} →</a>
 						</div>`
 						)
-						.join("") || `<p>${this.t("loading")}</p>`}
+						.join("") || `<p style="text-align:center">—</p>`}
 				</div>`;
 		},
 
 		async init_programs() {
+			const filterHost = document.getElementById("edu-program-filters");
 			const host = document.getElementById("edu-programs-list");
 			if (!host) return;
-			host.innerHTML = `<p>${this.t("loading")}</p>`;
+
+			host.innerHTML = `<p style="text-align:center">${this.t("loading")}</p>`;
 			const r = await frappe.call({
 				method: "omnexa_education.api.public_education_site.get_public_programs",
 			});
-			const rows = r.message || [];
+			this._programsCache = r.message || [];
+			const types = [...new Set(this._programsCache.map((p) => p.program_type || p.institution_type).filter(Boolean))];
+
+			if (filterHost) {
+				filterHost.innerHTML = `
+					<button type="button" class="edu-filter-btn active" data-filter="all">${this.t("all_programs")}</button>
+					${types
+						.map((t) => `<button type="button" class="edu-filter-btn" data-filter="${this.esc(t)}">${this.esc(t)}</button>`)
+						.join("")}`;
+				filterHost.querySelectorAll(".edu-filter-btn").forEach((btn) => {
+					btn.addEventListener("click", () => {
+						filterHost.querySelectorAll(".edu-filter-btn").forEach((b) => b.classList.remove("active"));
+						btn.classList.add("active");
+						this._programFilter = btn.dataset.filter;
+						this._renderProgramsList(host);
+					});
+				});
+			}
+			this._renderProgramsList(host);
+		},
+
+		_renderProgramsList(host) {
+			let rows = this._programsCache || [];
+			if (this._programFilter !== "all") {
+				rows = rows.filter(
+					(p) => (p.program_type || p.institution_type) === this._programFilter
+				);
+			}
 			host.innerHTML = `
 				<div class="edu-card-grid">
 					${rows
 						.map(
 							(row) => `
 						<div class="edu-card">
-							<span class="edu-badge">${this.esc(row.program_type || "")}</span>
+							<span class="edu-badge">${this.esc(row.program_type || row.degree_level || "")}</span>
 							<h3>${this.esc(row.program_name)}</h3>
 							<p>${this.esc(row.institution_name || row.institution)}</p>
 							${row.duration_years ? `<p>${row.duration_years} ${this.lang === "ar" ? "سنوات" : "years"}</p>` : ""}
+							<a class="edu-card-link" href="/education/apply?institution=${encodeURIComponent(row.institution || "")}">${this.t("apply_now")} →</a>
 						</div>`
 						)
-						.join("") || `<p>—</p>`}
+						.join("") || `<p style="text-align:center">—</p>`}
 				</div>`;
 		},
 
 		init_apply() {
+			const aside = document.getElementById("edu-apply-aside");
+			if (aside) {
+				const steps =
+					this.lang === "ar"
+						? [
+								"املأ بيانات المتقدّم والمؤسسة",
+								"اختر السنة الأكاديمية والبرنامج",
+								"سيتم مراجعة طلبك من القبول",
+								"بعد القبول: حساب طالب + بوابة kemetgate",
+							]
+						: [
+								"Fill applicant and institution details",
+								"Select academic year and program",
+								"Admissions team will review your application",
+								"After acceptance: student account + kemetgate portal",
+							];
+				aside.innerHTML = `
+					<h3>${this.lang === "ar" ? "خطوات التقديم" : "Application Steps"}</h3>
+					<ul>${steps.map((s, i) => `<li><span>${i + 1}.</span> ${s}</li>`).join("")}</ul>`;
+			}
+
 			const host = document.getElementById("edu-apply-form-host");
 			if (!host) return;
 			const params = new URLSearchParams(window.location.search);
@@ -273,7 +454,7 @@
 					host.innerHTML = `
 						<form id="edu-apply-form">
 							<div class="edu-form-group"><label>${this.t("applicant")} *</label>
-								<input type="text" name="applicant_name" required /></div>
+								<input type="text" name="applicant_name" required autocomplete="name" /></div>
 							<div class="edu-form-group"><label>${this.t("institution")} *</label>
 								<select name="institution" required><option value="">${this.t("select")}</option>${instOpts}</select></div>
 							<div class="edu-form-group"><label>${this.t("academic_year")} *</label>
@@ -281,10 +462,10 @@
 							<div class="edu-form-group"><label>${this.t("grade")}</label>
 								<input type="text" name="grade_level" /></div>
 							<div class="edu-form-group"><label>${this.t("guardian_email")}</label>
-								<input type="email" name="guardian_email" /></div>
-							<button type="submit" class="edu-btn edu-btn-primary" style="width:100%;margin-top:8px">${this.t("submit")}</button>
+								<input type="email" name="guardian_email" autocomplete="email" /></div>
+							<button type="submit" class="edu-btn edu-btn-primary" style="width:100%;margin-top:12px;padding:14px">${this.t("submit")}</button>
 						</form>
-						<div id="edu-apply-result" style="margin-top:12px"></div>`;
+						<div id="edu-apply-result" style="margin-top:16px"></div>`;
 
 					const $inst = host.querySelector('[name="institution"]');
 					const $year = host.querySelector('[name="academic_year"]');
@@ -307,10 +488,10 @@
 							method: "omnexa_education.api.education_admissions.submit_online_application",
 							args: fd,
 							callback(res) {
-								document.getElementById("edu-apply-result").innerHTML = `<div style="color:#0d6e3a;padding:12px;background:#e8f5e9;border-radius:8px">${EduSphereSite.t("success")}: <strong>${EduSphereSite.esc(res.message.application)}</strong></div>`;
+								document.getElementById("edu-apply-result").innerHTML = `<div style="color:#0d6e3a;padding:16px;background:#ecfdf5;border-radius:12px;border:1px solid #a7f3d0">${EduSphereSite.t("success")}: <strong>${EduSphereSite.esc(res.message.application)}</strong></div>`;
 							},
 							error(err) {
-								document.getElementById("edu-apply-result").innerHTML = `<div style="color:#c62828">${EduSphereSite.esc(err.message || "Error")}</div>`;
+								document.getElementById("edu-apply-result").innerHTML = `<div style="color:#c62828;padding:12px">${EduSphereSite.esc(err.message || "Error")}</div>`;
 							},
 						});
 					});

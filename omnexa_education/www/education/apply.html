@@ -6,17 +6,21 @@ no_header: 1
 
 {% extends "templates/web.html" %}
 
-{% block title %}EduSphere Apply | التقديم{% endblock %}
+{% block title %}EduSphere Apply | التقديم الأونلاين{% endblock %}
 
 {% block page_content %}
 <div class="edu-site" data-page="apply">
   <header class="edu-header" id="edu-header"></header>
-  <section class="edu-section" style="padding-top:48px">
+  <section class="edu-page-hero edu-page-hero-compact">
     <div class="edu-wrap">
-      <div class="edu-section-title">
-        <h2>التقديم الأونلاين</h2>
-        <p>Online Application</p>
-      </div>
+      <span class="edu-eyebrow edu-eyebrow-light">Admissions</span>
+      <h1>التقديم الأونلاين</h1>
+      <p>ابدأ رحلتك التعليمية — القبول · التسجيل · بوابات الطالب وولي الأمر</p>
+    </div>
+  </section>
+  <section class="edu-section">
+    <div class="edu-wrap edu-apply-layout">
+      <aside class="edu-apply-aside" id="edu-apply-aside"></aside>
       <div class="edu-apply-box" id="edu-apply-form-host"></div>
     </div>
   </section>
