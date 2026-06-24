@@ -19,5 +19,28 @@
 		{
 			"role": "Report Manager"
 		}
+	],
+	"filters": [
+		{
+			"fieldname": "company",
+			"fieldtype": "Link",
+			"label": "Company",
+			"options": "Company",
+			"reqd": 1,
+			"width": "180px"
+		},
+		{
+			"fieldname": "branch",
+			"fieldtype": "Link",
+			"label": "Branch",
+			"options": "Branch",
+			"width": "180px"
+		},
+		{
+			"fieldname": "lms_provider",
+			"fieldtype": "Data",
+			"label": "LMS Provider",
+			"width": "160px"
+		}
 	]
 }

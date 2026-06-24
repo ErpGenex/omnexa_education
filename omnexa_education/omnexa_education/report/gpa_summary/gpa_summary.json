@@ -19,5 +19,42 @@
 		{
 			"role": "Report Manager"
 		}
+	],
+	"filters": [
+		{
+			"fieldname": "company",
+			"fieldtype": "Link",
+			"label": "Company",
+			"options": "Company",
+			"reqd": 1,
+			"width": "180px"
+		},
+		{
+			"fieldname": "branch",
+			"fieldtype": "Link",
+			"label": "Branch",
+			"options": "Branch",
+			"width": "180px"
+		},
+		{
+			"fieldname": "academic_year",
+			"fieldtype": "Link",
+			"label": "Academic Year",
+			"options": "Education Academic Year",
+			"width": "160px"
+		},
+		{
+			"fieldname": "term",
+			"fieldtype": "Link",
+			"label": "Term",
+			"options": "Education Term",
+			"width": "140px"
+		},
+		{
+			"fieldname": "standing",
+			"fieldtype": "Data",
+			"label": "Standing",
+			"width": "140px"
+		}
 	]
 }
