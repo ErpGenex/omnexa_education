@@ -52,6 +52,38 @@ class TestEducationMasterData(FrappeTestCase):
 		doc.insert(ignore_permissions=True)
 		return doc.name
 
+	def _ensure_tax_rule(self):
+		if not frappe.db.exists("DocType", "Tax Rule"):
+			return
+		if frappe.db.exists("Tax Rule", {"company": self.company}):
+			return
+		from frappe.utils import add_years
+
+		num = f"8{frappe.generate_hash(length=4)}"
+		gl = frappe.get_doc(
+			{
+				"doctype": "GL Account",
+				"company": self.company,
+				"account_number": num,
+				"account_name": f"Education VAT {num}",
+				"account_class": "Liability",
+				"account_type": "Liability",
+				"is_group": 0,
+			}
+		).insert(ignore_permissions=True)
+		frappe.get_doc(
+			{
+				"doctype": "Tax Rule",
+				"title": f"Default VAT {self.company}",
+				"company": self.company,
+				"valid_from": today(),
+				"valid_to": add_years(today(), 5),
+				"tax_type": "standard",
+				"rate": 0,
+				"account_head": gl.name,
+			}
+		).insert(ignore_permissions=True)
+
 	def test_master_data_chain_inserts(self):
 		cur = frappe.get_doc(
 			{
@@ -181,6 +213,7 @@ class TestEducationMasterData(FrappeTestCase):
 		self.assertEqual(subj.curriculum, cur.name)
 
 	def test_billing_invoice_creates_sales_invoice(self):
+		self._ensure_tax_rule()
 		# Minimal setup: GL accounts + fee item + student -> billing invoice -> sales invoice
 		inc = frappe.get_doc(
 			{
@@ -256,6 +289,7 @@ class TestEducationMasterData(FrappeTestCase):
 		self.assertEqual(float(si.grand_total), 500.0)
 
 	def test_billing_cycle_generates_bulk_invoices_with_discount(self):
+		self._ensure_tax_rule()
 		inc = frappe.get_doc(
 			{
 				"doctype": "GL Account",

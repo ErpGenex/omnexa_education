@@ -16,7 +16,7 @@ from frappe import _
 def _verify_signature(payload: bytes, signature: str | None) -> bool:
 	secret = frappe.get_single("Education Settings").get_password("laravel_webhook_secret")
 	if not secret:
-		return frappe.session.user == "Administrator"
+		return False
 	if not signature:
 		return False
 	expected = hmac.new(secret.encode(), payload, hashlib.sha256).hexdigest()
